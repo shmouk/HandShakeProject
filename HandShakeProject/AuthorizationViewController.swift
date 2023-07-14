@@ -7,16 +7,10 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class AuthorizationViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        print("test")
-
-        // Do any additional setup after loading the view.
     }
-
-
 }
 
