@@ -8,17 +8,28 @@
 import UIKit
 import Firebase
 
-@main
+@UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
+  var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        FirebaseApp.configure()
-        // Override point for customization after application launch.
+    
+    FirebaseApp.configure()
+        
+        Auth.auth().addStateDidChangeListener { (auth, user) in
+            if user == nil {
+                self.showAuthViewController()
+            }
+        }
         return true
     }
-
+    
+    func showAuthViewController() {
+        let authVC = AuthorizationViewController()
+        self.window?.rootViewController?.present(authVC, animated: true)
+    }
+    
     // MARK: UISceneSession Lifecycle
 
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {

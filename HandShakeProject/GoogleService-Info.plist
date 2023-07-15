@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>717664529828-ffol7001052aj8c12npqg1c4tspt8g17.apps.googleusercontent.com</string>
+	<string>602678308825-mbj04mk6jnfd3i7cuc3ashcpuhqvv7se.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.717664529828-ffol7001052aj8c12npqg1c4tspt8g17</string>
+	<string>com.googleusercontent.apps.602678308825-mbj04mk6jnfd3i7cuc3ashcpuhqvv7se</string>
 	<key>API_KEY</key>
-	<string>AIzaSyA06L_4MQWWajMDXwc_eE2xFpkRUbJEVq8</string>
+	<string>AIzaSyCvda0wiF7_2rRioFYsfKQYvMb2Bt8DcHA</string>
 	<key>GCM_SENDER_ID</key>
-	<string>717664529828</string>
+	<string>602678308825</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.HandShakeProject</string>
 	<key>PROJECT_ID</key>
-	<string>handshake-project-on-ios</string>
+	<string>handshake-project-ios</string>
 	<key>STORAGE_BUCKET</key>
-	<string>handshake-project-on-ios.appspot.com</string>
+	<string>handshake-project-ios.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:717664529828:ios:abc397ef2943f5309ca531</string>
+	<string>1:602678308825:ios:e4ad03b39c6c7c3d59f3c8</string>
 </dict>
 </plist>

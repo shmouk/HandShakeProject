@@ -7,32 +7,38 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AD13F6312A61A22F007F5449 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AD13F6302A61A22F007F5449 /* GoogleService-Info.plist */; };
 		AD13F6362A61A5D4007F5449 /* AuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD13F6352A61A5D4007F5449 /* AuthModel.swift */; };
 		AD13F6382A61A6B0007F5449 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD13F6372A61A6B0007F5449 /* AuthViewModel.swift */; };
 		AD13F63B2A61A85F007F5449 /* InterfaceBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD13F63A2A61A85F007F5449 /* InterfaceBuilder.swift */; };
 		AD13F63D2A61AABB007F5449 /* UIView + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD13F63C2A61AABB007F5449 /* UIView + Extension.swift */; };
 		AD13F63F2A61AD28007F5449 /* Bindable.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD13F63E2A61AD28007F5449 /* Bindable.swift */; };
 		AD13F6422A61B337007F5449 /* SetupConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD13F6412A61B337007F5449 /* SetupConstraint.swift */; };
+		AD13F6442A61E4F5007F5449 /* MainTapBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD13F6432A61E4F5007F5449 /* MainTapBarViewController.swift */; };
+		AD13F6462A61E904007F5449 /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD13F6452A61E904007F5449 /* AuthView.swift */; };
+		AD47E5B02A62D8CD0060DD3F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AD47E5AF2A62D8CD0060DD3F /* GoogleService-Info.plist */; };
+		AD5C62E22A62DE580069A53F /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = AD5C62E12A62DE580069A53F /* FirebaseAnalytics */; };
+		AD5C62E42A62DE580069A53F /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = AD5C62E32A62DE580069A53F /* FirebaseAuth */; };
+		AD5C62E62A62DE580069A53F /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = AD5C62E52A62DE580069A53F /* FirebaseDatabase */; };
+		AD5C62E82A62ED8A0069A53F /* AnimateAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5C62E72A62ED890069A53F /* AnimateAuthView.swift */; };
 		ADACF2CF2A6186DB00550283 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADACF2CE2A6186DB00550283 /* AppDelegate.swift */; };
 		ADACF2D12A6186DB00550283 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADACF2D02A6186DB00550283 /* SceneDelegate.swift */; };
 		ADACF2D32A6186DB00550283 /* AuthorizationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADACF2D22A6186DB00550283 /* AuthorizationViewController.swift */; };
 		ADACF2D62A6186DB00550283 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ADACF2D42A6186DB00550283 /* Main.storyboard */; };
 		ADACF2D82A6186DF00550283 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ADACF2D72A6186DF00550283 /* Assets.xcassets */; };
 		ADACF2DB2A6186DF00550283 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ADACF2D92A6186DF00550283 /* LaunchScreen.storyboard */; };
-		FA8D4A313AC1996C98ED16F2 /* Pods_HandShakeProject.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FA69CABCA366840C0FFBABA /* Pods_HandShakeProject.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		5DED29EF21E010BBC150038D /* Pods-HandShakeProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HandShakeProject.release.xcconfig"; path = "Target Support Files/Pods-HandShakeProject/Pods-HandShakeProject.release.xcconfig"; sourceTree = "<group>"; };
-		9FA69CABCA366840C0FFBABA /* Pods_HandShakeProject.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HandShakeProject.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		AD13F6302A61A22F007F5449 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		AD13F6352A61A5D4007F5449 /* AuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthModel.swift; sourceTree = "<group>"; };
 		AD13F6372A61A6B0007F5449 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		AD13F63A2A61A85F007F5449 /* InterfaceBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceBuilder.swift; sourceTree = "<group>"; };
 		AD13F63C2A61AABB007F5449 /* UIView + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView + Extension.swift"; sourceTree = "<group>"; };
 		AD13F63E2A61AD28007F5449 /* Bindable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bindable.swift; sourceTree = "<group>"; };
 		AD13F6412A61B337007F5449 /* SetupConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupConstraint.swift; sourceTree = "<group>"; };
+		AD13F6432A61E4F5007F5449 /* MainTapBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTapBarViewController.swift; sourceTree = "<group>"; };
+		AD13F6452A61E904007F5449 /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
+		AD47E5AF2A62D8CD0060DD3F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		AD5C62E72A62ED890069A53F /* AnimateAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateAuthView.swift; sourceTree = "<group>"; };
 		ADACF2CB2A6186DB00550283 /* HandShakeProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HandShakeProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADACF2CE2A6186DB00550283 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		ADACF2D02A6186DB00550283 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -41,7 +47,6 @@
 		ADACF2D72A6186DF00550283 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		ADACF2DA2A6186DF00550283 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ADACF2DC2A6186DF00550283 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F750C46B0757A8FD8322E091 /* Pods-HandShakeProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HandShakeProject.debug.xcconfig"; path = "Target Support Files/Pods-HandShakeProject/Pods-HandShakeProject.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,26 +54,20 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA8D4A313AC1996C98ED16F2 /* Pods_HandShakeProject.framework in Frameworks */,
+				AD5C62E62A62DE580069A53F /* FirebaseDatabase in Frameworks */,
+				AD5C62E22A62DE580069A53F /* FirebaseAnalytics in Frameworks */,
+				AD5C62E42A62DE580069A53F /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		269DB71382C29A182173D438 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				F750C46B0757A8FD8322E091 /* Pods-HandShakeProject.debug.xcconfig */,
-				5DED29EF21E010BBC150038D /* Pods-HandShakeProject.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 		AD13F6322A61A437007F5449 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
 				ADACF2D22A6186DB00550283 /* AuthorizationViewController.swift */,
+				AD13F6432A61E4F5007F5449 /* MainTapBarViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -84,6 +83,7 @@
 		AD13F6342A61A5B3007F5449 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				AD13F6472A61E915007F5449 /* View */,
 				AD13F6372A61A6B0007F5449 /* AuthViewModel.swift */,
 				AD13F6402A61AD2D007F5449 /* Bindable */,
 			);
@@ -108,13 +108,20 @@
 			path = Bindable;
 			sourceTree = "<group>";
 		};
+		AD13F6472A61E915007F5449 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				AD13F6452A61E904007F5449 /* AuthView.swift */,
+				AD5C62E72A62ED890069A53F /* AnimateAuthView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		ADACF2C22A6186DB00550283 = {
 			isa = PBXGroup;
 			children = (
 				ADACF2CD2A6186DB00550283 /* HandShakeProject */,
 				ADACF2CC2A6186DB00550283 /* Products */,
-				269DB71382C29A182173D438 /* Pods */,
-				AFF263D15E2BE7C054F3D8F0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -138,18 +145,10 @@
 				ADACF2D42A6186DB00550283 /* Main.storyboard */,
 				ADACF2D72A6186DF00550283 /* Assets.xcassets */,
 				ADACF2D92A6186DF00550283 /* LaunchScreen.storyboard */,
+				AD47E5AF2A62D8CD0060DD3F /* GoogleService-Info.plist */,
 				ADACF2DC2A6186DF00550283 /* Info.plist */,
-				AD13F6302A61A22F007F5449 /* GoogleService-Info.plist */,
 			);
 			path = HandShakeProject;
-			sourceTree = "<group>";
-		};
-		AFF263D15E2BE7C054F3D8F0 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				9FA69CABCA366840C0FFBABA /* Pods_HandShakeProject.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -159,17 +158,20 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = ADACF2DF2A6186DF00550283 /* Build configuration list for PBXNativeTarget "HandShakeProject" */;
 			buildPhases = (
-				A9FAFBBBDC1672207109A7B4 /* [CP] Check Pods Manifest.lock */,
 				ADACF2C72A6186DB00550283 /* Sources */,
 				ADACF2C82A6186DB00550283 /* Frameworks */,
 				ADACF2C92A6186DB00550283 /* Resources */,
-				CBCF92B0C9D61F3A87EFC701 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = HandShakeProject;
+			packageProductDependencies = (
+				AD5C62E12A62DE580069A53F /* FirebaseAnalytics */,
+				AD5C62E32A62DE580069A53F /* FirebaseAuth */,
+				AD5C62E52A62DE580069A53F /* FirebaseDatabase */,
+			);
 			productName = HandShakeProject;
 			productReference = ADACF2CB2A6186DB00550283 /* HandShakeProject.app */;
 			productType = "com.apple.product-type.application";
@@ -198,6 +200,9 @@
 				Base,
 			);
 			mainGroup = ADACF2C22A6186DB00550283;
+			packageReferences = (
+				AD5C62E02A62DE580069A53F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			productRefGroup = ADACF2CC2A6186DB00550283 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -213,7 +218,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				ADACF2DB2A6186DF00550283 /* LaunchScreen.storyboard in Resources */,
-				AD13F6312A61A22F007F5449 /* GoogleService-Info.plist in Resources */,
+				AD47E5B02A62D8CD0060DD3F /* GoogleService-Info.plist in Resources */,
 				ADACF2D82A6186DF00550283 /* Assets.xcassets in Resources */,
 				ADACF2D62A6186DB00550283 /* Main.storyboard in Resources */,
 			);
@@ -221,53 +226,12 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		A9FAFBBBDC1672207109A7B4 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-HandShakeProject-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		CBCF92B0C9D61F3A87EFC701 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-HandShakeProject/Pods-HandShakeProject-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-HandShakeProject/Pods-HandShakeProject-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HandShakeProject/Pods-HandShakeProject-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		ADACF2C72A6186DB00550283 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AD5C62E82A62ED8A0069A53F /* AnimateAuthView.swift in Sources */,
 				AD13F6382A61A6B0007F5449 /* AuthViewModel.swift in Sources */,
 				AD13F63B2A61A85F007F5449 /* InterfaceBuilder.swift in Sources */,
 				AD13F6422A61B337007F5449 /* SetupConstraint.swift in Sources */,
@@ -277,6 +241,8 @@
 				AD13F63D2A61AABB007F5449 /* UIView + Extension.swift in Sources */,
 				ADACF2CF2A6186DB00550283 /* AppDelegate.swift in Sources */,
 				ADACF2D12A6186DB00550283 /* SceneDelegate.swift in Sources */,
+				AD13F6462A61E904007F5449 /* AuthView.swift in Sources */,
+				AD13F6442A61E4F5007F5449 /* MainTapBarViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -418,7 +384,6 @@
 		};
 		ADACF2E02A6186DF00550283 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F750C46B0757A8FD8322E091 /* Pods-HandShakeProject.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -447,7 +412,6 @@
 		};
 		ADACF2E12A6186DF00550283 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5DED29EF21E010BBC150038D /* Pods-HandShakeProject.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -496,6 +460,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		AD5C62E02A62DE580069A53F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AD5C62E12A62DE580069A53F /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AD5C62E02A62DE580069A53F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		AD5C62E32A62DE580069A53F /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AD5C62E02A62DE580069A53F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		AD5C62E52A62DE580069A53F /* FirebaseDatabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AD5C62E02A62DE580069A53F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDatabase;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = ADACF2C32A6186DB00550283 /* Project object */;
 }
