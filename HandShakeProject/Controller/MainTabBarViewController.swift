@@ -9,19 +9,16 @@ import UIKit
 
 class MainTabBarViewController: UITabBarController {
     
-    var authViewModel = AuthViewModel()
-
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
-        authViewModel.userLogoutAction()
     }
     
     private func setUI() {
         generateTabBar()
         addSubviews()
         setupViews()
-//        generateNavigationItem()
+        generateNavigationItem()
     }
     
     private func setupViews() {

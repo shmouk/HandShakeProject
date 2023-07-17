@@ -7,6 +7,9 @@
 
 import UIKit
 
+protocol AuthorizationViewControllerDelegate: AnyObject {
+    func didLogin()
+}
 
 class AuthorizationViewController: UIViewController {
     
@@ -18,6 +21,8 @@ class AuthorizationViewController: UIViewController {
     lazy var loginButton = interfaceBuilder.createButton()
     lazy var stateAuthButton = interfaceBuilder.createButton()
     
+    weak var delegate: AuthorizationViewControllerDelegate?
+
     let interfaceBuilder = InterfaceBuilder()
     var authViewModel = AuthViewModel()
     
@@ -45,6 +50,10 @@ class AuthorizationViewController: UIViewController {
        
     }
     
+    func login() {
+           delegate?.didLogin()
+       }
+
     private func bindViewModel() {
         authViewModel.statusText.bind({ (statusText) in
             DispatchQueue.main.async {
@@ -53,7 +62,43 @@ class AuthorizationViewController: UIViewController {
         })
     }
     
-    func setupTargets() {
+    private func setUI() {
+        setSubviews()
+        setSettings()
+        setupConstraints()
+        setupTargets()
+    }
+    
+    private func setSubviews() {
+        view.addSubviews(stateView, stateAuthButton, loginTextField, repeatPasswordTextField, passwordTextField,  statusAuthLabel, loginButton)
+    }
+    
+    private func setSettings() {
+        settingViews()
+        settingTextField()
+        settingButton(title: "Sign up")
+    }
+    
+    private func settingTextField() {
+        loginTextField.delegate = self
+        passwordTextField.delegate = self
+        repeatPasswordTextField.delegate = self
+        
+        loginTextField.placeholder = "Input login"
+        passwordTextField.placeholder = "Input password"
+        repeatPasswordTextField.placeholder = "Repeat password"
+    }
+    
+    private func settingButton(title: String) {
+        loginButton.setTitle(title, for: .normal)
+        stateAuthButton.setTitle("Sign up                 Log in", for: .normal)
+    }
+    
+    private func settingViews() {
+        view.backgroundColor = .white
+    }
+    
+    private func setupTargets() {
         loginButton.addTarget(self, action: #selector(loginAction(_:)), for: .touchUpInside)
         stateAuthButton.addTarget(self, action: #selector(changeAuthState(_:)), for: .touchUpInside)
     }

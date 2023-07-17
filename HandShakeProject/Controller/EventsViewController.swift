@@ -12,5 +12,11 @@ class EventsViewController: UIViewController {
 
         view.backgroundColor = .green
         super.viewDidLoad()
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image:  UIImage(systemName: "bell.badge"), style: .plain, target: self, action: #selector(addEventsAction))
+
+    }
+    @objc
+    private func addEventsAction(_ sender: Any) {
+        print(1)
     }
 }

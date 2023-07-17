@@ -7,6 +7,8 @@
 
 import UIKit
 
+// MARK: - AuthorizationViewController Constraint
+
 extension AuthorizationViewController {
     
     func setupConstraints() {
@@ -61,6 +63,21 @@ extension AuthorizationViewController {
             loginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
             loginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
             loginButton.heightAnchor.constraint(equalToConstant: view.frame.height / 8)
+        ])
+    }
+}
+
+// MARK: - ProfileViewController Constraint
+
+extension ProfileViewController {
+    
+    func setupConstraints() {
+        
+        NSLayoutConstraint.activate([
+            logoutButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30),
+            logoutButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            logoutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            logoutButton.heightAnchor.constraint(equalToConstant: view.frame.height / 12)
         ])
     }
 }
