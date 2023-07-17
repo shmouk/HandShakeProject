@@ -13,56 +13,48 @@ extension AuthorizationViewController {
     
     func setupConstraints() {
         
-        NSLayoutConstraint.activate([
-            stateAuthButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30),
-            stateAuthButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            stateAuthButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-            stateAuthButton.heightAnchor.constraint(equalToConstant: view.frame.height / 12)
-        ])
-        
-        leadingConstraint = stateView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30)
-        trailingConstraint = stateView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -view.frame.width / 2)
+        let heightForView = view.frame.height / 14
         
         NSLayoutConstraint.activate([
-            stateView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30),
-            leadingConstraint,
-            trailingConstraint,
-            stateView.heightAnchor.constraint(equalToConstant: view.frame.height / 12)
+            authSegmentControl.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30),
+            authSegmentControl.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            authSegmentControl.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            authSegmentControl.heightAnchor.constraint(equalToConstant: heightForView * 0.8)
         ])
         
         NSLayoutConstraint.activate([
-            loginTextField.topAnchor.constraint(equalTo: stateAuthButton.bottomAnchor, constant: 30),
+            loginTextField.topAnchor.constraint(equalTo: authSegmentControl.bottomAnchor, constant: 30),
             loginTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
             loginTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-            loginTextField.heightAnchor.constraint(equalToConstant: view.frame.height / 14)
+            loginTextField.heightAnchor.constraint(equalToConstant: heightForView)
         ])
         
         NSLayoutConstraint.activate([
-            passwordTextField.topAnchor.constraint(equalTo: loginTextField.bottomAnchor, constant: 30),
+            passwordTextField.topAnchor.constraint(equalTo: loginTextField.bottomAnchor, constant: 15),
             passwordTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
             passwordTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-            passwordTextField.heightAnchor.constraint(equalToConstant: view.frame.height / 14)
+            passwordTextField.heightAnchor.constraint(equalToConstant: heightForView)
         ])
         
         NSLayoutConstraint.activate([
-            repeatPasswordTextField.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 30),
+            repeatPasswordTextField.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 15),
             repeatPasswordTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
             repeatPasswordTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-            repeatPasswordTextField.heightAnchor.constraint(equalToConstant: view.frame.height / 14)
+            repeatPasswordTextField.heightAnchor.constraint(equalToConstant: heightForView)
         ])
         
         NSLayoutConstraint.activate([
             statusAuthLabel.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 30 + view.frame.height / 14),
             statusAuthLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
             statusAuthLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-            statusAuthLabel.heightAnchor.constraint(equalToConstant: view.frame.height / 14)
+            statusAuthLabel.heightAnchor.constraint(equalToConstant: heightForView)
         ])
 
         NSLayoutConstraint.activate([
             loginButton.topAnchor.constraint(equalTo: statusAuthLabel.bottomAnchor, constant: 30),
             loginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
             loginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-            loginButton.heightAnchor.constraint(equalToConstant: view.frame.height / 8)
+            loginButton.heightAnchor.constraint(equalToConstant: heightForView)
         ])
     }
 }

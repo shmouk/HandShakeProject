@@ -13,13 +13,12 @@ protocol AuthorizationViewControllerDelegate: AnyObject {
 
 class AuthorizationViewController: UIViewController {
     
-    lazy var stateView = interfaceBuilder.createView()
     lazy var loginTextField = interfaceBuilder.createTextField()
     lazy var passwordTextField = interfaceBuilder.createTextField()
     lazy var repeatPasswordTextField = interfaceBuilder.createTextField()
     lazy var statusAuthLabel = interfaceBuilder.createLabel()
     lazy var loginButton = interfaceBuilder.createButton()
-    lazy var stateAuthButton = interfaceBuilder.createButton()
+    lazy var authSegmentControl = interfaceBuilder.createSegmentControl(items: authState)
     
     weak var delegate: AuthorizationViewControllerDelegate?
 
@@ -27,9 +26,6 @@ class AuthorizationViewController: UIViewController {
     var authViewModel = AuthViewModel()
     
     let authState = ["Sign up", "Log in"]
-    
-    var leadingConstraint: NSLayoutConstraint!
-    var trailingConstraint: NSLayoutConstraint!
     
     var signup: Bool = true {
         willSet {
@@ -70,7 +66,7 @@ class AuthorizationViewController: UIViewController {
     }
     
     private func setSubviews() {
-        view.addSubviews(stateView, stateAuthButton, loginTextField, repeatPasswordTextField, passwordTextField,  statusAuthLabel, loginButton)
+        view.addSubviews(authSegmentControl, loginTextField, repeatPasswordTextField, passwordTextField,  statusAuthLabel, loginButton)
     }
     
     private func setSettings() {
@@ -84,14 +80,16 @@ class AuthorizationViewController: UIViewController {
         passwordTextField.delegate = self
         repeatPasswordTextField.delegate = self
         
-        loginTextField.placeholder = "Input login"
+        passwordTextField.isSecureTextEntry = true
+        repeatPasswordTextField.isSecureTextEntry = true
+
+        loginTextField.placeholder = "Input login (email)"
         passwordTextField.placeholder = "Input password"
         repeatPasswordTextField.placeholder = "Repeat password"
     }
     
     private func settingButton(title: String) {
         loginButton.setTitle(title, for: .normal)
-        stateAuthButton.setTitle("Sign up                 Log in", for: .normal)
     }
     
     private func settingViews() {
@@ -99,8 +97,8 @@ class AuthorizationViewController: UIViewController {
     }
     
     private func setupTargets() {
+        authSegmentControl.addTarget(self, action: #selector(changeAuthState(_:)), for: .editingChanged)
         loginButton.addTarget(self, action: #selector(loginAction(_:)), for: .touchUpInside)
-        stateAuthButton.addTarget(self, action: #selector(changeAuthState(_:)), for: .touchUpInside)
     }
 }
 
@@ -132,7 +130,6 @@ private extension AuthorizationViewController {
     
     @objc
     private func changeAuthState(_ sender: Any) {
-        animateView()
         signup = !signup
         view.layoutIfNeeded()
     }
