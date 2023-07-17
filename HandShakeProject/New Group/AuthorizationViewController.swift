@@ -26,8 +26,6 @@ class AuthorizationViewController: UIViewController {
     var leadingConstraint: NSLayoutConstraint!
     var trailingConstraint: NSLayoutConstraint!
     
-    
-    
     var signup: Bool = true {
         willSet {
             if newValue {
@@ -44,16 +42,17 @@ class AuthorizationViewController: UIViewController {
         super.viewDidLoad()
         setUI()
         bindViewModel()
-        
+       
     }
     
-    func bindViewModel() {
+    private func bindViewModel() {
         authViewModel.statusText.bind({ (statusText) in
             DispatchQueue.main.async {
                 self.statusAuthLabel.text = statusText
             }
         })
     }
+    
     func setupTargets() {
         loginButton.addTarget(self, action: #selector(loginAction(_:)), for: .touchUpInside)
         stateAuthButton.addTarget(self, action: #selector(changeAuthState(_:)), for: .touchUpInside)
@@ -63,25 +62,28 @@ class AuthorizationViewController: UIViewController {
 // MARK: - Action
 
 private extension AuthorizationViewController {
+    
     @objc
     private func loginAction(_ sender: Any) {
+        
         if let login = loginTextField.text,
            let password = passwordTextField.text,
            let rPassword = repeatPasswordTextField.text {
-            authViewModel.userButtonPressed(login: login, password: password, repeatPassword: rPassword, state: signup, completion: { [weak self](bool) in
+            
+            authViewModel.userLoginAction(login: login, password: password, repeatPassword: rPassword, state: signup, completion: { [weak self](bool) in
+                
                 if bool {
-                    let mVC = MainTapBarViewController()
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+                    let mVC = MainTabBarViewController()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
                         mVC.modalPresentationStyle = .fullScreen
-                        self?.present(mVC, animated: true)
+                        self?.navigationController?.pushViewController(mVC, animated: true)
+//                        self?.present(mVC, animated: true)
                         
-                        AuthorizationViewController().dismiss(animated: true, completion: nil)
                     })
                 }
             })
         }
     }
-    
     
     @objc
     private func changeAuthState(_ sender: Any) {

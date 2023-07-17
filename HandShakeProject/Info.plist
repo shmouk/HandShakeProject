@@ -16,7 +16,7 @@
 					<key>UISceneDelegateClassName</key>
 					<string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
 					<key>UISceneClassName</key>
-					<string>AuthorizationViewController</string>
+					<string>MainTabBarViewController</string>
 				</dict>
 			</array>
 		</dict>

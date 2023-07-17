@@ -19,6 +19,5 @@ extension AuthorizationViewController {
             self.view.layoutIfNeeded()
         }
     }
-
 }
     

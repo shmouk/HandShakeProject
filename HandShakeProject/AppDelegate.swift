@@ -12,7 +12,7 @@ import Firebase
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
   var window: UIWindow?
-
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     
     FirebaseApp.configure()
@@ -21,13 +21,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             if user == nil {
                 self.showAuthViewController()
             }
+            else {
+                self.showMainViewController()
+            }
         }
+        window?.makeKeyAndVisible()
+
         return true
     }
     
     func showAuthViewController() {
-        let authVC = AuthorizationViewController()
-        self.window?.rootViewController?.present(authVC, animated: true)
+        self.window?.rootViewController? = AuthorizationViewController()
+    }
+    
+    func showMainViewController() {
+        self.window?.rootViewController? = MainTabBarViewController()
     }
     
     // MARK: UISceneSession Lifecycle
