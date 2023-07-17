@@ -12,8 +12,3 @@ struct User {
     var password: String?
 }
 
-extension User {
-    static var users = [
-        User(login: "123", password: "123")
-    ]
-}
