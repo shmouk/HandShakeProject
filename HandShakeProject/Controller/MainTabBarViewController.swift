@@ -27,6 +27,8 @@ class MainTabBarViewController: UITabBarController {
     }
     
     private func addSubviews() {
+        let navBar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: 44))
+        view.addSubview(navBar)
     }
     
     private func generateTabBar() {
@@ -51,7 +53,7 @@ class MainTabBarViewController: UITabBarController {
         guard let vc1 = viewControllers?[0],
         let vc2 = viewControllers?[1],
         let vc3 = viewControllers?[2],
-              let vc4 = viewControllers?[3] else{ return }
+              let vc4 = viewControllers?[3] else { return }
 
         
         setNavigationItem(for: vc1, title: "Events", name: "bell.badge", isEvents: true)

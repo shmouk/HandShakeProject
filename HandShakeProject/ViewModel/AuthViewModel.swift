@@ -11,47 +11,54 @@ import FirebaseAuth
 class AuthViewModel {
     
     var statusText = Bindable("")
+    var signupBindable = Bindable(true)
+    
     let firebaseAuth = Auth.auth()
     
-    func userLoginAction(login: String, password: String, repeatPassword: String, state: Bool, completion: @escaping (Bool) -> ()) {
-        switch state {
-        case true:
+    func changeAuthState() {
+        signupBindable.value = !signupBindable.value
+    }
+    
+    func userLoginAction(login: String, password: String, repeatPassword: String, state: Bool, completion: @escaping (Bool) -> Void) {
+        guard !login.isEmpty, !password.isEmpty else {
+            statusText.value = "Error: Empty fields"
+            return
+        }
+        
+        if state {
             guard password == repeatPassword else {
-                self.statusText.value = "Error password"
+                statusText.value = "Error: Passwords do not match"
                 return
             }
+            
             firebaseAuth.createUser(withEmail: login, password: password) { [weak self] (result, error) in
                 guard error == nil else {
-                    self?.statusText.value = "Error sign up"
+                    self?.statusText.value = "Error: \(error!.localizedDescription)"
                     return
                 }
-                self?.statusText.value = "Successed sign up"
+                
+                self?.statusText.value = "Success: User created"
                 completion(true)
             }
-            
-        case false:
+        } else {
             firebaseAuth.signIn(withEmail: login, password: password) { [weak self] (result, error) in
                 guard error == nil else {
-                    self?.statusText.value = "Error sign in"
+                    self?.statusText.value = "Error: \(error!.localizedDescription)"
                     return
                 }
-                self?.statusText.value = "Successed sign in"
+                
+                self?.statusText.value = "Success: User logged in"
                 completion(true)
             }
         }
     }
+
     
     func userLogoutAction() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: { [self] in
-            print("go")
             do {
                 try firebaseAuth.signOut()
-                print("logout")
             } catch let signOutError as NSError {
                 print("Error signing out: %@", signOutError)
             }
-            
-        })
-        
     }
 }

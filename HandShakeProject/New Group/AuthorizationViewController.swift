@@ -27,17 +27,7 @@ class AuthorizationViewController: UIViewController {
     
     let authState = ["Sign up", "Log in"]
     
-    var signup: Bool = true {
-        willSet {
-            if newValue {
-                settingButton(title: authState.first ?? "")
-                repeatPasswordTextField.isHidden = false
-            } else {
-                settingButton(title: authState.last ?? "")
-                repeatPasswordTextField.isHidden = true
-            }
-        }
-    }
+    var isSignup: Bool = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,10 +41,13 @@ class AuthorizationViewController: UIViewController {
        }
 
     private func bindViewModel() {
-        authViewModel.statusText.bind({ (statusText) in
-            DispatchQueue.main.async {
-                self.statusAuthLabel.text = statusText
-            }
+        authViewModel.statusText.bind({ [self](statusText) in
+                statusAuthLabel.text = statusText
+        })
+        authViewModel.signupBindable.bind({ [self](signup) in
+            self.isSignup = signup
+                settingButton(title: signup ? authState.first ?? "" : authState.last ?? "")
+                repeatPasswordTextField.isHidden = !signup
         })
     }
     
@@ -97,7 +90,7 @@ class AuthorizationViewController: UIViewController {
     }
     
     private func setupTargets() {
-        authSegmentControl.addTarget(self, action: #selector(changeAuthState(_:)), for: .editingChanged)
+        authSegmentControl.addTarget(self, action: #selector(changeAuthState(_:)), for: .valueChanged)
         loginButton.addTarget(self, action: #selector(loginAction(_:)), for: .touchUpInside)
     }
 }
@@ -106,32 +99,27 @@ class AuthorizationViewController: UIViewController {
 
 private extension AuthorizationViewController {
     
-    @objc
-    private func loginAction(_ sender: Any) {
+    @objc private func loginAction(_ sender: Any) {
+        guard let login = loginTextField.text, let password = passwordTextField.text, let rPassword = repeatPasswordTextField.text else {
+            statusAuthLabel.text = "Error: Empty fields"
+            return
+        }
         
-        if let login = loginTextField.text,
-           let password = passwordTextField.text,
-           let rPassword = repeatPasswordTextField.text {
+        authViewModel.userLoginAction(login: login, password: password, repeatPassword: rPassword, state: isSignup) { [weak self] (success) in
+            guard success else { return }
             
-            authViewModel.userLoginAction(login: login, password: password, repeatPassword: rPassword, state: signup, completion: { [weak self](bool) in
-                
-                if bool {
-                    let mVC = MainTabBarViewController()
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
-                        mVC.modalPresentationStyle = .fullScreen
-                        self?.navigationController?.pushViewController(mVC, animated: true)
-//                        self?.present(mVC, animated: true)
-                        
-                    })
-                }
+            let mVC = MainTabBarViewController()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+                mVC.modalPresentationStyle = .fullScreen
+                self?.navigationController?.pushViewController(mVC, animated: true)
             })
         }
     }
+
     
     @objc
     private func changeAuthState(_ sender: Any) {
-        signup = !signup
-        view.layoutIfNeeded()
+        authViewModel.changeAuthState()
     }
 }
 
@@ -140,7 +128,6 @@ extension AuthorizationViewController: UITextFieldDelegate {
         passwordTextField.resignFirstResponder()
         loginTextField.resignFirstResponder()
         repeatPasswordTextField.resignFirstResponder()
-        
         return true
     }
 }
