@@ -27,7 +27,7 @@ class AuthorizationViewController: UIViewController {
     
     let authState = ["Sign up", "Log in"]
     
-    var isSignup: Bool = true
+    var isSignup = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,7 +45,7 @@ class AuthorizationViewController: UIViewController {
                 statusAuthLabel.text = statusText
         })
         authViewModel.signupBindable.bind({ [self](signup) in
-            self.isSignup = signup
+                isSignup = signup
                 settingButton(title: signup ? authState.first ?? "" : authState.last ?? "")
                 repeatPasswordTextField.isHidden = !signup
         })

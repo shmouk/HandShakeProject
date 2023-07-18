@@ -18,7 +18,6 @@ class MainTabBarViewController: UITabBarController {
         generateTabBar()
         addSubviews()
         setupViews()
-        generateNavigationItem()
     }
     
     private func setupViews() {
@@ -27,7 +26,8 @@ class MainTabBarViewController: UITabBarController {
     }
     
     private func addSubviews() {
-        let navBar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: 44))
+        let navBar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: view.frame.height / 9))
+        navBar.backgroundColor = .yellow
         view.addSubview(navBar)
     }
     
@@ -48,27 +48,22 @@ class MainTabBarViewController: UITabBarController {
         chatViewController.tabBarItem = UITabBarItem(title: "Chats", image: UIImage(systemName: "ellipsis.message"), tag: 1)
         teamViewController.tabBarItem = UITabBarItem(title: "Team", image: UIImage(systemName: "person.3"), tag: 2)
         profileViewController.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person.circle"), tag: 3)
-    }
-    private func generateNavigationItem() {
-        guard let vc1 = viewControllers?[0],
-        let vc2 = viewControllers?[1],
-        let vc3 = viewControllers?[2],
-              let vc4 = viewControllers?[3] else { return }
 
-        
-        setNavigationItem(for: vc1, title: "Events", name: "bell.badge", isEvents: true)
-        setNavigationItem(for: vc2, title: "Chats", name: "bell.badge", isEvents: false)
-        setNavigationItem(for: vc3, title: "Teams", name: "bell.badge", isEvents: false)
-        setNavigationItem(for: vc4, title: "Profile", name: "bell.badge", isEvents: false)
+        setNavigationItem(for: eventsViewController, title: "Events", name: "bell.badge", isEvents: true)
+        setNavigationItem(for: chatViewController, title: "Chats",  isEvents: false)
+        setNavigationItem(for: teamViewController, title: "Teams", isEvents: false)
+        setNavigationItem(for: profileViewController, title: "Profile", isEvents: false)
     }
     
-    private func setNavigationItem(for vc: UIViewController, title: String, name: String, isEvents: Bool) {
+    private func setNavigationItem(for vc: UIViewController, title: String, name: String = "bell.badge", isEvents: Bool) {
         let image = UIImage(systemName: name)
         vc.title = title
         if isEvents {
-            vc.navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(addEventsAction))
+            let eventsButton = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(addEventsAction))
+            vc.navigationItem.leftBarButtonItem = eventsButton
         }
-        vc.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(openNotificationAction))
+        let logoutButton = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(openNotificationAction))
+        vc.navigationItem.rightBarButtonItem = logoutButton
     }
     
     private func setBarAppearanceUpdate() {
