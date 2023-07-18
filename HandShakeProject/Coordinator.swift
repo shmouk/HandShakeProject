@@ -6,19 +6,24 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseAuth
 
 class Coordinator {
     
     var window: UIWindow?
     
     func start() {
-        
-        FirebaseApp.configure()
-        
+                
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.overrideUserInterfaceStyle = .light
         
+        authStateListener()
+        
+        window?.rootViewController = UIViewController()
+        window?.makeKeyAndVisible()
+    }
+    
+    private func authStateListener() {
         let authVC = AuthorizationViewController()
         let mainVC = MainTabBarViewController()
         
@@ -32,12 +37,9 @@ class Coordinator {
                 self.showViewController(mainVC)
             }
         }
-        
-        window?.rootViewController = authVC
-        window?.makeKeyAndVisible()
     }
-   
-    func showViewController(_ viewController: UIViewController) {
+    
+    private func showViewController(_ viewController: UIViewController) {
         window?.rootViewController = viewController
     }
 }
@@ -48,4 +50,5 @@ extension Coordinator: AuthorizationViewControllerDelegate {
         showViewController(mainVC)
     }
 }
+
 

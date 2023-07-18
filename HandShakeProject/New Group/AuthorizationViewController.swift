@@ -36,9 +36,9 @@ class AuthorizationViewController: UIViewController {
        
     }
     
-    func login() {
-           delegate?.didLogin()
-       }
+//    private func login() {
+//           delegate?.didLogin()
+//       }
 
     private func bindViewModel() {
         authViewModel.statusText.bind({ [self](statusText) in
@@ -100,12 +100,12 @@ class AuthorizationViewController: UIViewController {
 private extension AuthorizationViewController {
     
     @objc private func loginAction(_ sender: Any) {
-        guard let login = loginTextField.text, let password = passwordTextField.text, let rPassword = repeatPasswordTextField.text else {
+        guard let email = loginTextField.text, let password = passwordTextField.text, let rPassword = repeatPasswordTextField.text else {
             statusAuthLabel.text = "Error: Empty fields"
             return
         }
         
-        authViewModel.userLoginAction(login: login, password: password, repeatPassword: rPassword, state: isSignup) { [weak self] (success) in
+        authViewModel.userLoginAction(email: email, password: password, repeatPassword: rPassword, state: isSignup) { [weak self] (success) in
             guard success else { return }
             
             let mVC = MainTabBarViewController()
@@ -116,7 +116,6 @@ private extension AuthorizationViewController {
         }
     }
 
-    
     @objc
     private func changeAuthState(_ sender: Any) {
         authViewModel.changeAuthState()

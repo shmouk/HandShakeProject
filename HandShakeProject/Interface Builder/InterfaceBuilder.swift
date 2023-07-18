@@ -9,6 +9,16 @@ import UIKit
 
 class InterfaceBuilder {
     
+    func createNavBar() -> UINavigationBar {
+        let navBar = UINavigationBar()
+        navBar.translatesAutoresizingMaskIntoConstraints = false
+        navBar.barTintColor = .white
+        navBar.tintColor = .colorForText()
+        navBar.backgroundColor = .white
+        navBar.titleTextAttributes = [.foregroundColor: UIColor.black]
+        navBar.largeTitleTextAttributes = [.foregroundColor: UIColor.black]
+        return navBar
+    }
     func createView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -43,7 +53,7 @@ class InterfaceBuilder {
     func createLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .black
+        label.textColor = .colorForText()
         label.font = UIFont.boldSystemFont(ofSize: 24)
         label.textAlignment = .center
         return label

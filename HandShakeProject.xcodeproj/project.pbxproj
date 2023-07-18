@@ -29,6 +29,7 @@
 		ADACF2DB2A6186DF00550283 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ADACF2D92A6186DF00550283 /* LaunchScreen.storyboard */; };
 		ADDA9CA12A6579FD0008C481 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDA9CA02A6579FD0008C481 /* SceneDelegate.swift */; };
 		ADDBC56D2A6589BD004CD8E6 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDBC56C2A6589BD004CD8E6 /* Coordinator.swift */; };
+		ADDF7F1E2A66C89D009FE3C2 /* SetupNavigationTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDF7F1D2A66C89D009FE3C2 /* SetupNavigationTabBar.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +54,7 @@
 		ADACF2DC2A6186DF00550283 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ADDA9CA02A6579FD0008C481 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		ADDBC56C2A6589BD004CD8E6 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		ADDF7F1D2A66C89D009FE3C2 /* SetupNavigationTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupNavigationTabBar.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				AD13F63A2A61A85F007F5449 /* InterfaceBuilder.swift */,
+				ADDF7F1D2A66C89D009FE3C2 /* SetupNavigationTabBar.swift */,
 				AD13F6412A61B337007F5449 /* SetupConstraint.swift */,
 				AD13F63C2A61AABB007F5449 /* UIView + Extension.swift */,
 			);
@@ -241,6 +244,7 @@
 			files = (
 				ADDBC56D2A6589BD004CD8E6 /* Coordinator.swift in Sources */,
 				AD5C62E82A62ED8A0069A53F /* AnimateAuthView.swift in Sources */,
+				ADDF7F1E2A66C89D009FE3C2 /* SetupNavigationTabBar.swift in Sources */,
 				AD13F6382A61A6B0007F5449 /* AuthViewModel.swift in Sources */,
 				AD13F63B2A61A85F007F5449 /* InterfaceBuilder.swift in Sources */,
 				AD13F6422A61B337007F5449 /* SetupConstraint.swift in Sources */,

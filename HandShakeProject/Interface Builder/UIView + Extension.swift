@@ -77,5 +77,8 @@ extension UIColor {
     static func colorForView() -> UIColor {
         return #colorLiteral(red: 0.8823529412, green: 0.9019607843, blue: 0.937254902, alpha: 1)
     }
+    static func colorForText() -> UIColor {
+        return #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
+    }
 }
 // button  9CB9D1 tint CFDAEC view e1e6ef

@@ -1,13 +1,8 @@
-//
-//  MainTapBarViewController.swift
-//  HandShakeProject
-//
-//  Created by Марк on 14.07.23.
-//
-
 import UIKit
 
 class MainTabBarViewController: UITabBarController {
+    lazy var navBar = interfaceBuilder.createNavBar()
+    let interfaceBuilder = InterfaceBuilder()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,62 +13,73 @@ class MainTabBarViewController: UITabBarController {
         generateTabBar()
         addSubviews()
         setupViews()
+        setupConstraints()
+        updateNavItem()
     }
     
     private func setupViews() {
         delegate = self
+        
         setBarAppearanceUpdate()
     }
     
     private func addSubviews() {
-        let navBar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: view.frame.height / 9))
-        navBar.backgroundColor = .yellow
         view.addSubview(navBar)
     }
     
     private func generateTabBar() {
         let eventsViewController = EventsViewController()
+        eventsViewController.title = "Events"
+        eventsViewController.tabBarItem = UITabBarItem(title: "Events", image: UIImage(systemName: "note.text"), tag: 0)
+        
         let chatViewController = ChatViewController()
+        chatViewController.title = "Chats"
+        chatViewController.tabBarItem = UITabBarItem(title: "Chats", image: UIImage(systemName: "ellipsis.message"), tag: 1)
+        
         let teamViewController = TeamViewController()
+        teamViewController.title = "Team"
+        teamViewController.tabBarItem = UITabBarItem(title: "Team", image: UIImage(systemName: "person.3"), tag: 2)
+        
         let profileViewController = ProfileViewController()
-
+        profileViewController.title = "Profile"
+        profileViewController.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person.circle"), tag: 3)
+        
         viewControllers = [
             eventsViewController,
             chatViewController,
             teamViewController,
             profileViewController
         ]
-        
-        eventsViewController.tabBarItem = UITabBarItem(title: "Events", image: UIImage(systemName: "note.text"), tag: 0)
-        chatViewController.tabBarItem = UITabBarItem(title: "Chats", image: UIImage(systemName: "ellipsis.message"), tag: 1)
-        teamViewController.tabBarItem = UITabBarItem(title: "Team", image: UIImage(systemName: "person.3"), tag: 2)
-        profileViewController.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person.circle"), tag: 3)
-
-        setNavigationItem(for: eventsViewController, title: "Events", name: "bell.badge", isEvents: true)
-        setNavigationItem(for: chatViewController, title: "Chats",  isEvents: false)
-        setNavigationItem(for: teamViewController, title: "Teams", isEvents: false)
-        setNavigationItem(for: profileViewController, title: "Profile", isEvents: false)
     }
     
-    private func setNavigationItem(for vc: UIViewController, title: String, name: String = "bell.badge", isEvents: Bool) {
-        let image = UIImage(systemName: name)
-        vc.title = title
-        if isEvents {
-            let eventsButton = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(addEventsAction))
-            vc.navigationItem.leftBarButtonItem = eventsButton
+    private func updateNavItem() {
+        let selectedViewController = viewControllers?[selectedIndex]
+        let navItem = UINavigationItem(title: selectedViewController?.title ?? "")
+
+        let rightButton = UIBarButtonItem(image: UIImage(systemName: "bell"), style: .plain, target: self, action: #selector(openNotificationAction))
+        let leftButton = UIBarButtonItem(image: .add, style: .plain, target: self, action: #selector(addEventsAction))
+        
+        if selectedIndex == 0 {
+            navItem.leftBarButtonItem = leftButton
         }
-        let logoutButton = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(openNotificationAction))
-        vc.navigationItem.rightBarButtonItem = logoutButton
+        
+        navItem.rightBarButtonItem = rightButton
+        navBar.setItems([navItem], animated: false)
     }
     
     private func setBarAppearanceUpdate() {
         tabBar.backgroundColor = .white
         tabBar.barStyle = .default
-        tabBar.tintColor = .black
+        tabBar.tintColor = .colorForText()
         tabBar.itemPositioning = .fill
-        tabBar.barTintColor = .black
     }
+    
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        updateNavItem()
+    }
+    
 }
+
 extension MainTabBarViewController {
     @objc
     private func openNotificationAction(_ sender: Any) {
@@ -85,12 +91,16 @@ extension MainTabBarViewController {
         print(2)
     }
 }
+
 extension MainTabBarViewController: UITabBarControllerDelegate {
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
         guard let fromView = selectedViewController?.view, let toView = viewController.view else { return false }
+        
         if fromView != toView {
             UIView.transition(from: fromView, to: toView, duration: 0.5, options: [.transitionCrossDissolve], completion: nil)
         }
+        
         return true
     }
 }
+

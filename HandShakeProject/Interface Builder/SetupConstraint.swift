@@ -59,6 +59,19 @@ extension AuthorizationViewController {
     }
 }
 
+// MARK: - MainTabBarViewController Constraint
+
+extension MainTabBarViewController {
+    func setupConstraints() {
+
+            NSLayoutConstraint.activate([
+                navBar.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
+                navBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                navBar.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            ])
+    }
+}
+
 // MARK: - ProfileViewController Constraint
 
 extension ProfileViewController {
