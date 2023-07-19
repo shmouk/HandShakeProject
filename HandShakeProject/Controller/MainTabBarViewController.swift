@@ -1,7 +1,9 @@
 import UIKit
 
 class MainTabBarViewController: UITabBarController {
+    
     lazy var navBar = interfaceBuilder.createNavBar()
+    lazy var navBarContentView = interfaceBuilder.createView()
     let interfaceBuilder = InterfaceBuilder()
     
     override func viewDidLoad() {
@@ -19,7 +21,6 @@ class MainTabBarViewController: UITabBarController {
     
     private func setupViews() {
         delegate = self
-        
         setBarAppearanceUpdate()
     }
     
@@ -29,20 +30,21 @@ class MainTabBarViewController: UITabBarController {
     
     private func generateTabBar() {
         let eventsViewController = EventsViewController()
-        eventsViewController.title = "Events"
-        eventsViewController.tabBarItem = UITabBarItem(title: "Events", image: UIImage(systemName: "note.text"), tag: 0)
-        
         let chatViewController = ChatViewController()
-        chatViewController.title = "Chats"
-        chatViewController.tabBarItem = UITabBarItem(title: "Chats", image: UIImage(systemName: "ellipsis.message"), tag: 1)
-        
         let teamViewController = TeamViewController()
-        teamViewController.title = "Team"
-        teamViewController.tabBarItem = UITabBarItem(title: "Team", image: UIImage(systemName: "person.3"), tag: 2)
-        
         let profileViewController = ProfileViewController()
-        profileViewController.title = "Profile"
+        
+    
+        eventsViewController.tabBarItem = UITabBarItem(title: "Events", image: UIImage(systemName: "note.text"), tag: 0)
+        chatViewController.tabBarItem = UITabBarItem(title: "Chats", image: UIImage(systemName: "ellipsis.message"), tag: 1)
+        teamViewController.tabBarItem = UITabBarItem(title: "Team", image: UIImage(systemName: "person.3"), tag: 2)
         profileViewController.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person.circle"), tag: 3)
+    
+        eventsViewController.title = "Events"
+        chatViewController.title = "Chats"
+        teamViewController.title = "Team"
+        profileViewController.title = "Profile"
+       
         
         viewControllers = [
             eventsViewController,
@@ -55,14 +57,12 @@ class MainTabBarViewController: UITabBarController {
     private func updateNavItem() {
         let selectedViewController = viewControllers?[selectedIndex]
         let navItem = UINavigationItem(title: selectedViewController?.title ?? "")
-
         let rightButton = UIBarButtonItem(image: UIImage(systemName: "bell"), style: .plain, target: self, action: #selector(openNotificationAction))
         let leftButton = UIBarButtonItem(image: .add, style: .plain, target: self, action: #selector(addEventsAction))
         
         if selectedIndex == 0 {
             navItem.leftBarButtonItem = leftButton
         }
-        
         navItem.rightBarButtonItem = rightButton
         navBar.setItems([navItem], animated: false)
     }
@@ -70,7 +70,7 @@ class MainTabBarViewController: UITabBarController {
     private func setBarAppearanceUpdate() {
         tabBar.backgroundColor = .white
         tabBar.barStyle = .default
-        tabBar.tintColor = .colorForText()
+        tabBar.tintColor = .colorForTitleText()
         tabBar.itemPositioning = .fill
     }
     

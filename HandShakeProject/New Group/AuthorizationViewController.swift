@@ -16,7 +16,7 @@ class AuthorizationViewController: UIViewController {
     lazy var loginTextField = interfaceBuilder.createTextField()
     lazy var passwordTextField = interfaceBuilder.createTextField()
     lazy var repeatPasswordTextField = interfaceBuilder.createTextField()
-    lazy var statusAuthLabel = interfaceBuilder.createLabel()
+    lazy var statusAuthLabel = interfaceBuilder.createTitleLabel()
     lazy var loginButton = interfaceBuilder.createButton()
     lazy var authSegmentControl = interfaceBuilder.createSegmentControl(items: authState)
     
@@ -33,7 +33,6 @@ class AuthorizationViewController: UIViewController {
         super.viewDidLoad()
         setUI()
         bindViewModel()
-       
     }
     
 //    private func login() {
@@ -129,6 +128,7 @@ extension AuthorizationViewController: UITextFieldDelegate {
         repeatPasswordTextField.resignFirstResponder()
         return true
     }
+
 }
 
 

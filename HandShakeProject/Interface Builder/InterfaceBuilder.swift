@@ -13,7 +13,7 @@ class InterfaceBuilder {
         let navBar = UINavigationBar()
         navBar.translatesAutoresizingMaskIntoConstraints = false
         navBar.barTintColor = .white
-        navBar.tintColor = .colorForText()
+        navBar.tintColor = .colorForTitleText()
         navBar.backgroundColor = .white
         navBar.titleTextAttributes = [.foregroundColor: UIColor.black]
         navBar.largeTitleTextAttributes = [.foregroundColor: UIColor.black]
@@ -50,11 +50,28 @@ class InterfaceBuilder {
         return textField
     }
     
-    func createLabel() -> UILabel {
+    func createImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        return imageView
+    }
+    
+    func createTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .colorForText()
-        label.font = UIFont.boldSystemFont(ofSize: 24)
+        label.textColor = .colorForTitleText()
+        label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.textAlignment = .center
+        return label
+    }
+    
+    func createDescriptionLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .colorForDescriptionText()
+        label.font = UIFont.boldSystemFont(ofSize: 14)
         label.textAlignment = .center
         return label
     }

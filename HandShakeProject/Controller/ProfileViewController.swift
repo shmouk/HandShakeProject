@@ -10,8 +10,10 @@ import UIKit
 class ProfileViewController: UIViewController {
     
     lazy var logoutButton = interfaceBuilder.createButton()
-    let interfaceBuilder = InterfaceBuilder()
     
+    let interfaceBuilder = InterfaceBuilder()
+    lazy var authViewModel = AuthViewModel()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -39,6 +41,6 @@ private extension ProfileViewController {
     
     @objc
     private func logoutAction(_ sender: Any) {
-        AuthViewModel().userLogoutAction() 
+        authViewModel.userLogoutAction() 
     }
 }
