@@ -2,10 +2,6 @@ import UIKit
 
 class MainTabBarViewController: UITabBarController {
     
-    lazy var navBar = interfaceBuilder.createNavBar()
-    lazy var navBarContentView = interfaceBuilder.createView()
-    let interfaceBuilder = InterfaceBuilder()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
@@ -13,9 +9,7 @@ class MainTabBarViewController: UITabBarController {
     
     private func setUI() {
         generateTabBar()
-        addSubviews()
         setupViews()
-        setupConstraints()
         updateNavItem()
     }
     
@@ -24,27 +18,23 @@ class MainTabBarViewController: UITabBarController {
         setBarAppearanceUpdate()
     }
     
-    private func addSubviews() {
-        view.addSubview(navBar)
-    }
-    
     private func generateTabBar() {
         let eventsViewController = EventsViewController()
         let chatViewController = ChatViewController()
         let teamViewController = TeamViewController()
         let profileViewController = ProfileViewController()
         
-    
+        
         eventsViewController.tabBarItem = UITabBarItem(title: "Events", image: UIImage(systemName: "note.text"), tag: 0)
         chatViewController.tabBarItem = UITabBarItem(title: "Chats", image: UIImage(systemName: "ellipsis.message"), tag: 1)
         teamViewController.tabBarItem = UITabBarItem(title: "Team", image: UIImage(systemName: "person.3"), tag: 2)
         profileViewController.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person.circle"), tag: 3)
-    
+        
         eventsViewController.title = "Events"
         chatViewController.title = "Chats"
         teamViewController.title = "Team"
         profileViewController.title = "Profile"
-       
+        
         
         viewControllers = [
             eventsViewController,
@@ -58,13 +48,19 @@ class MainTabBarViewController: UITabBarController {
         let selectedViewController = viewControllers?[selectedIndex]
         let navItem = UINavigationItem(title: selectedViewController?.title ?? "")
         let rightButton = UIBarButtonItem(image: UIImage(systemName: "bell"), style: .plain, target: self, action: #selector(openNotificationAction))
-        let leftButton = UIBarButtonItem(image: .add, style: .plain, target: self, action: #selector(addEventsAction))
+        let leftButton = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(addEventsAction))
         
-        if selectedIndex == 0 {
+        if selectedIndex != 0 {
+            navItem.leftBarButtonItem = nil
+            self.navigationItem.setLeftBarButton(nil, animated: false)
+        } else {
             navItem.leftBarButtonItem = leftButton
+            self.navigationItem.setLeftBarButton(leftButton, animated: false)
         }
+        
         navItem.rightBarButtonItem = rightButton
-        navBar.setItems([navItem], animated: false)
+        self.navigationItem.setRightBarButton(rightButton, animated: false)
+        self.navigationItem.title = navItem.title
     }
     
     private func setBarAppearanceUpdate() {
@@ -88,7 +84,10 @@ extension MainTabBarViewController {
     
     @objc
     private func addEventsAction(_ sender: Any) {
-        print(2)
+        let eventVC = EventCreateViewController()
+        eventVC.modalPresentationStyle = .fullScreen
+        self.navigationController?.pushViewController(eventVC, animated: true)
+        //        present(eventVC, animated: true)
     }
 }
 

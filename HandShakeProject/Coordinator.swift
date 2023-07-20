@@ -16,10 +16,8 @@ class Coordinator {
                 
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.overrideUserInterfaceStyle = .light
-        
+        window?.rootViewController = UINavigationController(rootViewController: UIViewController())
         authStateListener()
-        
-        window?.rootViewController = UIViewController()
         window?.makeKeyAndVisible()
     }
     
@@ -29,7 +27,7 @@ class Coordinator {
         
         authVC.delegate = self
         
-        Auth.auth().addStateDidChangeListener { (auth, user) in
+        Auth.auth().addStateDidChangeListener { [self](auth, user) in
             if user == nil {
                 self.showViewController(authVC)
             }
@@ -40,7 +38,9 @@ class Coordinator {
     }
     
     private func showViewController(_ viewController: UIViewController) {
-        window?.rootViewController = viewController
+        let navVC = UINavigationController(rootViewController: viewController)
+        navVC.setupNavBarAppearance()
+        window?.rootViewController = navVC
     }
 }
 

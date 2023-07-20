@@ -18,6 +18,7 @@
 		AD33F4D52A6836C60028E919 /* ChatsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD33F4D42A6836C60028E919 /* ChatsTableViewCell.swift */; };
 		AD33F4D72A6837060028E919 /* TemplateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD33F4D62A6837060028E919 /* TemplateModel.swift */; };
 		AD33F4DA2A684C880028E919 /* EventCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD33F4D92A684C880028E919 /* EventCreateViewController.swift */; };
+		AD33F4DC2A695D6A0028E919 /* NavigationBar + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD33F4DB2A695D6A0028E919 /* NavigationBar + Extension.swift */; };
 		AD47E5B02A62D8CD0060DD3F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AD47E5AF2A62D8CD0060DD3F /* GoogleService-Info.plist */; };
 		AD5C62E22A62DE580069A53F /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = AD5C62E12A62DE580069A53F /* FirebaseAnalytics */; };
 		AD5C62E42A62DE580069A53F /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = AD5C62E32A62DE580069A53F /* FirebaseAuth */; };
@@ -47,6 +48,7 @@
 		AD33F4D42A6836C60028E919 /* ChatsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatsTableViewCell.swift; sourceTree = "<group>"; };
 		AD33F4D62A6837060028E919 /* TemplateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateModel.swift; sourceTree = "<group>"; };
 		AD33F4D92A684C880028E919 /* EventCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCreateViewController.swift; sourceTree = "<group>"; };
+		AD33F4DB2A695D6A0028E919 /* NavigationBar + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationBar + Extension.swift"; sourceTree = "<group>"; };
 		AD47E5AF2A62D8CD0060DD3F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		AD5C62E92A6310E20069A53F /* EventsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsViewController.swift; sourceTree = "<group>"; };
 		AD5C62EB2A6310F00069A53F /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
@@ -117,6 +119,7 @@
 				AD13F63A2A61A85F007F5449 /* InterfaceBuilder.swift */,
 				AD13F6412A61B337007F5449 /* SetupConstraint.swift */,
 				AD13F63C2A61AABB007F5449 /* UIView + Extension.swift */,
+				AD33F4DB2A695D6A0028E919 /* NavigationBar + Extension.swift */,
 			);
 			path = "Interface Builder";
 			sourceTree = "<group>";
@@ -271,6 +274,7 @@
 				ADACF2CF2A6186DB00550283 /* AppDelegate.swift in Sources */,
 				AD5C62EC2A6310F00069A53F /* ChatViewController.swift in Sources */,
 				AD13F6442A61E4F5007F5449 /* MainTabBarViewController.swift in Sources */,
+				AD33F4DC2A695D6A0028E919 /* NavigationBar + Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

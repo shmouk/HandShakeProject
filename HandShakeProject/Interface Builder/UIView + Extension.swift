@@ -15,48 +15,6 @@ extension UIView {
     }
 }
 
-extension UIView {
-    var cornerRadius: CGFloat {
-        get {
-            layer.cornerRadius
-        }
-    }
-    
-    var radius: CGFloat {
-        get {
-            layer.cornerRadius
-        }
-        
-        set {
-            makeRoundCorners(with: newValue)
-        }
-    }
-    
-    var diameter: CGFloat {
-        get {
-            self.layer.cornerRadius * 2
-        }
-        
-        set {
-            makeRoundCorners(with: newValue / 2)
-        }
-    }
-    
-    func makeRoundCorners(with radius: CGFloat = 30) {
-        layer.cornerRadius = min(radius, min(frame.width / 2 , frame.height / 2))
-        layer.masksToBounds = true
-    }
-    
-    func setShadow() {
-        layer.shadowColor = UIColor.black.cgColor
-        layer.shadowOpacity = 0.8
-        layer.shadowRadius = 8
-        layer.shadowOffset = .zero
-        layer.shouldRasterize = true
-        layer.rasterizationScale = UIScreen.main.scale
-    }
-}
-
 extension UIStackView {
     func addArrangedSubviews(_ views: UIView...) {
         views.forEach {

@@ -23,14 +23,14 @@ class InterfaceBuilder {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .colorForView()
-        view.makeRoundCorners()
+        view.layer.cornerRadius = 10
        return view
     }
     
     func createSegmentControl(items: [Any]?) -> UISegmentedControl {
         let viewSC = UISegmentedControl(items: items)
         viewSC.backgroundColor = .colorForView()
-        viewSC.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24)], for: .normal)
+        viewSC.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 18)], for: .normal)
         viewSC.selectedSegmentIndex = 0
         viewSC.translatesAutoresizingMaskIntoConstraints = false
         viewSC.layer.cornerRadius = 10
@@ -63,7 +63,7 @@ class InterfaceBuilder {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .colorForTitleText()
         label.font = UIFont.boldSystemFont(ofSize: 18)
-        label.textAlignment = .center
+        label.textAlignment = .left
         return label
     }
     
@@ -72,7 +72,7 @@ class InterfaceBuilder {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .colorForDescriptionText()
         label.font = UIFont.boldSystemFont(ofSize: 14)
-        label.textAlignment = .center
+        label.textAlignment = .left
         return label
     }
     
@@ -83,7 +83,19 @@ class InterfaceBuilder {
         button.layer.cornerRadius = 10
         button.layer.masksToBounds = true
         button.setTitleColor(.black, for: .normal)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 24)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
         return button
+    }
+    
+    func createTextView() -> UITextView {
+        let textView = UITextView()
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        textView.backgroundColor = .colorForView()
+        textView.textColor = .black
+        textView.layer.cornerRadius = 10
+        textView.font = UIFont.systemFont(ofSize: 14)
+        textView.textAlignment = .left
+        textView.text = "..."
+        return textView
     }
 }

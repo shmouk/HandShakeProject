@@ -34,7 +34,6 @@ class ChatViewController: UITableViewController {
     }
     private func setAppearanceTableView() {
         tableView.register(ChatsTableVeiwCell.self, forCellReuseIdentifier: cellId)
-        tableView.contentInset = UIEdgeInsets(top: 44, left: 0, bottom: 0, right: 0)
     }
 
     private func createFriendsArray() {

@@ -85,6 +85,7 @@ class AuthorizationViewController: UIViewController {
     }
     
     private func settingViews() {
+        self.navigationController?.isNavigationBarHidden = true
         view.backgroundColor = .white
     }
     
@@ -128,7 +129,6 @@ extension AuthorizationViewController: UITextFieldDelegate {
         repeatPasswordTextField.resignFirstResponder()
         return true
     }
-
 }
 
 
