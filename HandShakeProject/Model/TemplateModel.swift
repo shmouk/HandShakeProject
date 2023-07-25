@@ -9,5 +9,5 @@ import UIKit
 
 struct Template {
     var image: UIImage?
-    var nameLabel: String?
+    var nameLabel: String
 }

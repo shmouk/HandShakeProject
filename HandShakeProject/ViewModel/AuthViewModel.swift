@@ -5,34 +5,21 @@
 //  Created by Марк on 14.07.23.
 //
 
-import Foundation
+import UIKit
 import Firebase
 
 class AuthViewModel {
     
     var statusText = Bindable("")
     var signupBindable = Bindable(true)
-    
+    let database = SetupDatabase().setDatabase()
     let firebaseAuth = Auth.auth()
-    let ref = Database.database().reference()
+    let usersAPI = UsersAPI()
     
     func changeAuthState() {
         signupBindable.value = !signupBindable.value
     }
     
-    func writeToDatabase(uid: String, email: String) {
-        let userRef = Database.database(url: "https://handshake-project-ios-default-rtdb.europe-west1.firebasedatabase.app").reference().child("users").child(uid)
-        let userData = ["email": email]
-        
-        userRef.setValue(userData) { (error, databaseRef) in
-            if let error = error {
-                print("Error writing user to Firebase: \(error.localizedDescription)")
-            } else {
-                print("User data successfully written to Firebase")
-            }
-        }
-    }
-
     
     func userLoginAction(email: String, password: String, repeatPassword: String, state: Bool, completion: @escaping (Bool) -> Void) {
         guard !email.isEmpty, !password.isEmpty else {
@@ -52,7 +39,7 @@ class AuthViewModel {
                     return
                 }
                 
-                self?.writeToDatabase(uid: result?.user.uid ?? "", email: email)
+                self?.usersAPI.writeToDatabase(uid: result?.user.uid ?? "", email: email)
                 self?.statusText.value = "Success: User created"
                 completion(true)
             }

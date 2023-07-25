@@ -9,10 +9,17 @@ import UIKit
 
 class ProfileViewController: UIViewController {
     
-    lazy var logoutButton = interfaceBuilder.createButton()
     
+    lazy var logoutButton = interfaceBuilder.createButton()
+    lazy var friendsButton = interfaceBuilder.createButton()
+    lazy var editProfileButton = interfaceBuilder.createButton()
+    lazy var nameLabel = interfaceBuilder.createTitleLabel()
+    lazy var emailLabel = interfaceBuilder.createDescriptionLabel()
+    lazy var profileImageView = interfaceBuilder.createImageView()
+
     let interfaceBuilder = InterfaceBuilder()
     lazy var authViewModel = AuthViewModel()
+    lazy var usersAPI = UsersAPI()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,15 +29,41 @@ class ProfileViewController: UIViewController {
     
     private func setUI() {
         setSubviews()
+        settingTextLabel()
+        settingButton()
+        setImageView() 
         setupConstraints()
         setupTargets()
     }
     
     private func setSubviews() {
-        view.addSubviews(logoutButton)
+        view.addSubviews(profileImageView, editProfileButton, emailLabel, nameLabel, friendsButton, logoutButton)
     }
     
+    private func setImageView() {
+      usersAPI.loadImageFromFirebaseStorage(completion: { [self](image) in
+          profileImageView.image = image
+        })
+    }
+    
+    
+    private func settingTextLabel() {
+        usersAPI.currentUser(completion: { [self](dict) in
+            nameLabel.text = dict?["name"]
+            emailLabel.text = dict?["email"]
+        })
+        
+    }
+    
+    private func settingButton() {
+        editProfileButton.setImage(UIImage(systemName: "pencil.line"), for: .normal)
+        friendsButton.setTitle("Friends", for: .normal)
+        logoutButton.setTitle("Logout", for: .normal)
+    }
+    
+    
     private func setupTargets() {
+        editProfileButton.addTarget(self, action: #selector(editProfile), for: .touchUpInside)
         logoutButton.addTarget(self, action: #selector(logoutAction(_:)), for: .touchUpInside)
     }
 }
@@ -40,7 +73,13 @@ class ProfileViewController: UIViewController {
 private extension ProfileViewController {
     
     @objc
+    private func editProfile(_ sender: Any) {
+        selectProfileImageView()
+    }
+
+    @objc
     private func logoutAction(_ sender: Any) {
-        authViewModel.userLogoutAction() 
+        dismiss(animated: true)
+        authViewModel.userLogoutAction()
     }
 }

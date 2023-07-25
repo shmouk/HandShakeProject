@@ -1,9 +1,9 @@
 import UIKit
 
 class MainTabBarViewController: UITabBarController {
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    var friendAPI = UsersAPI()
+
+    override func viewDidAppear(_ animated: Bool) {
         setUI()
     }
     
@@ -79,7 +79,7 @@ class MainTabBarViewController: UITabBarController {
 extension MainTabBarViewController {
     @objc
     private func openNotificationAction(_ sender: Any) {
-        print(1)
+
     }
     
     @objc
@@ -87,7 +87,6 @@ extension MainTabBarViewController {
         let eventVC = EventCreateViewController()
         eventVC.modalPresentationStyle = .fullScreen
         self.navigationController?.pushViewController(eventVC, animated: true)
-        //        present(eventVC, animated: true)
     }
 }
 

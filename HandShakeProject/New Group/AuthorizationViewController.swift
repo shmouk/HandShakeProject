@@ -29,6 +29,7 @@ class AuthorizationViewController: UIViewController {
     
     var isSignup = true
     
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
@@ -100,7 +101,9 @@ class AuthorizationViewController: UIViewController {
 private extension AuthorizationViewController {
     
     @objc private func loginAction(_ sender: Any) {
-        guard let email = loginTextField.text, let password = passwordTextField.text, let rPassword = repeatPasswordTextField.text else {
+        guard let email = loginTextField.text,
+                let password = passwordTextField.text,
+                let rPassword = repeatPasswordTextField.text else {
             statusAuthLabel.text = "Error: Empty fields"
             return
         }

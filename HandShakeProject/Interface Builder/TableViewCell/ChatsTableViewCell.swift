@@ -3,14 +3,14 @@ import UIKit
 class ChatsTableVeiwCell : UITableViewCell {
     
     lazy var nameLabel = interfaceBuilder.createTitleLabel()
-    lazy var friendImageView = interfaceBuilder.createImageView()
+    lazy var userImageView = interfaceBuilder.createImageView()
     
     let interfaceBuilder = InterfaceBuilder()
     
-    var friend: Template? {
+    var user: User? {
         didSet {
-            friendImageView.image = friend?.image
-            nameLabel.text = friend?.nameLabel
+            userImageView.image = user?.image
+            nameLabel.text = user?.name
         }
     }
     
@@ -25,6 +25,6 @@ class ChatsTableVeiwCell : UITableViewCell {
     }
     
     private func setSubviews() {
-        contentView.addSubviews(friendImageView, nameLabel)
+        contentView.addSubviews(userImageView, nameLabel)
     }
 }

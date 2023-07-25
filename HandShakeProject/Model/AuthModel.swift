@@ -5,9 +5,10 @@
 //  Created by Марк on 14.07.23.
 //
 
-import Foundation
+import UIKit
 
-struct User {
-    var login: String?
-    var password: String?
+class User: NSObject {
+    @objc dynamic var name: String?
+    @objc dynamic var email: String?
+    var image: UIImage?
 }

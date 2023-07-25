@@ -181,20 +181,6 @@ extension EventCreateViewController {
     }
 }
 
-// MARK: - ProfileViewController Constraint
-
-extension ProfileViewController {
-    
-    func setupConstraints() {
-        
-        NSLayoutConstraint.activate([
-            logoutButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30),
-            logoutButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            logoutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-            logoutButton.heightAnchor.constraint(equalToConstant: view.frame.height / 12)
-        ])
-    }
-}
 
 // MARK: - EventTableViewCell Constraint
 
@@ -238,17 +224,69 @@ extension ChatsTableVeiwCell{
     func setupConstraints() {
         
         NSLayoutConstraint.activate([
-            friendImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            friendImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
-            friendImageView.topAnchor.constraint(equalTo: topAnchor, constant: 10),
-            friendImageView.widthAnchor.constraint(equalTo: friendImageView.heightAnchor)
+            userImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            userImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+            userImageView.topAnchor.constraint(equalTo: topAnchor, constant: 10),
+            userImageView.widthAnchor.constraint(equalTo: userImageView.heightAnchor)
         ])
         
         NSLayoutConstraint.activate([
             nameLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            nameLabel.leadingAnchor.constraint(equalTo: friendImageView.trailingAnchor, constant: 20),
+            nameLabel.leadingAnchor.constraint(equalTo: userImageView.trailingAnchor, constant: 20),
             nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -frame.width / 2),
-            nameLabel.heightAnchor.constraint(equalTo: friendImageView.heightAnchor)
+            nameLabel.heightAnchor.constraint(equalTo: userImageView.heightAnchor)
+        ])
+    }
+}
+
+// MARK: - ProfileViewController Constraint
+
+extension ProfileViewController {
+
+    func setupConstraints() {
+        
+        let heightForView = view.frame.height / 14
+
+        NSLayoutConstraint.activate([
+            profileImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 130),
+            profileImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            profileImageView.heightAnchor.constraint(equalToConstant: heightForView * 1.2),
+            profileImageView.widthAnchor.constraint(equalTo: profileImageView.heightAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            nameLabel.bottomAnchor.constraint(equalTo: profileImageView.centerYAnchor),
+            nameLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 30),
+            nameLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -100),
+            nameLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
+        ])
+        
+        NSLayoutConstraint.activate([
+            emailLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor),
+            emailLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 30),
+            emailLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -100),
+            emailLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
+        ])
+        
+        NSLayoutConstraint.activate([
+            editProfileButton.centerYAnchor.constraint(equalTo: profileImageView.centerYAnchor),
+            editProfileButton.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor, constant: 10),
+            editProfileButton.heightAnchor.constraint(equalToConstant: heightForView * 0.7),
+            editProfileButton.widthAnchor.constraint(equalTo: editProfileButton.heightAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            friendsButton.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 10),
+            friendsButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            friendsButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            friendsButton.heightAnchor.constraint(equalToConstant: heightForView)
+        ])
+        
+        NSLayoutConstraint.activate([
+            logoutButton.topAnchor.constraint(equalTo: friendsButton.bottomAnchor, constant: 30),
+            logoutButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            logoutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            logoutButton.heightAnchor.constraint(equalToConstant: heightForView)
         ])
     }
 }
