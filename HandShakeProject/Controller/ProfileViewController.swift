@@ -19,8 +19,8 @@ class ProfileViewController: UIViewController {
 
     let interfaceBuilder = InterfaceBuilder()
     lazy var authViewModel = AuthViewModel()
-    lazy var usersAPI = UsersAPI()
-
+    lazy var profileViewModel = ProfileViewModel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -29,30 +29,34 @@ class ProfileViewController: UIViewController {
     
     private func setUI() {
         setSubviews()
-        settingTextLabel()
         settingButton()
-        setImageView() 
         setupConstraints()
         setupTargets()
+        DispatchQueue.main.async { [self] in
+            bindViewModel()
+            setViews()
+        }
     }
     
     private func setSubviews() {
         view.addSubviews(profileImageView, editProfileButton, emailLabel, nameLabel, friendsButton, logoutButton)
     }
     
-    private func setImageView() {
-      usersAPI.loadImageFromFirebaseStorage(completion: { [self](image) in
-          profileImageView.image = image
-        })
+    private func setViews() {
+        profileViewModel.setImageView()
+        profileViewModel.setText()
     }
     
-    
-    private func settingTextLabel() {
-        usersAPI.currentUser(completion: { [self](dict) in
-            nameLabel.text = dict?["name"]
-            emailLabel.text = dict?["email"]
-        })
-        
+    private func bindViewModel() {
+        profileViewModel.nameText.bind { [self](nameText) in
+            nameLabel.text = nameText
+        }
+        profileViewModel.emailText.bind { [self](emailText) in
+            emailLabel.text = emailText
+        }
+        profileViewModel.profileImage.bind { [self](image) in
+            profileImageView.image = image
+        }
     }
     
     private func settingButton() {
@@ -65,12 +69,18 @@ class ProfileViewController: UIViewController {
     private func setupTargets() {
         editProfileButton.addTarget(self, action: #selector(editProfile), for: .touchUpInside)
         logoutButton.addTarget(self, action: #selector(logoutAction(_:)), for: .touchUpInside)
+        friendsButton.addTarget(self, action: #selector(openFriend(_:)), for: .touchUpInside)
     }
 }
 
 // MARK: - Action
 
 private extension ProfileViewController {
+    
+    @objc
+    private func openFriend(_ sender: Any) {
+//        setViews()
+    }
     
     @objc
     private func editProfile(_ sender: Any) {

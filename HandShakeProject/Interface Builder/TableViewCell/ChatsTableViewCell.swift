@@ -9,7 +9,7 @@ class ChatsTableVeiwCell : UITableViewCell {
     
     var user: User? {
         didSet {
-            userImageView.image = user?.image
+//            userImageView.image = user?.image
             nameLabel.text = user?.name
         }
     }

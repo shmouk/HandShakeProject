@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AD13F6362A61A5D4007F5449 /* AuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD13F6352A61A5D4007F5449 /* AuthModel.swift */; };
+		AD13F6362A61A5D4007F5449 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD13F6352A61A5D4007F5449 /* UserModel.swift */; };
 		AD13F6382A61A6B0007F5449 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD13F6372A61A6B0007F5449 /* AuthViewModel.swift */; };
 		AD13F63B2A61A85F007F5449 /* InterfaceBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD13F63A2A61A85F007F5449 /* InterfaceBuilder.swift */; };
 		AD13F63D2A61AABB007F5449 /* UIView + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD13F63C2A61AABB007F5449 /* UIView + Extension.swift */; };
@@ -35,13 +35,14 @@
 		ADACF2DB2A6186DF00550283 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ADACF2D92A6186DF00550283 /* LaunchScreen.storyboard */; };
 		ADBFBB0B2A7009D900666533 /* PickerProfileImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBFBB0A2A7009D900666533 /* PickerProfileImageView.swift */; };
 		ADBFBB0E2A70166100666533 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = ADBFBB0D2A70166100666533 /* FirebaseStorage */; };
+		ADBFBB102A71612D00666533 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBFBB0F2A71612D00666533 /* ProfileViewModel.swift */; };
 		ADDA9CA12A6579FD0008C481 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDA9CA02A6579FD0008C481 /* SceneDelegate.swift */; };
 		ADDBC56D2A6589BD004CD8E6 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDBC56C2A6589BD004CD8E6 /* Coordinator.swift */; };
 		ADDF7F202A6704FA009FE3C2 /* EventTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDF7F1F2A6704FA009FE3C2 /* EventTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		AD13F6352A61A5D4007F5449 /* AuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthModel.swift; sourceTree = "<group>"; };
+		AD13F6352A61A5D4007F5449 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		AD13F6372A61A6B0007F5449 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		AD13F63A2A61A85F007F5449 /* InterfaceBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceBuilder.swift; sourceTree = "<group>"; };
 		AD13F63C2A61AABB007F5449 /* UIView + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView + Extension.swift"; sourceTree = "<group>"; };
@@ -67,6 +68,7 @@
 		ADACF2DA2A6186DF00550283 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ADACF2DC2A6186DF00550283 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ADBFBB0A2A7009D900666533 /* PickerProfileImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerProfileImageView.swift; sourceTree = "<group>"; };
+		ADBFBB0F2A71612D00666533 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		ADDA9CA02A6579FD0008C481 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		ADDBC56C2A6589BD004CD8E6 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		ADDF7F1F2A6704FA009FE3C2 /* EventTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTableViewCell.swift; sourceTree = "<group>"; };
@@ -105,7 +107,8 @@
 		AD13F6332A61A59C007F5449 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				AD13F6352A61A5D4007F5449 /* AuthModel.swift */,
+				AD2F8BED2A6F014300743601 /* UsersAPI.swift */,
+				AD13F6352A61A5D4007F5449 /* UserModel.swift */,
 				AD33F4D22A682C320028E919 /* EventsModel.swift */,
 				AD33F4D62A6837060028E919 /* TemplateModel.swift */,
 				AD2F8BEF2A6F0C0400743601 /* SetupDatabase.swift */,
@@ -117,7 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				AD13F6372A61A6B0007F5449 /* AuthViewModel.swift */,
-				AD2F8BED2A6F014300743601 /* UsersAPI.swift */,
+				ADBFBB0F2A71612D00666533 /* ProfileViewModel.swift */,
 				AD13F6402A61AD2D007F5449 /* Bindable */,
 			);
 			path = ViewModel;
@@ -287,7 +290,8 @@
 				AD5C62F02A6311060069A53F /* ProfileViewController.swift in Sources */,
 				AD2F8BEE2A6F014300743601 /* UsersAPI.swift in Sources */,
 				ADACF2D32A6186DB00550283 /* AuthorizationViewController.swift in Sources */,
-				AD13F6362A61A5D4007F5449 /* AuthModel.swift in Sources */,
+				AD13F6362A61A5D4007F5449 /* UserModel.swift in Sources */,
+				ADBFBB102A71612D00666533 /* ProfileViewModel.swift in Sources */,
 				AD5C62EA2A6310E30069A53F /* EventsViewController.swift in Sources */,
 				AD2F8BF02A6F0C0500743601 /* SetupDatabase.swift in Sources */,
 				AD33F4D72A6837060028E919 /* TemplateModel.swift in Sources */,
