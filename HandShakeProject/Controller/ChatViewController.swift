@@ -11,9 +11,8 @@ import UIKit
 class ChatViewController: UITableViewController {
     
     let cellId = "cellId"
-    let usersAPI = UsersAPI()
+    lazy var usersAPI = UsersAPI()
     
-    lazy var users = usersAPI.users
     var refreshCntrl = UIRefreshControl()
     
     init() {
@@ -33,18 +32,24 @@ class ChatViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! ChatsTableVeiwCell
-        let user = users[indexPath.row]
+        let user = usersAPI.users[indexPath.row]
         cell.user = user
         return cell
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return users.count
+        return usersAPI.users.count
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         64
     }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+            let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
+            navigationController?.pushViewController(chatLogController, animated: true)
+        }
+    
     private func setAppearanceTableView() {
         tableView.register(ChatsTableVeiwCell.self, forCellReuseIdentifier: cellId)
         tableView.addSubviews(refreshCntrl)
@@ -58,7 +63,12 @@ class ChatViewController: UITableViewController {
 extension ChatViewController {
     @objc func handleRefresh(_ sender: UIRefreshControl) {
         tableView.reloadData()
-        print(1)
+
         refreshCntrl.endRefreshing()
     }
 }
+
+
+
+///= ChatLogController (collectionViewLayout: UICollectionViewFlowLayout)
+

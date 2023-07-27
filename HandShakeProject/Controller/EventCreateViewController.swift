@@ -147,7 +147,6 @@ extension EventCreateViewController: UITextViewDelegate {
         if newText.count > 100 {
             return false
         }
-        let numberOfLines = newText.components(separatedBy: .newlines).count
         if text == "\n" {
             descriptionTextView.resignFirstResponder()
             return false

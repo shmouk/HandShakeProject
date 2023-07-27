@@ -20,7 +20,8 @@ class ProfileViewController: UIViewController {
     let interfaceBuilder = InterfaceBuilder()
     lazy var authViewModel = AuthViewModel()
     lazy var profileViewModel = ProfileViewModel()
-    
+    lazy var usersAPI = UsersAPI()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white

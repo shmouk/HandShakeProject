@@ -36,6 +36,8 @@
 		ADBFBB0B2A7009D900666533 /* PickerProfileImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBFBB0A2A7009D900666533 /* PickerProfileImageView.swift */; };
 		ADBFBB0E2A70166100666533 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = ADBFBB0D2A70166100666533 /* FirebaseStorage */; };
 		ADBFBB102A71612D00666533 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBFBB0F2A71612D00666533 /* ProfileViewModel.swift */; };
+		ADBFBB142A72894C00666533 /* ChatLogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBFBB132A72894C00666533 /* ChatLogController.swift */; };
+		ADBFBB162A72917500666533 /* ChatAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBFBB152A72917500666533 /* ChatAPI.swift */; };
 		ADDA9CA12A6579FD0008C481 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDA9CA02A6579FD0008C481 /* SceneDelegate.swift */; };
 		ADDBC56D2A6589BD004CD8E6 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDBC56C2A6589BD004CD8E6 /* Coordinator.swift */; };
 		ADDF7F202A6704FA009FE3C2 /* EventTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDF7F1F2A6704FA009FE3C2 /* EventTableViewCell.swift */; };
@@ -69,6 +71,8 @@
 		ADACF2DC2A6186DF00550283 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ADBFBB0A2A7009D900666533 /* PickerProfileImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerProfileImageView.swift; sourceTree = "<group>"; };
 		ADBFBB0F2A71612D00666533 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
+		ADBFBB132A72894C00666533 /* ChatLogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogController.swift; sourceTree = "<group>"; };
+		ADBFBB152A72917500666533 /* ChatAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatAPI.swift; sourceTree = "<group>"; };
 		ADDA9CA02A6579FD0008C481 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		ADDBC56C2A6589BD004CD8E6 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		ADDF7F1F2A6704FA009FE3C2 /* EventTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTableViewCell.swift; sourceTree = "<group>"; };
@@ -97,6 +101,7 @@
 				AD5C62E92A6310E20069A53F /* EventsViewController.swift */,
 				AD33F4D92A684C880028E919 /* EventCreateViewController.swift */,
 				AD5C62EB2A6310F00069A53F /* ChatViewController.swift */,
+				ADBFBB132A72894C00666533 /* ChatLogController.swift */,
 				AD5C62ED2A6310FA0069A53F /* TeamViewController.swift */,
 				AD5C62EF2A6311060069A53F /* ProfileViewController.swift */,
 				ADBFBB0A2A7009D900666533 /* PickerProfileImageView.swift */,
@@ -108,6 +113,7 @@
 			isa = PBXGroup;
 			children = (
 				AD2F8BED2A6F014300743601 /* UsersAPI.swift */,
+				ADBFBB152A72917500666533 /* ChatAPI.swift */,
 				AD13F6352A61A5D4007F5449 /* UserModel.swift */,
 				AD33F4D22A682C320028E919 /* EventsModel.swift */,
 				AD33F4D62A6837060028E919 /* TemplateModel.swift */,
@@ -299,8 +305,10 @@
 				AD13F63D2A61AABB007F5449 /* UIView + Extension.swift in Sources */,
 				ADACF2CF2A6186DB00550283 /* AppDelegate.swift in Sources */,
 				AD5C62EC2A6310F00069A53F /* ChatViewController.swift in Sources */,
+				ADBFBB162A72917500666533 /* ChatAPI.swift in Sources */,
 				ADBFBB0B2A7009D900666533 /* PickerProfileImageView.swift in Sources */,
 				AD13F6442A61E4F5007F5449 /* MainTabBarViewController.swift in Sources */,
+				ADBFBB142A72894C00666533 /* ChatLogController.swift in Sources */,
 				AD33F4DC2A695D6A0028E919 /* NavigationBar + Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

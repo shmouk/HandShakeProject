@@ -30,26 +30,46 @@ class UsersAPI {
             }
             
             downloadImage(from: imageUrl) { result in
-                switch result {
-                case .success(let image):
-                    let user = User(uid: uid, email: email, name: name, image: image)
-                    completion(.success(user))
-                case .failure(let error):
-                    completion(.failure(error))
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let image):
+                        let user = User(email: email, name: name, image: image)
+                        completion(.success(user))
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
                 }
             }
         }
     }
     
     func fetchUser() {
-        database.child("users").observe(.childAdded) { [weak self](snapshot) in
-            guard let self = self else { return }
-            if let dictionary = snapshot.value as? [String: AnyObject] {
-                let user = User()
-                user.setValuesForKeys(dictionary)
-                self.users.append(user)
+        database.child("users").observe(.childAdded) { [weak self] (snapshot) in
+            guard let userDict = snapshot.value as? [String: Any],
+                  let imageUrlString = userDict["downloadURL"] as? String,
+                  let imageUrl = URL(string: imageUrlString) else {
+                return
+            }
+            
+            self?.downloadImage(from: imageUrl) { [weak self] result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let image):
+                        let user = User(image: image)
+                        user.setValuesForKeys(userDict)
+                        self?.addUser(user)
+                        print("Success load image")
+                        
+                    case .failure(let error):
+                        print(error)
+                    }
+                }
             }
         }
+    }
+    
+    func addUser(_ user: User) {
+        self.users.append(user)
     }
     
     func uploadImageToFirebaseStorage(image: UIImage, completion: @escaping (Result<URL, Error>) -> Void) {
@@ -159,7 +179,7 @@ class UsersAPI {
         let userRef = database.child("users").child(uid)
         
         downloadDefaultImageString { [weak self] (result) in
-            guard let self = self else { return }
+            guard self != nil else { return }
             
             switch result {
             case .success(let string):
@@ -171,6 +191,7 @@ class UsersAPI {
                         print("Data written successfully to database")
                     }
                 }
+                
             case .failure(let error):
                 print("Error downloading default image URL: \(error.localizedDescription)")
             }

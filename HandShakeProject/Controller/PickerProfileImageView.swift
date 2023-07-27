@@ -21,7 +21,6 @@ extension ProfileViewController: UIImagePickerControllerDelegate {
 
         if let selectedImage = selectedImageFromPicker {
             profileImageView.image = selectedImage
-            let usersAPI = UsersAPI()
             usersAPI.uploadImageToFirebaseStorage(image: selectedImage, completion: { result in
                 
             })

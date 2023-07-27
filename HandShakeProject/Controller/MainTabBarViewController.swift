@@ -1,7 +1,6 @@
 import UIKit
 
 class MainTabBarViewController: UITabBarController {
-    var friendAPI = UsersAPI()
 
     override func viewDidAppear(_ animated: Bool) {
         setUI()

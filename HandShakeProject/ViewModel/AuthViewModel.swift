@@ -1,33 +1,23 @@
-//
-//  AuthViewModel.swift
-//  HandShakeProject
-//
-//  Created by Марк on 14.07.23.
-//
-
-import UIKit
 import Firebase
 
 class AuthViewModel {
     
     var statusText = Bindable("")
-    var signupBindable = Bindable(true)
-    let database = SetupDatabase().setDatabase()
-    let firebaseAuth = Auth.auth()
-    let usersAPI = UsersAPI()
+    var isSigningUp = Bindable(true)
+    lazy var  firebaseAuth = Auth.auth()
+    lazy var usersAPI = UsersAPI()
     
-    func changeAuthState() {
-        signupBindable.value = !signupBindable.value
+    func toggleAuthState() {
+        isSigningUp.value = !isSigningUp.value
     }
     
-    
-    func userLoginAction(email: String, password: String, repeatPassword: String, state: Bool, completion: @escaping (Bool) -> Void) {
+    func userLoginAction(email: String, password: String, repeatPassword: String, completion: @escaping (Bool) -> Void) {
         guard !email.isEmpty, !password.isEmpty else {
             statusText.value = "Error: Empty fields"
             return
         }
         
-        if state {
+        if isSigningUp.value {
             guard password == repeatPassword else {
                 statusText.value = "Error: Passwords do not match"
                 return
@@ -55,14 +45,12 @@ class AuthViewModel {
             }
         }
     }
-
     
     func userLogoutAction() {
-            do {
-                try firebaseAuth.signOut()
-                statusText.value = "" 
-            } catch let signOutError as NSError {
-                print("Error signing out: %@", signOutError)
-            }
+        do {
+            try firebaseAuth.signOut()
+        } catch let signOutError as NSError {
+            print("Error signing out: %@", signOutError)
+        }
     }
 }

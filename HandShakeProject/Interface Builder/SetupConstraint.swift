@@ -239,6 +239,35 @@ extension ChatsTableVeiwCell{
     }
 }
 
+// MARK: - ChatLogController Constraint
+
+extension ChatLogController {
+    
+    func setupConstraints() {
+        
+        NSLayoutConstraint.activate([
+            containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            containerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            containerView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1/14)
+        ])
+
+        NSLayoutConstraint.activate([
+            sendButton.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 10),
+            sendButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10),
+            sendButton.widthAnchor.constraint(equalToConstant: 80),
+            sendButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -10)
+        ])
+        
+        NSLayoutConstraint.activate([
+            textField.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 10),
+            textField.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 50),
+            textField.trailingAnchor.constraint(equalTo: sendButton.leadingAnchor, constant: -10),
+            textField.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -10),
+        ])
+    }
+}
+
 // MARK: - ProfileViewController Constraint
 
 extension ProfileViewController {

@@ -23,7 +23,7 @@ class AuthorizationViewController: UIViewController {
     weak var delegate: AuthorizationViewControllerDelegate?
 
     let interfaceBuilder = InterfaceBuilder()
-    var authViewModel = AuthViewModel()
+    lazy var authViewModel = AuthViewModel()
     
     let authState = ["Sign up", "Log in"]
     
@@ -44,7 +44,7 @@ class AuthorizationViewController: UIViewController {
         authViewModel.statusText.bind({ [self](statusText) in
                 statusAuthLabel.text = statusText
         })
-        authViewModel.signupBindable.bind({ [self](signup) in
+        authViewModel.isSigningUp.bind({ [self](signup) in
                 isSignup = signup
                 settingButton(title: signup ? authState.first ?? "" : authState.last ?? "")
                 repeatPasswordTextField.isHidden = !signup
@@ -108,7 +108,7 @@ private extension AuthorizationViewController {
             return
         }
         
-        authViewModel.userLoginAction(email: email, password: password, repeatPassword: rPassword, state: isSignup) { [weak self] (success) in
+        authViewModel.userLoginAction(email: email, password: password, repeatPassword: rPassword, completion: { [weak self] (success) in
             guard success else { return }
             
             let mVC = MainTabBarViewController()
@@ -116,12 +116,12 @@ private extension AuthorizationViewController {
                 mVC.modalPresentationStyle = .fullScreen
                 self?.navigationController?.pushViewController(mVC, animated: true)
             })
-        }
+        })
     }
 
     @objc
     private func changeAuthState(_ sender: Any) {
-        authViewModel.changeAuthState()
+        authViewModel.toggleAuthState()
     }
 }
 
