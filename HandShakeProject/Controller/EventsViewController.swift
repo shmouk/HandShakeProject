@@ -14,6 +14,10 @@ class EventsViewController: UIViewController {
         super.viewDidLoad()
     }
     
+    deinit {
+        print("1")
+    }
+    
     @objc
     private func addEventsAction(_ sender: Any) {
         print(1)

@@ -16,12 +16,25 @@ class ProfileViewController: UIViewController {
     lazy var nameLabel = interfaceBuilder.createTitleLabel()
     lazy var emailLabel = interfaceBuilder.createDescriptionLabel()
     lazy var profileImageView = interfaceBuilder.createImageView()
-
+    
     let interfaceBuilder = InterfaceBuilder()
     lazy var authViewModel = AuthViewModel()
     lazy var profileViewModel = ProfileViewModel()
     lazy var usersAPI = UsersAPI()
-
+    
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        bindViewModel()
+    }
+    deinit {
+        print("4")
+    }
+    
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -33,10 +46,7 @@ class ProfileViewController: UIViewController {
         settingButton()
         setupConstraints()
         setupTargets()
-        DispatchQueue.main.async { [self] in
-            bindViewModel()
-            setViews()
-        }
+        setViews()
     }
     
     private func setSubviews() {
@@ -80,17 +90,18 @@ private extension ProfileViewController {
     
     @objc
     private func openFriend(_ sender: Any) {
-//        setViews()
+        //        setViews()
     }
     
     @objc
     private func editProfile(_ sender: Any) {
         selectProfileImageView()
     }
-
+    
     @objc
     private func logoutAction(_ sender: Any) {
-        dismiss(animated: true)
-        authViewModel.userLogoutAction()
+        dismiss(animated: true) { [self] in
+            authViewModel.userLogoutAction()
+        }
     }
 }

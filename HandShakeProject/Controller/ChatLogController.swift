@@ -18,6 +18,15 @@ class ChatLogController: UICollectionViewController {
     
     let interfaceBuilder = InterfaceBuilder()
     lazy var chatAPI = ChatAPI()
+    lazy var chatViewModel = ChatViewModel()
+    var chatViewController: ChatViewController?
+
+    
+    var user: User? {
+        didSet {
+            navigationItem.title = user?.name
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,7 +35,7 @@ class ChatLogController: UICollectionViewController {
     }
     
     private func setUI() {
-        updateNavItem()
+        bindViewModel()
         setSubviews()
         setupConstraints()
         settingTextField()
@@ -55,10 +64,8 @@ class ChatLogController: UICollectionViewController {
         
     }
     
-    private func updateNavItem() {
-        
-        let navItem = UINavigationItem(title: "Messenger")
-        self.navigationItem.title = navItem.title
+    private func bindViewModel() {
+
     }
     
     private func setInputComponents() {

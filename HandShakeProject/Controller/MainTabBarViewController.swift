@@ -2,8 +2,13 @@ import UIKit
 
 class MainTabBarViewController: UITabBarController {
 
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewDidLoad() {
+        super.viewDidLoad()
         setUI()
+    }
+    
+    deinit {
+        print("0")
     }
     
     private func setUI() {

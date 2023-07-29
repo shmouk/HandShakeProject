@@ -15,61 +15,65 @@ class UsersAPI {
     
     func currentUser(completion: @escaping (Result<User, Error>) -> Void) {
         guard let uid = Auth.auth().currentUser?.uid else {
-            completion(.failure(NSError(domain: "Current user is not authenticated", code: 401, userInfo: nil)))
+            let error = NSError(domain: "Current user is not authenticated", code: 401, userInfo: nil)
+            completion(.failure(error))
             return
         }
         
-        database.child("users").child(uid).observeSingleEvent(of: .value) { [self] snapshot in
-            guard let userDict = snapshot.value as? [String: Any],
-                  let email = userDict["email"] as? String,
-                  let name = userDict["name"] as? String,
-                  let imageUrlString = userDict["downloadURL"] as? String,
-                  let imageUrl = URL(string: imageUrlString) else {
-                completion(.failure(NSError(domain: "Invalid user data", code: 400, userInfo: nil)))
+        let userRef = database.child("users").child(uid)
+        userRef.observeSingleEvent(of: .value) { [weak self] snapshot in
+            guard let userDict = snapshot.value as? [String: Any] else {
+                let error = NSError(domain: "Invalid user data", code: 400, userInfo: nil)
+                completion(.failure(error))
                 return
             }
             
-            downloadImage(from: imageUrl) { result in
-                DispatchQueue.main.async {
-                    switch result {
-                    case .success(let image):
-                        let user = User(email: email, name: name, image: image)
-                        completion(.success(user))
-                    case .failure(let error):
-                        completion(.failure(error))
+            if let email = userDict["email"] as? String,
+               let name = userDict["name"] as? String,
+               let imageUrlString = userDict["downloadURL"] as? String,
+               let imageUrl = URL(string: imageUrlString) {
+                self?.downloadImage(from: imageUrl) { result in
+                    DispatchQueue.main.async {
+                        switch result {
+                        case .success(let image):
+                            let user = User(email: email, name: name, image: image)
+                            completion(.success(user))
+                        case .failure(let error):
+                            completion(.failure(error))
+                        }
                     }
                 }
+            } else {
+                let error = NSError(domain: "Invalid user data", code: 400, userInfo: nil)
+                completion(.failure(error))
             }
         }
     }
-    
+
     func fetchUser() {
-        database.child("users").observe(.childAdded) { [weak self] (snapshot) in
-            guard let userDict = snapshot.value as? [String: Any],
-                  let imageUrlString = userDict["downloadURL"] as? String,
-                  let imageUrl = URL(string: imageUrlString) else {
+        database.child("users").observe(.childAdded) { [weak self] snapshot in
+            guard let userDict = snapshot.value as? [String: Any] else {
                 return
             }
             
-            self?.downloadImage(from: imageUrl) { [weak self] result in
-                DispatchQueue.main.async {
-                    switch result {
-                    case .success(let image):
-                        let user = User(image: image)
-                        user.setValuesForKeys(userDict)
-                        self?.addUser(user)
-                        print("Success load image")
-                        
-                    case .failure(let error):
-                        print(error)
+            if let imageUrlString = userDict["downloadURL"] as? String,
+               let imageUrl = URL(string: imageUrlString) {
+                self?.downloadImage(from: imageUrl) { [weak self] result in
+                    DispatchQueue.main.async {
+                        switch result {
+                        case .success(let image):
+                            let user = User(image: image)
+                            user.setValuesForKeys(userDict)
+                            self?.users.append(user)
+                            print("Success load image")
+                            
+                        case .failure(let error):
+                            print(error)
+                        }
                     }
                 }
             }
         }
-    }
-    
-    func addUser(_ user: User) {
-        self.users.append(user)
     }
     
     func uploadImageToFirebaseStorage(image: UIImage, completion: @escaping (Result<URL, Error>) -> Void) {

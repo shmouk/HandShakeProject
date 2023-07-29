@@ -12,4 +12,7 @@ class TeamViewController: UIViewController {
         view.backgroundColor = .red
         super.viewDidLoad()
     }
+    deinit {
+        print("3")
+    }
 }
