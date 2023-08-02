@@ -11,10 +11,10 @@ import Firebase
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
+    let coordinator = Coordinator()
+
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
-
-        let coordinator = Coordinator()
         coordinator.start()
         
         return true

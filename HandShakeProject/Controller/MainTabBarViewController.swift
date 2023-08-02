@@ -14,7 +14,6 @@ class MainTabBarViewController: UITabBarController {
     private func setUI() {
         generateTabBar()
         setupViews()
-        updateNavItem()
     }
     
     private func setupViews() {
@@ -41,41 +40,19 @@ class MainTabBarViewController: UITabBarController {
         
         
         viewControllers = [
-            eventsViewController,
-            chatViewController,
-            teamViewController,
-            profileViewController
-        ]
+                    UINavigationController(rootViewController: eventsViewController),
+                    UINavigationController(rootViewController: chatViewController),
+                    UINavigationController(rootViewController: teamViewController),
+                    UINavigationController(rootViewController: profileViewController)
+                ]
     }
     
-    private func updateNavItem() {
-        let selectedViewController = viewControllers?[selectedIndex]
-        let navItem = UINavigationItem(title: selectedViewController?.title ?? "")
-        let rightButton = UIBarButtonItem(image: UIImage(systemName: "bell"), style: .plain, target: self, action: #selector(openNotificationAction))
-        let leftButton = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(addEventsAction))
-        
-        if selectedIndex != 0 {
-            navItem.leftBarButtonItem = nil
-            self.navigationItem.setLeftBarButton(nil, animated: false)
-        } else {
-            navItem.leftBarButtonItem = leftButton
-            self.navigationItem.setLeftBarButton(leftButton, animated: false)
-        }
-        
-        navItem.rightBarButtonItem = rightButton
-        self.navigationItem.setRightBarButton(rightButton, animated: false)
-        self.navigationItem.title = navItem.title
-    }
-    
+
     private func setBarAppearanceUpdate() {
         tabBar.backgroundColor = .white
         tabBar.barStyle = .default
         tabBar.tintColor = .colorForTitleText()
         tabBar.itemPositioning = .fill
-    }
-    
-    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
-        updateNavItem()
     }
     
 }
@@ -96,12 +73,7 @@ extension MainTabBarViewController {
 
 extension MainTabBarViewController: UITabBarControllerDelegate {
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
-        guard let fromView = selectedViewController?.view, let toView = viewController.view else { return false }
-        
-        if fromView != toView {
-            UIView.transition(from: fromView, to: toView, duration: 0.5, options: [.transitionCrossDissolve], completion: nil)
-        }
-        
+
         return true
     }
 }

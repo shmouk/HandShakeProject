@@ -12,42 +12,26 @@ class Coordinator {
     
     var window: UIWindow?
     
+    private let authVC = AuthorizationViewController()
+    
     func start() {
                 
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.overrideUserInterfaceStyle = .light
-        window?.rootViewController = UINavigationController(rootViewController: UIViewController())
-        authStateListener()
+        authVC.delegate = self
+        window?.rootViewController = UINavigationController(rootViewController: authVC)
         window?.makeKeyAndVisible()
     }
     
-    private func authStateListener() {
-        let authVC = AuthorizationViewController()
+    private func showViewController() {
         let mainVC = MainTabBarViewController()
-        
-        authVC.delegate = self
-        
-        Auth.auth().addStateDidChangeListener { [self](auth, user) in
-            if user == nil {
-                self.showViewController(authVC)
-            }
-            else {
-                self.showViewController(mainVC)
-            }
-        }
-    }
-    
-    private func showViewController(_ viewController: UIViewController) {
-        let navVC = UINavigationController(rootViewController: viewController)
-        navVC.setupNavBarAppearance()
-        window?.rootViewController = navVC
+        authVC.navigationController?.pushViewController(mainVC, animated: true)
     }
 }
 
 extension Coordinator: AuthorizationViewControllerDelegate {
     func didLogin() {
-        let mainVC = MainTabBarViewController()
-        showViewController(mainVC)
+        showViewController()
     }
 }
 

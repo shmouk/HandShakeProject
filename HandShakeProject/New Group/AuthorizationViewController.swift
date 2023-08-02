@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 protocol AuthorizationViewControllerDelegate: AnyObject {
     func didLogin()
@@ -29,16 +30,24 @@ class AuthorizationViewController: UIViewController {
     
     var isSignup = true
     
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
         bindViewModel()
+        authStateListener()
     }
     
-//    private func login() {
-//           delegate?.didLogin()
-//       }
+    private func authStateListener() {
+        Auth.auth().addStateDidChangeListener { [self](auth, user) in
+            if user == nil {
+                self.navigationController?.popToRootViewController(animated: false)
+            }
+            else {
+                delegate?.didLogin()
+            }
+        }
+    }
 
     private func bindViewModel() {
         authViewModel.statusText.bind({ [self](statusText) in
@@ -110,12 +119,7 @@ private extension AuthorizationViewController {
         
         authViewModel.userLoginAction(email: email, password: password, repeatPassword: rPassword, completion: { [weak self] (success) in
             guard success else { return }
-            
-            let mVC = MainTabBarViewController()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
-                mVC.modalPresentationStyle = .fullScreen
-                self?.navigationController?.pushViewController(mVC, animated: true)
-            })
+        
         })
     }
 

@@ -100,8 +100,6 @@ private extension ProfileViewController {
     
     @objc
     private func logoutAction(_ sender: Any) {
-        dismiss(animated: true) { [self] in
-            authViewModel.userLogoutAction()
-        }
+        authViewModel.userLogoutAction()
     }
 }

@@ -8,18 +8,26 @@
 import Foundation
 import UIKit
 
+protocol ChatViewControllerDelegate: AnyObject {
+    func openChatWithChoosenUser(user: User)
+}
+
 class ChatViewController: UITableViewController {
     
+    let navigationBarManager = NavigationBarManager()
     let cellId = "cellId"
+    
     lazy var usersAPI = UsersAPI()
     var refreshCntrl = UIRefreshControl()
-    var chatLogController: ChatLogController?
+    var usersListTableViewController = UsersListTableViewController()
+    weak var chatLogController: ChatLogController?
     
     init() {
         super.init(style: .plain)
-        usersAPI.fetchUser()
+//        usersAPI.fetchUser()
+        usersListTableViewController.delegate = self
         tableView.register(ChatsTableVeiwCell.self, forCellReuseIdentifier: cellId)
-
+        
     }
     
     required init?(coder: NSCoder) {
@@ -30,6 +38,11 @@ class ChatViewController: UITableViewController {
         print("2")
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setupNavBarManager()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setSubviews()
@@ -37,11 +50,11 @@ class ChatViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? ChatsTableVeiwCell else { return UITableViewCell() }
-            let user = usersAPI.users[indexPath.row]
-            cell.user = user
-            return cell
-        }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? ChatsTableVeiwCell else { return UITableViewCell() }
+        let user = usersAPI.users[indexPath.row]
+        cell.user = user
+        return cell
+    }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return usersAPI.users.count
@@ -53,17 +66,14 @@ class ChatViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let user = self.usersAPI.users[indexPath.row]
-        showChatControllerForUser(user: user)
-      
-        }
-    
-    private func showChatControllerForUser(user: User) {
-    
-        let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
-        chatLogController.chatViewController = self
-        chatLogController.user = user
-        navigationController?.pushViewController(chatLogController, animated: true)
     }
+    
+    private func setupNavBarManager() {
+        navigationBarManager.delegate = self
+        navigationBarManager.updateNavigationBar(for: self, isAddButtonNeeded: true)
+    }
+    
+
     
     private func setSubviews() {
         tableView.addSubviews(refreshCntrl)
@@ -77,12 +87,31 @@ class ChatViewController: UITableViewController {
 extension ChatViewController {
     @objc func handleRefresh(_ sender: UIRefreshControl) {
         tableView.reloadData()
-
+        
         refreshCntrl.endRefreshing()
     }
 }
 
+extension ChatViewController: ChatViewControllerDelegate {
+    func openChatWithChoosenUser(user: User) {
+        let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
+        chatLogController.user = user
+        navigationController?.pushViewController(chatLogController, animated: true)
+    }
+}
 
-
-///= ChatLogController (collectionViewLayout: UICollectionViewFlowLayout)
+extension ChatViewController: NavigationBarManagerDelegate {
+    
+    func didTapNotificationButton() {
+        
+    }
+    
+    func didTapAddEventsButton() {
+        let usersListTableViewController = UsersListTableViewController()
+//        navigationController?.pushViewController(usersListTableViewController, animated: true)
+        usersListTableViewController.modalPresentationStyle = .fullScreen
+        present(usersListTableViewController, animated: true)
+        
+    }
+}
 
