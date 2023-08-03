@@ -2,20 +2,28 @@
 import Foundation
 import UIKit
 
+protocol UsersListTableViewControllerDelegate: AnyObject {
+    func openChatWithChoosenUser(with user: User)
+}
+
 class UsersListTableViewController: UITableViewController {
     
-    weak var delegate: ChatViewControllerDelegate?
-
     let cellId = "cellId"
+
+    lazy var usersAPI = UsersAPI()
+    weak var delegate: UsersListTableViewControllerDelegate?
     
-    var usersAPI = UsersAPI()
     var refreshCntrl = UIRefreshControl()
     
     init() {
         super.init(style: .plain)
-        usersAPI.fetchUser()
-        tableView.register(ChatsTableVeiwCell.self, forCellReuseIdentifier: cellId)
-
+        loadData()
+    }
+    
+    func loadData() {
+        usersAPI.fetchUser(completion: { [weak self]_ in
+                self?.tableView.reloadData()
+        })
     }
     
     required init?(coder: NSCoder) {
@@ -23,25 +31,22 @@ class UsersListTableViewController: UITableViewController {
     }
     
     deinit {
-        print("2")
+        print("close users")
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
+        
         setSubviews()
         setupTargets()
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? ChatsTableVeiwCell else { return UITableViewCell() }
-            let user = usersAPI.users[indexPath.row]
-            cell.user = user
-            return cell
-        }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? UsersTableViewCell else { return UITableViewCell() }
+        let user = usersAPI.users[indexPath.row]
+        cell.user = user
+        return cell
+    }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return usersAPI.users.count
@@ -53,24 +58,25 @@ class UsersListTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let user = self.usersAPI.users[indexPath.row]
-        delegate?.openChatWithChoosenUser(user: user)
+        dismiss(animated: true) { [self] in
+            delegate?.openChatWithChoosenUser(with: user)
+        }
     }
-
-    
-    
     private func setSubviews() {
+        tableView.register(UsersTableViewCell.self, forCellReuseIdentifier: cellId)
         tableView.addSubviews(refreshCntrl)
     }
     
     private func setupTargets() {
         refreshCntrl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
     }
+    
 }
 
 extension UsersListTableViewController {
     @objc func handleRefresh(_ sender: UIRefreshControl) {
         tableView.reloadData()
-
+        
         refreshCntrl.endRefreshing()
     }
 }

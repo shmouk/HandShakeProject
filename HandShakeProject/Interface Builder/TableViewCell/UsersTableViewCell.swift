@@ -1,6 +1,6 @@
 import UIKit
 
-class ChatsTableVeiwCell : UITableViewCell {
+class UsersTableViewCell : UITableViewCell {
     
     lazy var nameLabel = interfaceBuilder.createTitleLabel()
     lazy var userImageView = interfaceBuilder.createImageView()

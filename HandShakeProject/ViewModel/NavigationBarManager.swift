@@ -9,7 +9,7 @@ import UIKit
 
 protocol NavigationBarManagerDelegate: AnyObject {
     func didTapNotificationButton()
-    func didTapAddEventsButton()
+    func didTapAddButton()
 }
 
 class NavigationBarManager {
@@ -43,7 +43,7 @@ class NavigationBarManager {
     }
     
     @objc func handleAddEventsButton() {
-        delegate?.didTapAddEventsButton()
+        delegate?.didTapAddButton()
     }
 }
 

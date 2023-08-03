@@ -32,7 +32,7 @@ extension EventsViewController: NavigationBarManagerDelegate {
           navigationController?.pushViewController(eventCreateViewController, animated: true)
       }
       
-      func didTapAddEventsButton() {
+      func didTapAddButton() {
           // Handle add events button tap here
       }
 

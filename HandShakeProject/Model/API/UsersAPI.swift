@@ -49,25 +49,28 @@ class UsersAPI {
             }
         }
     }
-
-    func fetchUser() {
+    
+    func fetchUser(completion: @escaping (Result<Void, Error>) -> Void) {
         database.child("users").observe(.childAdded) { [weak self] snapshot in
             guard let userDict = snapshot.value as? [String: Any] else {
                 return
             }
-            
+            let uid = snapshot.key
             if let imageUrlString = userDict["downloadURL"] as? String,
                let imageUrl = URL(string: imageUrlString) {
                 self?.downloadImage(from: imageUrl) { [weak self] result in
-                    DispatchQueue.main.async {
-                        switch result {
-                        case .success(let image):
-                            let user = User(image: image)
+                    switch result {
+                    case .success(let image):
+                        DispatchQueue.main.async {
+                            let user = User(uid: uid, image: image)
                             user.setValuesForKeys(userDict)
                             self?.users.append(user)
                             print("Success load image")
-                            
-                        case .failure(let error):
+                            completion(.success(()))
+                        }
+                    case .failure(let error):
+                        DispatchQueue.main.async {
+                            completion(.failure(error))
                             print(error)
                         }
                     }
@@ -75,6 +78,8 @@ class UsersAPI {
             }
         }
     }
+
+
     
     func uploadImageToFirebaseStorage(image: UIImage, completion: @escaping (Result<URL, Error>) -> Void) {
         guard let uid = Auth.auth().currentUser?.uid else {
@@ -92,8 +97,8 @@ class UsersAPI {
         metadata.contentType = "image/jpeg"
         
         storageRef.putData(imageData, metadata: metadata) { metadata, error in
-            guard error == nil else {
-                completion(.failure(error!))
+            if let error = error {
+                completion(.failure(error))
                 return
             }
             

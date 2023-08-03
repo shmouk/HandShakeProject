@@ -8,26 +8,18 @@
 import Foundation
 import UIKit
 
-protocol ChatViewControllerDelegate: AnyObject {
-    func openChatWithChoosenUser(user: User)
-}
-
 class ChatViewController: UITableViewController {
     
     let navigationBarManager = NavigationBarManager()
     let cellId = "cellId"
     
     lazy var usersAPI = UsersAPI()
+    lazy var chatAPI = ChatAPI()
     var refreshCntrl = UIRefreshControl()
-    var usersListTableViewController = UsersListTableViewController()
-    weak var chatLogController: ChatLogController?
     
     init() {
         super.init(style: .plain)
-//        usersAPI.fetchUser()
-        usersListTableViewController.delegate = self
-        tableView.register(ChatsTableVeiwCell.self, forCellReuseIdentifier: cellId)
-        
+        chatAPI.observerMessage()
     }
     
     required init?(coder: NSCoder) {
@@ -50,14 +42,14 @@ class ChatViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? ChatsTableVeiwCell else { return UITableViewCell() }
-        let user = usersAPI.users[indexPath.row]
-        cell.user = user
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? MessageTableViewCell else { return UITableViewCell() }
+        let message = chatAPI.messages[indexPath.row]
+        cell.message = message
         return cell
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return usersAPI.users.count
+        return chatAPI.messages.count
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -65,7 +57,6 @@ class ChatViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let user = self.usersAPI.users[indexPath.row]
     }
     
     private func setupNavBarManager() {
@@ -73,9 +64,15 @@ class ChatViewController: UITableViewController {
         navigationBarManager.updateNavigationBar(for: self, isAddButtonNeeded: true)
     }
     
-
+    private func openChatAction() {
+        let usersListTableViewController = UsersListTableViewController()
+        usersListTableViewController.delegate = self
+        usersListTableViewController.modalPresentationStyle = .automatic
+        present(usersListTableViewController, animated: true)
+    }
     
     private func setSubviews() {
+        tableView.register(MessageTableViewCell.self, forCellReuseIdentifier: cellId)
         tableView.addSubviews(refreshCntrl)
     }
     
@@ -92,26 +89,22 @@ extension ChatViewController {
     }
 }
 
-extension ChatViewController: ChatViewControllerDelegate {
-    func openChatWithChoosenUser(user: User) {
-        let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
-        chatLogController.user = user
-        navigationController?.pushViewController(chatLogController, animated: true)
-    }
-}
-
 extension ChatViewController: NavigationBarManagerDelegate {
     
     func didTapNotificationButton() {
         
     }
     
-    func didTapAddEventsButton() {
-        let usersListTableViewController = UsersListTableViewController()
-//        navigationController?.pushViewController(usersListTableViewController, animated: true)
-        usersListTableViewController.modalPresentationStyle = .fullScreen
-        present(usersListTableViewController, animated: true)
-        
+    func didTapAddButton() {
+        openChatAction()
     }
+}
+
+extension ChatViewController: UsersListTableViewControllerDelegate {
+        func openChatWithChoosenUser(with user: User) {
+            let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
+            chatLogController.user = user
+            navigationController?.pushViewController(chatLogController, animated: true)
+        }
 }
 

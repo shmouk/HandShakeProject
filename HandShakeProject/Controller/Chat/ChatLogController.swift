@@ -19,7 +19,7 @@ class ChatLogController: UICollectionViewController {
     let interfaceBuilder = InterfaceBuilder()
     lazy var chatAPI = ChatAPI()
     lazy var chatViewModel = ChatViewModel()
-    var chatViewController: ChatViewController?
+
 
     
     var user: User? {
@@ -72,6 +72,12 @@ class ChatLogController: UICollectionViewController {
         
     }
     
+    private func sendText() {
+        guard let text = textField.text,
+        let uid = user?.uid else { return }
+        chatAPI.sendMessage(text: text, toId: uid)
+    }
+    
     private func setupTargets() {
         sendButton.addTarget(self, action: #selector(sendAction(_:)), for: .touchUpInside)
     }
@@ -79,8 +85,7 @@ class ChatLogController: UICollectionViewController {
 
 extension ChatLogController {
     @objc func sendAction(_ sender: Any) {
-        guard let text = textField.text else { return }
-        chatAPI.sendMessage(text: text)
+        sendText()
     }
 }
 
@@ -90,3 +95,5 @@ extension ChatLogController: UITextFieldDelegate {
         return true
     }
 }
+
+

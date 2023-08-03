@@ -219,7 +219,7 @@ extension EventTableViewCell{
 
 // MARK: - ChatsTableVeiwCell Constraint
 
-extension ChatsTableVeiwCell{
+extension UsersTableViewCell {
     
     func setupConstraints() {
         
@@ -238,6 +238,27 @@ extension ChatsTableVeiwCell{
         ])
     }
 }
+
+extension MessageTableViewCell {
+    
+    func setupConstraints() {
+        
+        NSLayoutConstraint.activate([
+            uidLabel.topAnchor.constraint(equalTo: topAnchor),
+            uidLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
+            uidLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 30),
+            uidLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1/2)
+        ])
+        
+        NSLayoutConstraint.activate([
+            messageTextLabel.topAnchor.constraint(equalTo: uidLabel.bottomAnchor),
+            messageTextLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
+            messageTextLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 30),
+            messageTextLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1/2)
+        ])
+    }
+}
+
 
 // MARK: - ChatLogController Constraint
 
