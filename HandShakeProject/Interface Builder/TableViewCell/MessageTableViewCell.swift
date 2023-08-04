@@ -3,17 +3,18 @@ import UIKit
 class MessageTableViewCell: UITableViewCell {
     
     lazy var nameLabel = interfaceBuilder.createTitleLabel()
-    lazy var uidLabel = interfaceBuilder.createTitleLabel()
     lazy var messageTextLabel = interfaceBuilder.createDescriptionLabel()
+    lazy var userImageView = interfaceBuilder.createImageView()
+    lazy var timeTextLabel = interfaceBuilder.createDescriptionLabel()
 
-//    lazy var userImageView = interfaceBuilder.createImageView()
-    
     let interfaceBuilder = InterfaceBuilder()
     
     var message: Message? {
         didSet {
-            uidLabel.text = message?.uid
+            userImageView.image = message?.image
+            nameLabel.text = message?.name
             messageTextLabel.text = message?.text
+            timeTextLabel.text = convertTimestampToDate(message?.timeStamp ?? 0)
         }
     }
     
@@ -27,7 +28,14 @@ class MessageTableViewCell: UITableViewCell {
         super.init(coder: aDecoder)
     }
     
+    private func convertTimestampToDate(_ timestamp: Int) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "hh:mm:ss"
+        let date = Date(timeIntervalSince1970: TimeInterval(timestamp))
+        return dateFormatter.string(from: date)
+    }
+
     private func setSubviews() {
-        contentView.addSubviews(uidLabel, messageTextLabel)
+        contentView.addSubviews(userImageView, nameLabel, messageTextLabel, timeTextLabel)
     }
 }

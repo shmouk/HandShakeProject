@@ -13,7 +13,7 @@ class UsersAPI {
         self.storage = Storage.storage().reference()
     }
     
-    func currentUser(completion: @escaping (Result<User, Error>) -> Void) {
+    func loadCurrentUser(completion: @escaping (Result<User, Error>) -> Void) {
         guard let uid = Auth.auth().currentUser?.uid else {
             let error = NSError(domain: "Current user is not authenticated", code: 401, userInfo: nil)
             completion(.failure(error))
@@ -32,7 +32,8 @@ class UsersAPI {
                let name = userDict["name"] as? String,
                let imageUrlString = userDict["downloadURL"] as? String,
                let imageUrl = URL(string: imageUrlString) {
-                self?.downloadImage(from: imageUrl) { result in
+                guard let self = self else { return }
+                self.downloadImage(from: imageUrl) { result in
                     DispatchQueue.main.async {
                         switch result {
                         case .success(let image):
@@ -50,21 +51,22 @@ class UsersAPI {
         }
     }
     
-    func fetchUser(completion: @escaping (Result<Void, Error>) -> Void) {
-        database.child("users").observe(.childAdded) { [weak self] snapshot in
-            guard let userDict = snapshot.value as? [String: Any] else {
-                return
-            }
-            let uid = snapshot.key
-            if let imageUrlString = userDict["downloadURL"] as? String,
-               let imageUrl = URL(string: imageUrlString) {
-                self?.downloadImage(from: imageUrl) { [weak self] result in
+    func loadUserFromDatabase(completion: @escaping (Result<Void, Error>) -> Void) {
+            database.child("users").observe(.childAdded) { [weak self] snapshot in
+                guard let userDict = snapshot.value as? [String: Any],
+                      let imageUrlString = userDict["downloadURL"] as? String,
+                      let imageUrl = URL(string: imageUrlString),
+                      let self = self else {
+                    return
+                }
+                self.downloadImage(from: imageUrl) { result in
                     switch result {
                     case .success(let image):
                         DispatchQueue.main.async {
+                            let uid = snapshot.key
                             let user = User(uid: uid, image: image)
                             user.setValuesForKeys(userDict)
-                            self?.users.append(user)
+                            self.users.append(user)
                             print("Success load image")
                             completion(.success(()))
                         }
@@ -77,7 +79,6 @@ class UsersAPI {
                 }
             }
         }
-    }
 
 
     

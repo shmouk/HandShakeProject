@@ -54,8 +54,7 @@ class ProfileViewController: UIViewController {
     }
     
     private func setViews() {
-        profileViewModel.setImageView()
-        profileViewModel.setText()
+        profileViewModel.setView()
     }
     
     private func bindViewModel() {

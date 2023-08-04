@@ -4,7 +4,7 @@ class AuthViewModel {
     
     var statusText = Bindable("")
     var isSigningUp = Bindable(true)
-    lazy var  firebaseAuth = Auth.auth()
+    lazy var firebaseAuth = Auth.auth()
     lazy var usersAPI = UsersAPI()
     
     func toggleAuthState() {
@@ -24,23 +24,26 @@ class AuthViewModel {
             }
             
             firebaseAuth.createUser(withEmail: email, password: password) { [weak self] (result, error) in
+                guard let self = self else { return }
                 guard error == nil else {
-                    self?.statusText.value = "Error: \(error!.localizedDescription)"
+                    self.statusText.value = "Error: \(error!.localizedDescription)"
                     return
                 }
                 
-                self?.usersAPI.writeToDatabase(uid: result?.user.uid ?? "", email: email)
-                self?.statusText.value = "Success: User created"
+                self.usersAPI.writeToDatabase(uid: result?.user.uid ?? "", email: email)
+                self.statusText.value = "Success: User created"
                 completion(true)
             }
         } else {
             firebaseAuth.signIn(withEmail: email, password: password) { [weak self] (result, error) in
+                guard let self = self else { return }
+                
                 guard error == nil else {
-                    self?.statusText.value = "Error: \(error!.localizedDescription)"
+                    self.statusText.value = "Error: \(error!.localizedDescription)"
                     return
                 }
                 
-                self?.statusText.value = "Success: User logged in"
+                self.statusText.value = "Success: User logged in"
                 completion(true)
             }
         }

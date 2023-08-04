@@ -17,12 +17,12 @@ class UsersListTableViewController: UITableViewController {
     
     init() {
         super.init(style: .plain)
-        loadData()
     }
     
     func loadData() {
-        usersAPI.fetchUser(completion: { [weak self]_ in
-                self?.tableView.reloadData()
+        usersAPI.loadUserFromDatabase(completion: { [weak self]_ in
+            guard let self = self else { return }
+                self.tableView.reloadData()
         })
     }
     
@@ -36,7 +36,7 @@ class UsersListTableViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+        loadData()
         setSubviews()
         setupTargets()
     }

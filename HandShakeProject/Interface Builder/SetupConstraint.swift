@@ -244,17 +244,31 @@ extension MessageTableViewCell {
     func setupConstraints() {
         
         NSLayoutConstraint.activate([
-            uidLabel.topAnchor.constraint(equalTo: topAnchor),
-            uidLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
-            uidLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 30),
-            uidLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1/2)
+            userImageView.topAnchor.constraint(equalTo: topAnchor),
+            userImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            userImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10 ),
+            userImageView.heightAnchor.constraint(equalTo: userImageView.widthAnchor, multiplier: 1)
+        ])
+             
+        NSLayoutConstraint.activate([
+            nameLabel.topAnchor.constraint(equalTo: topAnchor),
+            nameLabel.leadingAnchor.constraint(equalTo: userImageView.trailingAnchor, constant: 10),
+            nameLabel.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 1/2),
+            nameLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1/2)
         ])
         
         NSLayoutConstraint.activate([
-            messageTextLabel.topAnchor.constraint(equalTo: uidLabel.bottomAnchor),
-            messageTextLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
-            messageTextLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 30),
+            messageTextLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor),
+            messageTextLabel.leadingAnchor.constraint(equalTo: userImageView.trailingAnchor, constant: 10),
+            messageTextLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30),
             messageTextLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1/2)
+        ])
+         
+        NSLayoutConstraint.activate([
+            timeTextLabel.topAnchor.constraint(equalTo: topAnchor),
+            timeTextLabel.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor, constant: 30),
+            timeTextLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
+            timeTextLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1/2)
         ])
     }
 }

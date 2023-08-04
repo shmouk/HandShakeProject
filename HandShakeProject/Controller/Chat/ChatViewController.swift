@@ -13,13 +13,12 @@ class ChatViewController: UITableViewController {
     let navigationBarManager = NavigationBarManager()
     let cellId = "cellId"
     
-    lazy var usersAPI = UsersAPI()
     lazy var chatAPI = ChatAPI()
+    
     var refreshCntrl = UIRefreshControl()
     
     init() {
         super.init(style: .plain)
-        chatAPI.observerMessage()
     }
     
     required init?(coder: NSCoder) {
@@ -32,6 +31,7 @@ class ChatViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        loadData()
         setupNavBarManager()
     }
     
@@ -57,6 +57,7 @@ class ChatViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        openChatWithChoosenUser(with: <#T##User#>)
     }
     
     private func setupNavBarManager() {
@@ -64,11 +65,18 @@ class ChatViewController: UITableViewController {
         navigationBarManager.updateNavigationBar(for: self, isAddButtonNeeded: true)
     }
     
-    private func openChatAction() {
+    private func openUsersListVC() {
         let usersListTableViewController = UsersListTableViewController()
         usersListTableViewController.delegate = self
         usersListTableViewController.modalPresentationStyle = .automatic
         present(usersListTableViewController, animated: true)
+    }
+
+    private func loadData() {
+        chatAPI.observeMessages(completion: { [weak self]_ in
+            guard let self = self else { return }
+                self.tableView.reloadData()
+        })
     }
     
     private func setSubviews() {
@@ -84,27 +92,25 @@ class ChatViewController: UITableViewController {
 extension ChatViewController {
     @objc func handleRefresh(_ sender: UIRefreshControl) {
         tableView.reloadData()
-        
         refreshCntrl.endRefreshing()
     }
 }
 
 extension ChatViewController: NavigationBarManagerDelegate {
-    
     func didTapNotificationButton() {
         
     }
     
     func didTapAddButton() {
-        openChatAction()
+        openUsersListVC()
     }
 }
 
 extension ChatViewController: UsersListTableViewControllerDelegate {
-        func openChatWithChoosenUser(with user: User) {
-            let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
-            chatLogController.user = user
-            navigationController?.pushViewController(chatLogController, animated: true)
-        }
+    func openChatWithChoosenUser(with user: User) {
+        let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
+        chatLogController.user = user
+        navigationController?.pushViewController(chatLogController, animated: true)
+    }
 }
 

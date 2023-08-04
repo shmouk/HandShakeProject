@@ -112,14 +112,10 @@ private extension AuthorizationViewController {
     @objc private func loginAction(_ sender: Any) {
         guard let email = loginTextField.text,
                 let password = passwordTextField.text,
-                let rPassword = repeatPasswordTextField.text else {
-            statusAuthLabel.text = "Error: Empty fields"
-            return
-        }
+                let rPassword = repeatPasswordTextField.text else { return }
         
         authViewModel.userLoginAction(email: email, password: password, repeatPassword: rPassword, completion: { [weak self] (success) in
             guard success else { return }
-        
         })
     }
 

@@ -75,7 +75,10 @@ class ChatLogController: UICollectionViewController {
     private func sendText() {
         guard let text = textField.text,
         let uid = user?.uid else { return }
-        chatAPI.sendMessage(text: text, toId: uid)
+        chatAPI.sendMessage(text: text, toId: uid, completion: { _ in
+            
+        })
+        
     }
     
     private func setupTargets() {

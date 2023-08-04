@@ -6,13 +6,16 @@
 //
 
 import Foundation
-
+import UIKit
 
 class ChatViewModel {
     
-    var currentUser = Bindable(User())
+    var nameText = Bindable("")
+    var messageText = Bindable("")
+    var profileImage = Bindable(UIImage())
+    lazy var chatAPI = ChatAPI()
     
-    func setCurrentUser() {
-        
+    func setViews() {
+
     }
 }

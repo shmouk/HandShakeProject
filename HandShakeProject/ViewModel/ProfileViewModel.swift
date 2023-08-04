@@ -13,24 +13,15 @@ class ProfileViewModel {
     var profileImage = Bindable(UIImage())
     lazy var usersAPI = UsersAPI()
     
-    func setImageView() {
-        usersAPI.currentUser { [weak self] result in
+    func setView() {
+        usersAPI.loadCurrentUser { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success(let user):
                 guard let image = user.image else { return }
-                self?.profileImage.value = image
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-        }
-    }
-    
-    func setText() {
-        usersAPI.currentUser { [weak self] result in
-            switch result {
-            case .success(let user):
-                self?.nameText.value = user.name
-                self?.emailText.value = user.email
+                self.profileImage.value = image
+                self.nameText.value = user.name
+                self.emailText.value = user.email
             case .failure(let error):
                 print(error.localizedDescription)
             }
