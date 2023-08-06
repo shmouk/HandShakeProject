@@ -40,7 +40,7 @@ class ChatAPI {
         }
     }
     
-    func observeMessages(completion: @escaping (Result<Void, Error>) -> Void) {
+    func observeMessages(completion: @escaping (Result<[Message], Error>) -> Void) {
         guard let uid = Auth.auth().currentUser?.uid else {
             let error = NSError(domain: "Current user is not authenticated", code: 401, userInfo: nil)
             completion(.failure(error))
@@ -48,19 +48,19 @@ class ChatAPI {
         }
         
         let userMessagesRef = database.child("user-messages").child(uid)
-
+        
         userMessagesRef.observe(.childAdded) { [weak self] (snapshot) in
             guard let self = self else { return }
             let messageId = snapshot.key
             let messagesReference = self.database.child("messages").child(messageId)
             
             messagesReference.observe(.value) { [weak self] (snapshot) in
-                guard let dict = snapshot.value as? [String: Any],
+                guard let self = self,
+                      let dict = snapshot.value as? [String: Any],
                       let fromId = dict["fromId"] as? String,
                       let toId = dict["toId"] as? String,
                       let timestamp = dict["timestamp"] as? Int,
-                      let text = dict["text"] as? String,
-                      let self = self else {
+                      let text = dict["text"] as? String else {
                     return
                 }
                 
@@ -70,15 +70,13 @@ class ChatAPI {
                     case .success(let (image, name)):
                         let message = Message(fromId: fromId, toId: toId, name: name, timeStamp: timestamp, text: text, image: image)
                         self.messagesDictionary[toId] = message
-                        self.messages = Array(self.messagesDictionary.values)
-                        
-                        DispatchQueue.main.async {
-                            completion(.success(()))
+                        let messages = Array(self.messagesDictionary.values)
+                        DispatchQueue.main.async { [self] in
+                            completion(.success(messages))
                         }
                     case .failure(let error):
                         DispatchQueue.main.async {
                             completion(.failure(error))
-                            print(error)
                         }
                     }
                 }

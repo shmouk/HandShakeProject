@@ -3,53 +3,44 @@ import Foundation
 import UIKit
 
 protocol UsersListTableViewControllerDelegate: AnyObject {
-    func openChatWithChoosenUser(with user: User)
+    func openChatWithChosenUser(_ user: User)
 }
 
 class UsersListTableViewController: UITableViewController {
     
     let cellId = "cellId"
-
-    lazy var usersAPI = UsersAPI()
-    weak var delegate: UsersListTableViewControllerDelegate?
     
+    weak var delegate: UsersListTableViewControllerDelegate?
+    lazy var userChatViewModel = UserChatViewModel()
     var refreshCntrl = UIRefreshControl()
+    var users: [User]?
     
     init() {
         super.init(style: .plain)
-    }
-    
-    func loadData() {
-        usersAPI.loadUserFromDatabase(completion: { [weak self]_ in
-            guard let self = self else { return }
-                self.tableView.reloadData()
-        })
+        userChatViewModel.fetchUsers()
+        
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    deinit {
-        print("close users")
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        loadData()
         setSubviews()
         setupTargets()
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? UsersTableViewCell else { return UITableViewCell() }
-        let user = usersAPI.users[indexPath.row]
+        let user = userChatViewModel.users?[indexPath.row]
         cell.user = user
+        print("userlist load \(users)")
         return cell
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return usersAPI.users.count
+        return  userChatViewModel.users?.count ?? 0
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -57,9 +48,9 @@ class UsersListTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let user = self.usersAPI.users[indexPath.row]
+        guard let user = self.userChatViewModel.users?[indexPath.row] else { return }
         dismiss(animated: true) { [self] in
-            delegate?.openChatWithChoosenUser(with: user)
+            delegate?.openChatWithChosenUser(user)
         }
     }
     private func setSubviews() {

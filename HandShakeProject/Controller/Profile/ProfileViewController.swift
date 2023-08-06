@@ -20,7 +20,7 @@ class ProfileViewController: UIViewController {
     let interfaceBuilder = InterfaceBuilder()
     lazy var authViewModel = AuthViewModel()
     lazy var profileViewModel = ProfileViewModel()
-    lazy var usersAPI = UsersAPI()
+    let userAPI = UserAPI.shared
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -89,7 +89,7 @@ private extension ProfileViewController {
     
     @objc
     private func openFriend(_ sender: Any) {
-        //        setViews()
+
     }
     
     @objc

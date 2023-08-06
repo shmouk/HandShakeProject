@@ -4,7 +4,7 @@
 //
 //  Created by Марк on 15.07.23.
 //
-
+import FirebaseAuth
 import Foundation
 import UIKit
 
@@ -14,11 +14,13 @@ class ChatViewController: UITableViewController {
     let cellId = "cellId"
     
     lazy var chatAPI = ChatAPI()
-    
+    lazy var userChatViewModel = UserChatViewModel()
+
     var refreshCntrl = UIRefreshControl()
     
     init() {
         super.init(style: .plain)
+        loadData()
     }
     
     required init?(coder: NSCoder) {
@@ -31,7 +33,6 @@ class ChatViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        loadData()
         setupNavBarManager()
     }
     
@@ -43,13 +44,13 @@ class ChatViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? MessageTableViewCell else { return UITableViewCell() }
-        let message = chatAPI.messages[indexPath.row]
+        let message = userChatViewModel.messages?[indexPath.row]
         cell.message = message
         return cell
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return chatAPI.messages.count
+        return userChatViewModel.messages?.count ?? 0
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -57,9 +58,17 @@ class ChatViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        openChatWithChoosenUser(with: <#T##User#>)
+        let index = indexPath.row
+        print("fetch")
+        userChatViewModel.fetchUserFromMessage(index)
+        
+        userChatViewModel.user.bind { [weak self] user in
+            guard let self = self else { return }
+            print("open \(user)")
+            self.openChatWithChosenUser(user)
+        }
     }
-    
+
     private func setupNavBarManager() {
         navigationBarManager.delegate = self
         navigationBarManager.updateNavigationBar(for: self, isAddButtonNeeded: true)
@@ -71,12 +80,9 @@ class ChatViewController: UITableViewController {
         usersListTableViewController.modalPresentationStyle = .automatic
         present(usersListTableViewController, animated: true)
     }
-
+    
     private func loadData() {
-        chatAPI.observeMessages(completion: { [weak self]_ in
-            guard let self = self else { return }
-                self.tableView.reloadData()
-        })
+        userChatViewModel.fetchUserMessage()
     }
     
     private func setSubviews() {
@@ -107,7 +113,7 @@ extension ChatViewController: NavigationBarManagerDelegate {
 }
 
 extension ChatViewController: UsersListTableViewControllerDelegate {
-    func openChatWithChoosenUser(with user: User) {
+    func openChatWithChosenUser(_ user: User) {
         let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
         chatLogController.user = user
         navigationController?.pushViewController(chatLogController, animated: true)

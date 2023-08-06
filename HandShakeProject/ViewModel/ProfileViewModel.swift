@@ -11,10 +11,10 @@ class ProfileViewModel {
     var nameText = Bindable("")
     var emailText = Bindable("")
     var profileImage = Bindable(UIImage())
-    lazy var usersAPI = UsersAPI()
-    
+    let userAPI = UserAPI.shared
+
     func setView() {
-        usersAPI.loadCurrentUser { [weak self] result in
+        userAPI.loadCurrentUser { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let user):

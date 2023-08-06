@@ -5,8 +5,8 @@ class AuthViewModel {
     var statusText = Bindable("")
     var isSigningUp = Bindable(true)
     lazy var firebaseAuth = Auth.auth()
-    lazy var usersAPI = UsersAPI()
-    
+    let userAPI = UserAPI.shared
+
     func toggleAuthState() {
         isSigningUp.value = !isSigningUp.value
     }
@@ -30,7 +30,7 @@ class AuthViewModel {
                     return
                 }
                 
-                self.usersAPI.writeToDatabase(uid: result?.user.uid ?? "", email: email)
+                self.userAPI.writeToDatabase(uid: result?.user.uid ?? "", email: email)
                 self.statusText.value = "Success: User created"
                 completion(true)
             }

@@ -18,8 +18,7 @@ class ChatLogController: UICollectionViewController {
     
     let interfaceBuilder = InterfaceBuilder()
     lazy var chatAPI = ChatAPI()
-    lazy var chatViewModel = ChatViewModel()
-
+    let cellId = "cellId"
 
     
     var user: User? {
@@ -34,6 +33,16 @@ class ChatLogController: UICollectionViewController {
        
     }
     
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        5
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath)
+        cell.backgroundColor = .blue
+        return cell
+    }
+    
     private func setUI() {
         bindViewModel()
         setSubviews()
@@ -45,6 +54,7 @@ class ChatLogController: UICollectionViewController {
     }
     
     private func setSubviews() {
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: cellId)
         view.addSubviews(containerView)
         view.addSubviews(textField, sendButton)
     }
@@ -75,7 +85,7 @@ class ChatLogController: UICollectionViewController {
     private func sendText() {
         guard let text = textField.text,
         let uid = user?.uid else { return }
-        chatAPI.sendMessage(text: text, toId: uid, completion: { _ in
+            chatAPI.sendMessage(text: text, toId: uid, completion: { _ in
             
         })
         
@@ -99,4 +109,9 @@ extension ChatLogController: UITextFieldDelegate {
     }
 }
 
+extension ChatLogController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: view.frame.height, height: view.frame.height / 14)
+    }
+}
 

@@ -2,15 +2,25 @@ import UIKit
 import Firebase
 import FirebaseStorage
 
-class UsersAPI {
+class UserAPI {
     let database: DatabaseReference
     let storage: StorageReference
     
+    static var shared = UserAPI()
+
     var users = [User]()
     
-    init() {
-        self.database = SetupDatabase().setDatabase()
-        self.storage = Storage.storage().reference()
+    private init() {
+          self.database = SetupDatabase().setDatabase()
+          self.storage = Storage.storage().reference()
+          loadUsersFromDatabase { [weak self] _ in
+              guard let self = self else { return }
+              print("init \(self.users)")
+          }
+      }
+
+    deinit {
+        print("deinit UserAPI")
     }
     
     func loadCurrentUser(completion: @escaping (Result<User, Error>) -> Void) {
@@ -51,7 +61,7 @@ class UsersAPI {
         }
     }
     
-    func loadUserFromDatabase(completion: @escaping (Result<Void, Error>) -> Void) {
+    func loadUsersFromDatabase(completion: @escaping (Result<Void, Error>) -> Void) {
             database.child("users").observe(.childAdded) { [weak self] snapshot in
                 guard let userDict = snapshot.value as? [String: Any],
                       let imageUrlString = userDict["downloadURL"] as? String,
@@ -60,27 +70,49 @@ class UsersAPI {
                     return
                 }
                 self.downloadImage(from: imageUrl) { result in
+                    let uid = snapshot.key
+                    
                     switch result {
                     case .success(let image):
                         DispatchQueue.main.async {
-                            let uid = snapshot.key
                             let user = User(uid: uid, image: image)
                             user.setValuesForKeys(userDict)
                             self.users.append(user)
-                            print("Success load image")
                             completion(.success(()))
                         }
                     case .failure(let error):
                         DispatchQueue.main.async {
                             completion(.failure(error))
-                            print(error)
                         }
                     }
                 }
             }
         }
 
+    func loadUserChat(_ index: Int, messages: [Message], completion: @escaping (Result<User, Error>) -> Void) {
+            guard let uid = Auth.auth().currentUser?.uid else {
+                completion(.failure(NSError(domain: "Current user is not authenticated", code: 401, userInfo: nil)))
+                return
+            }
+            guard messages.indices.contains(index) else {
+                completion(.failure(NSError(domain: "Invalid index", code: 400, userInfo: nil)))
+                return
+            }
+            let message = messages[index]
+            print("message: \(message)")
+        
+            let chatUserId = uid == message.toId ? message.fromId : message.toId
+        
+            print("load users: \(users)")
+            guard let user = users.first(where: { $0.uid == chatUserId }) else {
+                completion(.failure(NSError(domain: "User not found", code: 404, userInfo: nil)))
+                return
+            }
 
+            completion(.success(user))
+        }
+    
+    
     
     func uploadImageToFirebaseStorage(image: UIImage, completion: @escaping (Result<URL, Error>) -> Void) {
         guard let uid = Auth.auth().currentUser?.uid else {
