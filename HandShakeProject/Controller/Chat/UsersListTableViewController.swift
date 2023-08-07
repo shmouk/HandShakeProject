@@ -40,8 +40,9 @@ class UsersListTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let user = users[indexPath.row]
-        dismiss(animated: true) { [self] in
-            delegate?.openChatWithChosenUser(user)
+        dismiss(animated: true) { [weak self] in
+            guard let self = self else { return }
+            self.delegate?.openChatWithChosenUser(user)
         }
     }
     
@@ -73,7 +74,6 @@ class UsersListTableViewController: UITableViewController {
     }
     
     @objc private func handleRefresh(_ sender: UIRefreshControl) {
-//        userChatViewModel.loadUsers()
         refreshCntrl.endRefreshing()
     }
 }

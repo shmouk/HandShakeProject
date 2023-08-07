@@ -29,7 +29,7 @@ class ProfileViewController: UIViewController {
     deinit {
         print("4")
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

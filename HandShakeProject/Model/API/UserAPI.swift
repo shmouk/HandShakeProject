@@ -11,17 +11,14 @@ class UserAPI {
     var users = [User]()
     
     private init() {
-          self.database = SetupDatabase().setDatabase()
-          self.storage = Storage.storage().reference()
-          loadUsersFromDatabase { [weak self] _ in
-              guard let self = self else { return }
-              print("init UserAPI")
-          }
+         database = SetupDatabase().setDatabase()
+         storage = Storage.storage().reference()
       }
 
     deinit {
         print("deinit UserAPI")
     }
+    
     
     func loadCurrentUser(completion: @escaping (Result<User, Error>) -> Void) {
         guard let uid = Auth.auth().currentUser?.uid else {
@@ -99,11 +96,8 @@ class UserAPI {
                 return
             }
             let message = messages[index]
-            print("message: \(message)")
-        
             let chatUserId = uid == message.toId ? message.fromId : message.toId
         
-            print("load users: \(users)")
             guard let user = users.first(where: { $0.uid == chatUserId }) else {
                 completion(.failure(NSError(domain: "User not found", code: 404, userInfo: nil)))
                 return
@@ -111,8 +105,6 @@ class UserAPI {
 
             completion(.success(user))
         }
-    
-    
     
     func uploadImageToFirebaseStorage(image: UIImage, completion: @escaping (Result<URL, Error>) -> Void) {
         guard let uid = Auth.auth().currentUser?.uid else {

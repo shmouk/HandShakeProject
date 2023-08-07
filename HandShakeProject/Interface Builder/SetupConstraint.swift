@@ -239,6 +239,8 @@ extension UsersTableViewCell {
     }
 }
 
+// MARK: - MessageTableViewCell Constraint
+
 extension MessageTableViewCell {
     
     func setupConstraints() {
@@ -303,6 +305,28 @@ extension ChatLogController {
     }
 }
 
+// MARK: - MessageCollectionViewCell Constraint
+
+extension MessageCollectionViewCell {
+    
+    func setupConstraints() {
+        
+        NSLayoutConstraint.activate([
+            messageTextView.topAnchor.constraint(equalTo: topAnchor, constant: 10),
+            messageTextView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+            messageTextView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
+            messageTextView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            timeTextLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
+            timeTextLabel.leadingAnchor.constraint(equalTo: messageTextView.trailingAnchor, constant: -40),
+            timeTextLabel.trailingAnchor.constraint(equalTo: messageTextView.trailingAnchor),
+            timeTextLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1/2)
+        ])
+    }
+}
+    
 // MARK: - ProfileViewController Constraint
 
 extension ProfileViewController {

@@ -7,9 +7,12 @@ class ChatViewController: UITableViewController {
     let userChatViewModel = UserChatViewModel()
     var refreshCntrl = UIRefreshControl()
     var messages: [Message]?
-    
+    var user: User?
+    var fetchMessages: Message?
+
     init() {
         super.init(style: .plain)
+        userChatViewModel.loadData()
     }
     
     required init?(coder: NSCoder) {
@@ -23,11 +26,12 @@ class ChatViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setUI()
+        loadData()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadData()
+        
         setSubviews()
         setupTargets()
     }
@@ -50,12 +54,7 @@ class ChatViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let index = indexPath.row
         print("fetch")
-        userChatViewModel.fetchUserFromMessage(index)
-        userChatViewModel.user.bind { [weak self] user in
-            guard let self = self else { return }
-            print("open \(user)")
-            self.openChatWithChosenUser(user)
-        }
+        openUserChat(index)
     }
     
     private func setUI() {
@@ -63,11 +62,19 @@ class ChatViewController: UITableViewController {
     }
     
     private func bindViewModel() {
+        
+
+        
         userChatViewModel.messages.bind { [weak self] messages in
             guard let self = self else { return }
             self.messages = messages
-
+            
             self.tableView.reloadData()
+        }
+        userChatViewModel.user.bind { [weak self] user in
+            guard let self = self else { return }
+            print("take \(user)")
+            self.user = user
         }
     }
     
@@ -83,10 +90,24 @@ class ChatViewController: UITableViewController {
         present(usersListTableViewController, animated: true)
     }
     
+    private func openUserChat(_ index: Int) {
+        userChatViewModel.fetchUserFromMessage(index, completion: { [weak self] result in
+            guard let self = self, let user = self.user else { return }
+            
+            switch result {
+            case .success():
+                self.openChatWithChosenUser(user)
+                
+            case .failure(let error):
+                break
+            }
+        })
+    }
+    
     private func loadData() {
         userChatViewModel.loadMessages()
-        bindViewModel()
         userChatViewModel.loadUsers()
+        bindViewModel()
         reloadTable()
     }
 
@@ -107,7 +128,6 @@ class ChatViewController: UITableViewController {
 
 extension ChatViewController {
     @objc func handleRefresh(_ sender: UIRefreshControl) {
-        userChatViewModel.loadMessages()
         refreshCntrl.endRefreshing()
     }
 }
@@ -125,6 +145,7 @@ extension ChatViewController: UsersListTableViewControllerDelegate {
     func openChatWithChosenUser(_ user: User) {
         let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
         chatLogController.user = user
+//        chatLogController.messages = fetchMessages
         navigationController?.pushViewController(chatLogController, animated: true)
     }
 }

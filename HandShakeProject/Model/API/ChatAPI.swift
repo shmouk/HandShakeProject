@@ -6,7 +6,7 @@ class ChatAPI {
     let database: DatabaseReference
     let storage: StorageReference
     
-    var messages = [Message]()
+    var messages = [Message]() 
     var messagesDictionary = [String : Message]()
     
     static var shared = ChatAPI()
@@ -14,12 +14,12 @@ class ChatAPI {
     typealias UserCompletion = (Result<(UIImage, String), Error>) -> Void
     
     private init() {
-        self.database = SetupDatabase().setDatabase()
-        self.storage = Storage.storage().reference()
-        observeMessages { [weak self] _ in
-            guard let self = self else { return }
-            print("init ChatAPI")
-        }
+        database = SetupDatabase().setDatabase()
+        storage = Storage.storage().reference()
+    }
+    
+    deinit {
+        print("deinit ChatAPI")
     }
     
     private func fetchUser(userId: String, completion: @escaping UserCompletion) {
@@ -46,6 +46,19 @@ class ChatAPI {
         }
     }
     
+    func loadUserMessages(_ index: Int, messages: [Message], completion: @escaping (Result<Message, Error>) -> Void) {
+            guard let uid = Auth.auth().currentUser?.uid else {
+                completion(.failure(NSError(domain: "Current user is not authenticated", code: 401, userInfo: nil)))
+                return
+            }
+            guard messages.indices.contains(index) else {
+                completion(.failure(NSError(domain: "Invalid index", code: 400, userInfo: nil)))
+                return
+            }
+            
+//            completion(.success(user)) 
+        }
+    
     func observeMessages(completion: @escaping (Result<Void, Error>) -> Void) {
         guard let uid = Auth.auth().currentUser?.uid else {
             let error = NSError(domain: "Current user is not authenticated", code: 401, userInfo: nil)
@@ -69,14 +82,16 @@ class ChatAPI {
                       let text = dict["text"] as? String else {
                     return
                 }
-                
-                fetchUser(userId: fromId) { [weak self] (result) in
+                let withId = fromId == uid ? toId : fromId
+
+                fetchUser(userId: withId) { [weak self] (result) in
                     guard let self = self else { return }
                     switch result {
                     case .success(let (image, name)):
                         DispatchQueue.main.async {
                             let message = Message(fromId: fromId, toId: toId, name: name, timeStamp: timestamp, text: text, image: image)
-                            self.messagesDictionary[toId] = message
+      
+                            self.messagesDictionary[withId] = message
                             self.messages = Array(self.messagesDictionary.values)
                             
                             completion(.success(()))

@@ -19,7 +19,7 @@ class ChatLogController: UICollectionViewController {
     let interfaceBuilder = InterfaceBuilder()
     let chatAPI = ChatAPI.shared
     let cellId = "cellId"
-
+    var messages: [Message]?
     
     var user: User? {
         didSet {
@@ -34,12 +34,13 @@ class ChatLogController: UICollectionViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        5
+        messages?.count ?? 0
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath)
-        cell.backgroundColor = .blue
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? MessageCollectionViewCell else { return UICollectionViewCell() }
+        let message = messages?[indexPath.row]
+        cell.message = message
         return cell
     }
     
@@ -54,7 +55,7 @@ class ChatLogController: UICollectionViewController {
     }
     
     private func setSubviews() {
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView.register(MessageCollectionViewCell.self, forCellWithReuseIdentifier: cellId)
         view.addSubviews(containerView)
         view.addSubviews(textField, sendButton)
     }
@@ -82,13 +83,23 @@ class ChatLogController: UICollectionViewController {
         
     }
     
+    
+    
+    private func loadMessages() {
+//        if user.uid == messages.
+    }
+    
+    
+    
+    
+    
+    
+    
     private func sendText() {
         guard let text = textField.text,
         let uid = user?.uid else { return }
             chatAPI.sendMessage(text: text, toId: uid, completion: { _ in
-            
         })
-        
     }
     
     private func setupTargets() {
@@ -111,7 +122,7 @@ extension ChatLogController: UITextFieldDelegate {
 
 extension ChatLogController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.height, height: view.frame.height / 14)
+        return CGSize(width: view.frame.width, height: view.frame.height / 14)
     }
 }
 

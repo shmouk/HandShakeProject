@@ -33,7 +33,5 @@ extension EventsViewController: NavigationBarManagerDelegate {
       }
       
       func didTapAddButton() {
-          // Handle add events button tap here
       }
-
 }

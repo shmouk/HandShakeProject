@@ -8,9 +8,20 @@ class UserChatViewModel {
     var user = Bindable(User())
     var users = Bindable([User()])
     var messages = Bindable([Message()])
+    var messagesFromUser = Bindable([Message()])
     
     init() {
         print("hi im UserChatViewModel")
+       
+    }
+    
+    func loadData() {
+        userAPI.loadUsersFromDatabase { [weak self] _ in
+            guard let self = self else { return }
+        }
+            chatAPI.observeMessages { [weak self] _ in
+                guard let self = self else { return }
+        }
     }
     
     func loadMessages() {
@@ -26,22 +37,22 @@ class UserChatViewModel {
             self.users.value = self.userAPI.users
         }
     }
-
-
     
-    func fetchUserFromMessage(_ index: Int) {
+    func fetchUserFromMessage(_ index: Int, completion: @escaping (Result<Void, Error>) -> Void) {
         
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            let messages = self.messages.value
-            
+            let messages = self.chatAPI.messages
             self.userAPI.loadUserChat(index, messages: messages) { [weak self] result in
                 guard let self = self else { return }
                 
                 switch result {
                 case .success(let user):
                     self.user.value = user
-                case .failure:
+                    completion(.success(()))
+                    
+                case .failure(let error):
+                    completion(.failure(error))
                     break
                 }
             }

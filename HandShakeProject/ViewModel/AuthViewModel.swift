@@ -6,6 +6,7 @@ class AuthViewModel {
     var isSigningUp = Bindable(true)
     lazy var firebaseAuth = Auth.auth()
     let userAPI = UserAPI.shared
+    let chatAPI = ChatAPI.shared
     
     func toggleAuthState() {
         isSigningUp.value = !isSigningUp.value
@@ -52,8 +53,15 @@ class AuthViewModel {
     func userLogoutAction() {
         do {
             try firebaseAuth.signOut()
+            clearSingletonData()
         } catch let signOutError as NSError {
             print("Error signing out: %@", signOutError)
         }
+    }
+    
+    func clearSingletonData() {
+        userAPI.users.removeAll()
+        chatAPI.messages.removeAll()
+        chatAPI.messagesDictionary.removeAll()
     }
 }

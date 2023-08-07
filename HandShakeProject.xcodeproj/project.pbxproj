@@ -33,6 +33,7 @@
 		AD5C62EC2A6310F00069A53F /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5C62EB2A6310F00069A53F /* ChatViewController.swift */; };
 		AD5C62EE2A6310FA0069A53F /* TeamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5C62ED2A6310FA0069A53F /* TeamViewController.swift */; };
 		AD5C62F02A6311060069A53F /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5C62EF2A6311060069A53F /* ProfileViewController.swift */; };
+		AD86E0102A811DD6000306B2 /* MessageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD86E00F2A811DD6000306B2 /* MessageCollectionViewCell.swift */; };
 		ADACF2CF2A6186DB00550283 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADACF2CE2A6186DB00550283 /* AppDelegate.swift */; };
 		ADACF2D32A6186DB00550283 /* AuthorizationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADACF2D22A6186DB00550283 /* AuthorizationViewController.swift */; };
 		ADACF2D82A6186DF00550283 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ADACF2D72A6186DF00550283 /* Assets.xcassets */; };
@@ -72,6 +73,7 @@
 		AD5C62EB2A6310F00069A53F /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		AD5C62ED2A6310FA0069A53F /* TeamViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamViewController.swift; sourceTree = "<group>"; };
 		AD5C62EF2A6311060069A53F /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		AD86E00F2A811DD6000306B2 /* MessageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCollectionViewCell.swift; sourceTree = "<group>"; };
 		ADACF2CB2A6186DB00550283 /* HandShakeProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HandShakeProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADACF2CE2A6186DB00550283 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		ADACF2D22A6186DB00550283 /* AuthorizationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AuthorizationViewController.swift; path = "../New Group/AuthorizationViewController.swift"; sourceTree = "<group>"; };
@@ -204,6 +206,7 @@
 				ADDF7F1F2A6704FA009FE3C2 /* EventTableViewCell.swift */,
 				AD33F4D42A6836C60028E919 /* UsersTableViewCell.swift */,
 				AD1EB90C2A7BFEF700B78AEA /* MessageTableViewCell.swift */,
+				AD86E00F2A811DD6000306B2 /* MessageCollectionViewCell.swift */,
 			);
 			path = TableViewCell;
 			sourceTree = "<group>";
@@ -334,6 +337,7 @@
 				AD1EB9062A7BE89700B78AEA /* MessageModel.swift in Sources */,
 				AD13F6382A61A6B0007F5449 /* AuthViewModel.swift in Sources */,
 				AD13F63B2A61A85F007F5449 /* InterfaceBuilder.swift in Sources */,
+				AD86E0102A811DD6000306B2 /* MessageCollectionViewCell.swift in Sources */,
 				AD33F4DA2A684C880028E919 /* EventCreateViewController.swift in Sources */,
 				AD33F4D32A682C320028E919 /* EventsModel.swift in Sources */,
 				ADDF7F202A6704FA009FE3C2 /* EventTableViewCell.swift in Sources */,

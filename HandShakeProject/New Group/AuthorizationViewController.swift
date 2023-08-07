@@ -39,7 +39,8 @@ class AuthorizationViewController: UIViewController {
     }
     
     private func authStateListener() {
-        Auth.auth().addStateDidChangeListener { [self](auth, user) in
+        Auth.auth().addStateDidChangeListener { [weak self](auth, user) in
+            guard let self = self else { return }
             if user == nil {
                 self.navigationController?.popToRootViewController(animated: false)
             }
@@ -50,13 +51,15 @@ class AuthorizationViewController: UIViewController {
     }
 
     private func bindViewModel() {
-        authViewModel.statusText.bind({ [self](statusText) in
-                statusAuthLabel.text = statusText
+        authViewModel.statusText.bind({ [weak self](statusText) in
+            guard let self = self else { return }
+            self.statusAuthLabel.text = statusText
         })
-        authViewModel.isSigningUp.bind({ [self](signup) in
-                isSignup = signup
-                settingButton(title: signup ? authState.first ?? "" : authState.last ?? "")
-                repeatPasswordTextField.isHidden = !signup
+        authViewModel.isSigningUp.bind({ [weak self](signup) in
+            guard let self = self else { return }
+            self.isSignup = signup
+            self.settingButton(title: signup ? authState.first ?? "" : authState.last ?? "")
+            self.repeatPasswordTextField.isHidden = !signup
         })
     }
     
