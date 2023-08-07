@@ -17,7 +17,7 @@ class ChatLogController: UICollectionViewController {
     lazy var separatorView = interfaceBuilder.createView()
     
     let interfaceBuilder = InterfaceBuilder()
-    lazy var chatAPI = ChatAPI()
+    let chatAPI = ChatAPI.shared
     let cellId = "cellId"
 
     

@@ -6,14 +6,20 @@ class ChatAPI {
     let database: DatabaseReference
     let storage: StorageReference
     
-    var messages: [Message] = []
+    var messages = [Message]()
     var messagesDictionary = [String : Message]()
     
+    static var shared = ChatAPI()
+    
     typealias UserCompletion = (Result<(UIImage, String), Error>) -> Void
-
-    init() {
+    
+    private init() {
         self.database = SetupDatabase().setDatabase()
         self.storage = Storage.storage().reference()
+        observeMessages { [weak self] _ in
+            guard let self = self else { return }
+            print("init ChatAPI")
+        }
     }
     
     private func fetchUser(userId: String, completion: @escaping UserCompletion) {
@@ -40,7 +46,7 @@ class ChatAPI {
         }
     }
     
-    func observeMessages(completion: @escaping (Result<[Message], Error>) -> Void) {
+    func observeMessages(completion: @escaping (Result<Void, Error>) -> Void) {
         guard let uid = Auth.auth().currentUser?.uid else {
             let error = NSError(domain: "Current user is not authenticated", code: 401, userInfo: nil)
             completion(.failure(error))
@@ -68,11 +74,12 @@ class ChatAPI {
                     guard let self = self else { return }
                     switch result {
                     case .success(let (image, name)):
-                        let message = Message(fromId: fromId, toId: toId, name: name, timeStamp: timestamp, text: text, image: image)
-                        self.messagesDictionary[toId] = message
-                        let messages = Array(self.messagesDictionary.values)
-                        DispatchQueue.main.async { [self] in
-                            completion(.success(messages))
+                        DispatchQueue.main.async {
+                            let message = Message(fromId: fromId, toId: toId, name: name, timeStamp: timestamp, text: text, image: image)
+                            self.messagesDictionary[toId] = message
+                            self.messages = Array(self.messagesDictionary.values)
+                            
+                            completion(.success(()))
                         }
                     case .failure(let error):
                         DispatchQueue.main.async {
@@ -83,7 +90,7 @@ class ChatAPI {
             }
         }
     }
-
+    
     func sendMessage(text: String, toId: String, completion: @escaping (Result<Void, Error>) -> Void) {
         guard let fromId = Auth.auth().currentUser?.uid else {
             let error = NSError(domain: "Current user is not authenticated", code: 401, userInfo: nil)

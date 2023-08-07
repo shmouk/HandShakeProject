@@ -13,7 +13,7 @@ class ProfileViewModel {
     var profileImage = Bindable(UIImage())
     let userAPI = UserAPI.shared
 
-    func setView() {
+    func fetchUser() {
         userAPI.loadCurrentUser { [weak self] result in
             guard let self = self else { return }
             switch result {

@@ -9,7 +9,6 @@ import UIKit
 
 class ProfileViewController: UIViewController {
     
-    
     lazy var logoutButton = interfaceBuilder.createButton()
     lazy var friendsButton = interfaceBuilder.createButton()
     lazy var editProfileButton = interfaceBuilder.createButton()
@@ -17,44 +16,49 @@ class ProfileViewController: UIViewController {
     lazy var emailLabel = interfaceBuilder.createDescriptionLabel()
     lazy var profileImageView = interfaceBuilder.createImageView()
     
+    let navigationBarManager = NavigationBarManager()
     let interfaceBuilder = InterfaceBuilder()
     lazy var authViewModel = AuthViewModel()
     lazy var profileViewModel = ProfileViewModel()
-    let userAPI = UserAPI.shared
+    lazy var userAPI = UserAPI.shared
     
     init() {
         super.init(nibName: nil, bundle: nil)
-        bindViewModel()
     }
+    
     deinit {
         print("4")
     }
-    
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .white
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         setUI()
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        loadData()
+    }
+    
     private func setUI() {
+        setupNavBarManager()
         setSubviews()
         settingButton()
         setupConstraints()
         setupTargets()
-        setViews()
     }
     
     private func setSubviews() {
         view.addSubviews(profileImageView, editProfileButton, emailLabel, nameLabel, friendsButton, logoutButton)
     }
     
-    private func setViews() {
-        profileViewModel.setView()
+    private func loadData() {
+        bindViewModel()
+        profileViewModel.fetchUser()
     }
     
     private func bindViewModel() {
@@ -75,6 +79,10 @@ class ProfileViewController: UIViewController {
         logoutButton.setTitle("Logout", for: .normal)
     }
     
+    private func setupNavBarManager() {
+        navigationBarManager.delegate = self
+        navigationBarManager.updateNavigationBar(for: self, isAddButtonNeeded: false)
+    }
     
     private func setupTargets() {
         editProfileButton.addTarget(self, action: #selector(editProfile), for: .touchUpInside)
@@ -100,5 +108,12 @@ private extension ProfileViewController {
     @objc
     private func logoutAction(_ sender: Any) {
         authViewModel.userLogoutAction()
+    }
+}
+
+extension ProfileViewController: NavigationBarManagerDelegate {
+    func didTapNotificationButton() {}
+    
+    func didTapAddButton() {
     }
 }

@@ -15,7 +15,7 @@ class UserAPI {
           self.storage = Storage.storage().reference()
           loadUsersFromDatabase { [weak self] _ in
               guard let self = self else { return }
-              print("init \(self.users)")
+              print("init UserAPI")
           }
       }
 

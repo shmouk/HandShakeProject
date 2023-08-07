@@ -6,7 +6,7 @@ class AuthViewModel {
     var isSigningUp = Bindable(true)
     lazy var firebaseAuth = Auth.auth()
     let userAPI = UserAPI.shared
-
+    
     func toggleAuthState() {
         isSigningUp.value = !isSigningUp.value
     }
