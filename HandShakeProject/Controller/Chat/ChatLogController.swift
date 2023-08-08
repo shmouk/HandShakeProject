@@ -20,6 +20,7 @@ class ChatLogController: UICollectionViewController {
     let chatAPI = ChatAPI.shared
     let cellId = "cellId"
     var messages: [Message]?
+    let userChatViewModel = UserChatViewModel()
     
     var user: User? {
         didSet {
@@ -27,10 +28,14 @@ class ChatLogController: UICollectionViewController {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        loadData()
         setUI()
-       
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -45,11 +50,9 @@ class ChatLogController: UICollectionViewController {
     }
     
     private func setUI() {
-        bindViewModel()
         setSubviews()
         setupConstraints()
         settingTextField()
-        settingTextLabel()
         settingButton()
         setupTargets()
     }
@@ -66,34 +69,24 @@ class ChatLogController: UICollectionViewController {
         textField.placeholder = "Input text..."
     }
     
-    private func settingTextLabel() {
-        
-    }
-    
     private func settingButton() {
         sendButton.setTitle("Send", for: .normal)
         
     }
     
+    private func loadData() {
+        guard let user = self.user else { return }
+        userChatViewModel.loadMessagesPerUser(user)
+        bindViewModel()
+    }
+    
     private func bindViewModel() {
-
+            self.userChatViewModel.messagesPerUser.bind { [weak self] messages in
+                guard let self = self else { return }
+                self.messages = messages
+                self.reloadTable()
+        }
     }
-    
-    private func setInputComponents() {
-        
-    }
-    
-    
-    
-    private func loadMessages() {
-//        if user.uid == messages.
-    }
-    
-    
-    
-    
-    
-    
     
     private func sendText() {
         guard let text = textField.text,
@@ -104,6 +97,9 @@ class ChatLogController: UICollectionViewController {
     
     private func setupTargets() {
         sendButton.addTarget(self, action: #selector(sendAction(_:)), for: .touchUpInside)
+    }
+    private func reloadTable() {
+        collectionView.reloadData()
     }
 }
 

@@ -53,7 +53,6 @@ class ChatViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let index = indexPath.row
-        print("fetch")
         openUserChat(index)
     }
     
@@ -62,9 +61,6 @@ class ChatViewController: UITableViewController {
     }
     
     private func bindViewModel() {
-        
-
-        
         userChatViewModel.messages.bind { [weak self] messages in
             guard let self = self else { return }
             self.messages = messages
@@ -73,7 +69,6 @@ class ChatViewController: UITableViewController {
         }
         userChatViewModel.user.bind { [weak self] user in
             guard let self = self else { return }
-            print("take \(user)")
             self.user = user
         }
     }
@@ -128,6 +123,7 @@ class ChatViewController: UITableViewController {
 
 extension ChatViewController {
     @objc func handleRefresh(_ sender: UIRefreshControl) {
+        loadData() 
         refreshCntrl.endRefreshing()
     }
 }
@@ -145,7 +141,6 @@ extension ChatViewController: UsersListTableViewControllerDelegate {
     func openChatWithChosenUser(_ user: User) {
         let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
         chatLogController.user = user
-//        chatLogController.messages = fetchMessages
         navigationController?.pushViewController(chatLogController, animated: true)
     }
 }

@@ -10,6 +10,8 @@ class UserChatViewModel {
     var messages = Bindable([Message()])
     var messagesFromUser = Bindable([Message()])
     
+    var messagesPerUser = Bindable([Message()])
+    
     init() {
         print("hi im UserChatViewModel")
        
@@ -19,7 +21,7 @@ class UserChatViewModel {
         userAPI.loadUsersFromDatabase { [weak self] _ in
             guard let self = self else { return }
         }
-            chatAPI.observeMessages { [weak self] _ in
+        chatAPI.observeMessages { [weak self] _ in
                 guard let self = self else { return }
         }
     }
@@ -28,6 +30,18 @@ class UserChatViewModel {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             self.messages.value = self.chatAPI.messages
+        }
+    }
+    
+    func loadMessagesPerUser(_ user: User) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            let messagesDict = self.chatAPI.messagesDictionaryTEST
+            let uid = user.uid
+            
+            guard let messages = messagesDict[uid] else { return }
+            messagesPerUser.value = messages
+
         }
     }
     

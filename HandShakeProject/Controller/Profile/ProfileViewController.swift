@@ -20,7 +20,6 @@ class ProfileViewController: UIViewController {
     let interfaceBuilder = InterfaceBuilder()
     lazy var authViewModel = AuthViewModel()
     lazy var profileViewModel = ProfileViewModel()
-    lazy var userAPI = UserAPI.shared
     
     init() {
         super.init(nibName: nil, bundle: nil)

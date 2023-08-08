@@ -27,4 +27,9 @@ class ProfileViewModel {
             }
         }
     }
+    func loadImagePicker(image: UIImage) {
+        userAPI.uploadImageToFirebaseStorage(image: image, completion: { result in
+            
+        })
+    }
 }

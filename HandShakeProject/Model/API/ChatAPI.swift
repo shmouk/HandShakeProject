@@ -6,7 +6,9 @@ class ChatAPI {
     let database: DatabaseReference
     let storage: StorageReference
     
-    var messages = [Message]() 
+    var messages = [Message]()
+    var messagesTEST = [Message]()
+    var messagesDictionaryTEST = [String : [Message]]()
     var messagesDictionary = [String : Message]()
     
     static var shared = ChatAPI()
@@ -73,16 +75,16 @@ class ChatAPI {
             let messageId = snapshot.key
             let messagesReference = self.database.child("messages").child(messageId)
             
-            messagesReference.observe(.value) { [weak self] (snapshot) in
-                guard let self = self,
-                      let dict = snapshot.value as? [String: Any],
+            messagesReference.observeSingleEvent(of: .value) { [weak self] (snapshot) in
+                guard let self = self else { return }
+                guard let dict = snapshot.value as? [String: Any],
                       let fromId = dict["fromId"] as? String,
                       let toId = dict["toId"] as? String,
                       let timestamp = dict["timestamp"] as? Int,
                       let text = dict["text"] as? String else {
                     return
                 }
-                let withId = fromId == uid ? toId : fromId
+                var withId = fromId == uid ? toId : fromId
 
                 fetchUser(userId: withId) { [weak self] (result) in
                     guard let self = self else { return }
@@ -90,8 +92,17 @@ class ChatAPI {
                     case .success(let (image, name)):
                         DispatchQueue.main.async {
                             let message = Message(fromId: fromId, toId: toId, name: name, timeStamp: timestamp, text: text, image: image)
-      
+                            if uid == withId {
+                                withId = toId
+                            }
+
                             self.messagesDictionary[withId] = message
+                            
+                            self.messagesTEST.append(message)
+                            self.messagesDictionaryTEST[withId] = self.messagesTEST
+                            
+                            print("\(self.messagesTEST.count), \(self.messagesTEST)")
+                            
                             self.messages = Array(self.messagesDictionary.values)
                             
                             completion(.success(()))
@@ -105,6 +116,7 @@ class ChatAPI {
             }
         }
     }
+
     
     func sendMessage(text: String, toId: String, completion: @escaping (Result<Void, Error>) -> Void) {
         guard let fromId = Auth.auth().currentUser?.uid else {
