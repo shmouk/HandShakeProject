@@ -26,12 +26,11 @@ class ChatViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setUI()
-        loadData()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        loadData()
         setSubviews()
         setupTargets()
     }

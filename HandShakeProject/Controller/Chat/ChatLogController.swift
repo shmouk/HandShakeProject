@@ -30,12 +30,12 @@ class ChatLogController: UICollectionViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        setUI()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         loadData()
-        setUI()
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -81,23 +81,23 @@ class ChatLogController: UICollectionViewController {
     }
     
     private func bindViewModel() {
-            self.userChatViewModel.messagesPerUser.bind { [weak self] messages in
-                guard let self = self else { return }
-                self.messages = messages
-                self.reloadTable()
+        self.userChatViewModel.messagesPerUser.bind { [weak self] messages in
+            guard let self = self else { return }
+            self.messages = messages
+            self.reloadTable()
         }
     }
     
     private func sendText() {
         guard let text = textField.text,
-        let uid = user?.uid else { return }
-            chatAPI.sendMessage(text: text, toId: uid, completion: { _ in
-        })
+              let uid = user?.uid else { return }
+        userChatViewModel.sendMessage(text: text, toId: uid)
     }
     
     private func setupTargets() {
         sendButton.addTarget(self, action: #selector(sendAction(_:)), for: .touchUpInside)
     }
+    
     private func reloadTable() {
         collectionView.reloadData()
     }

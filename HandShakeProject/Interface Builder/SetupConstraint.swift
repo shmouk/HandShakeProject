@@ -255,20 +255,20 @@ extension MessageTableViewCell {
         NSLayoutConstraint.activate([
             nameLabel.topAnchor.constraint(equalTo: topAnchor),
             nameLabel.leadingAnchor.constraint(equalTo: userImageView.trailingAnchor, constant: 10),
-            nameLabel.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 1/2),
+            nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -60),
             nameLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1/2)
         ])
         
         NSLayoutConstraint.activate([
             messageTextLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor),
             messageTextLabel.leadingAnchor.constraint(equalTo: userImageView.trailingAnchor, constant: 10),
-            messageTextLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30),
+            messageTextLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -60),
             messageTextLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1/2)
         ])
          
         NSLayoutConstraint.activate([
             timeTextLabel.topAnchor.constraint(equalTo: topAnchor),
-            timeTextLabel.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor, constant: 30),
+            timeTextLabel.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor, constant: 10),
             timeTextLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
             timeTextLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1/2)
         ])
@@ -320,7 +320,7 @@ extension MessageCollectionViewCell {
         
         NSLayoutConstraint.activate([
             timeTextLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
-            timeTextLabel.leadingAnchor.constraint(equalTo: messageTextView.trailingAnchor, constant: -40),
+            timeTextLabel.leadingAnchor.constraint(equalTo: messageTextView.trailingAnchor, constant: -50),
             timeTextLabel.trailingAnchor.constraint(equalTo: messageTextView.trailingAnchor),
             timeTextLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1/2)
         ])

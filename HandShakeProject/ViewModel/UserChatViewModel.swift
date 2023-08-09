@@ -13,8 +13,6 @@ class UserChatViewModel {
     var messagesPerUser = Bindable([Message()])
     
     init() {
-        print("hi im UserChatViewModel")
-       
     }
     
     func loadData() {
@@ -22,26 +20,28 @@ class UserChatViewModel {
             guard let self = self else { return }
         }
         chatAPI.observeMessages { [weak self] _ in
-                guard let self = self else { return }
+            guard let self = self else { return }
         }
     }
     
     func loadMessages() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.messages.value = self.chatAPI.messages
+            self.messages.value = self.chatAPI.lastMessageFromMessages
         }
     }
     
     func loadMessagesPerUser(_ user: User) {
-        DispatchQueue.main.async { [weak self] in
+        chatAPI.filterMessagesPerUser(user) { [weak self] result in
             guard let self = self else { return }
-            let messagesDict = self.chatAPI.messagesDictionaryTEST
-            let uid = user.uid
             
-            guard let messages = messagesDict[uid] else { return }
-            messagesPerUser.value = messages
-
+            switch result {
+            case .success(let messages):
+                messagesPerUser.value = messages
+                
+            case .failure(_):
+                break
+            }
         }
     }
     
@@ -53,10 +53,9 @@ class UserChatViewModel {
     }
     
     func fetchUserFromMessage(_ index: Int, completion: @escaping (Result<Void, Error>) -> Void) {
-        
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            let messages = self.chatAPI.messages
+            let messages = self.chatAPI.lastMessageFromMessages
             self.userAPI.loadUserChat(index, messages: messages) { [weak self] result in
                 guard let self = self else { return }
                 
@@ -71,6 +70,11 @@ class UserChatViewModel {
                 }
             }
         }
+    }
+    
+    func sendMessage(text: String, toId: String) {
+        chatAPI.sendMessage(text: text, toId: toId, completion: { _ in
+        })
     }
 }
 

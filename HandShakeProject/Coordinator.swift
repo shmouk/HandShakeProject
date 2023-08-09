@@ -10,17 +10,19 @@ import FirebaseAuth
 
 class Coordinator {
     
-    var window: UIWindow?
+    var window: UIWindow
     
     private let authVC = AuthorizationViewController()
     
+    init(window: UIWindow) {
+        self.window = window
+    }
+    
     func start() {
-                
-        window = UIWindow(frame: UIScreen.main.bounds)
-        window?.overrideUserInterfaceStyle = .light
+        window.overrideUserInterfaceStyle = .light
         authVC.delegate = self
-        window?.rootViewController = UINavigationController(rootViewController: authVC)
-        window?.makeKeyAndVisible()
+        window.rootViewController = UINavigationController(rootViewController: authVC)
+        window.makeKeyAndVisible()
     }
     
     private func showViewController() {

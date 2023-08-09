@@ -34,7 +34,7 @@ class MessageCollectionViewCell: UICollectionViewCell {
     
     private func convertTimestampToDate(_ timestamp: Int) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "hh:mm:ss"
+        dateFormatter.dateFormat = "hh:mm"
         let date = Date(timeIntervalSince1970: TimeInterval(timestamp))
         return dateFormatter.string(from: date)
     }
