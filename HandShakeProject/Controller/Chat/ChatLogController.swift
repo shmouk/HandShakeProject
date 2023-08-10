@@ -1,10 +1,3 @@
-//
-//  ChatLogController.swift
-//  HandShakeProject
-//
-//  Created by Марк on 27.07.23.
-//
-
 import Foundation
 import UIKit
 
@@ -17,10 +10,9 @@ class ChatLogController: UICollectionViewController {
     lazy var separatorView = interfaceBuilder.createView()
     
     let interfaceBuilder = InterfaceBuilder()
-    let chatAPI = ChatAPI.shared
-    let cellId = "cellId"
-    var messages: [Message]?
-    let userChatViewModel = UserChatViewModel()
+    private let userChatViewModel = UserChatViewModel()
+    private let cellId = "cellId"
+    private var messages: [Message]?
     
     var user: User? {
         didSet {
@@ -31,11 +23,12 @@ class ChatLogController: UICollectionViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setUI()
+        reloadDataIfNeeded()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadData()
+        bindViewModel()        
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -43,8 +36,9 @@ class ChatLogController: UICollectionViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? MessageCollectionViewCell else { return UICollectionViewCell() }
+        guard let uid = self.user?.uid, let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? MessageCollectionViewCell else { return UICollectionViewCell() }
         let message = messages?[indexPath.row]
+        cell.partnerUID = uid
         cell.message = message
         return cell
     }
@@ -58,6 +52,7 @@ class ChatLogController: UICollectionViewController {
     }
     
     private func setSubviews() {
+        tabBarController?.tabBar.isHidden = true
         collectionView.register(MessageCollectionViewCell.self, forCellWithReuseIdentifier: cellId)
         view.addSubviews(containerView)
         view.addSubviews(textField, sendButton)
@@ -65,7 +60,6 @@ class ChatLogController: UICollectionViewController {
     
     private func settingTextField() {
         textField.delegate = self
-        
         textField.placeholder = "Input text..."
     }
     
@@ -76,18 +70,27 @@ class ChatLogController: UICollectionViewController {
     
     private func loadData() {
         guard let user = self.user else { return }
-        userChatViewModel.loadMessagesPerUser(user)
-        bindViewModel()
+            self.userChatViewModel.loadMessages()
+            self.userChatViewModel.loadMessagesPerUser(user)
     }
     
-    private func bindViewModel() {
-        self.userChatViewModel.messagesPerUser.bind { [weak self] messages in
-            guard let self = self else { return }
-            self.messages = messages
-            self.reloadTable()
+    private func reloadDataIfNeeded() {
+        if messages?.isEmpty ?? true {
+            loadData()
         }
     }
-    
+
+    private func bindViewModel() {
+        userChatViewModel.newMessageReceived.bind { [weak self] _ in
+            guard let self = self else { return }
+            userChatViewModel.filterMessages.bind { [weak self] messages in
+                guard let self = self else { return }
+                self.messages = messages
+                self.reloadTable()
+            }
+        }
+    }
+
     private func sendText() {
         guard let text = textField.text,
               let uid = user?.uid else { return }
@@ -97,14 +100,38 @@ class ChatLogController: UICollectionViewController {
     private func setupTargets() {
         sendButton.addTarget(self, action: #selector(sendAction(_:)), for: .touchUpInside)
     }
-    
+       
     private func reloadTable() {
-        collectionView.reloadData()
+        self.collectionView.reloadData()
+        
+        if let indexPath = self.getLastIndexPath() {
+            self.collectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
+        }
     }
+    
+    private func getLastIndexPath() -> IndexPath? {
+        guard let messages = self.messages else {
+            return nil
+        }
+        
+        let lastSection = collectionView.numberOfSections - 1
+        if lastSection < 0 {
+            return nil
+        }
+        
+        let lastItem = collectionView.numberOfItems(inSection: lastSection) - 1
+        if lastItem < 0 {
+            return nil
+        }
+        
+        return IndexPath(item: lastItem, section: lastSection)
+    }
+
 }
 
 extension ChatLogController {
-    @objc func sendAction(_ sender: Any) {
+    @objc
+    private func sendAction(_ sender: Any) {
         sendText()
     }
 }

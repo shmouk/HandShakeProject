@@ -16,9 +16,9 @@ class ProfileViewController: UIViewController {
     lazy var emailLabel = interfaceBuilder.createDescriptionLabel()
     lazy var profileImageView = interfaceBuilder.createImageView()
     
-    let navigationBarManager = NavigationBarManager()
-    let interfaceBuilder = InterfaceBuilder()
-    lazy var authViewModel = AuthViewModel()
+    private let navigationBarManager = NavigationBarManager()
+    private let interfaceBuilder = InterfaceBuilder()
+    private lazy var authViewModel = AuthViewModel()
     lazy var profileViewModel = ProfileViewModel()
     
     init() {

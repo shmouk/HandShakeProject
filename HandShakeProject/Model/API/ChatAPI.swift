@@ -8,7 +8,7 @@ class ChatAPI {
     
     var lastMessageFromMessages = [Message]()
     var allMessages = [Message]()
-    var currentUid: String?
+    var currentUID: String?
 
     static var shared = ChatAPI()
     
@@ -18,6 +18,9 @@ class ChatAPI {
         database = SetupDatabase().setDatabase()
         storage = Storage.storage().reference()
         fetchCurrentId()
+        observeMessages{ _ in
+            print("load messages")
+        }
     }
     
     deinit {
@@ -25,12 +28,7 @@ class ChatAPI {
     }
     
     private func fetchCurrentId() {
-        guard let uid = Auth.auth().currentUser?.uid else {
-            let error = NSError(domain: "Current user is not authenticated", code: 401, userInfo: nil)
-            print(error)
-            return
-        }
-        currentUid = uid
+        currentUID = User.fetchCurrentId()
     }
     
     private func fetchUser(userId: String, completion: @escaping UserCompletion) {
@@ -58,7 +56,7 @@ class ChatAPI {
     }
     
     func observeMessages(completion: @escaping (Result<Void, Error>) -> Void) {
-            guard let uid = currentUid else { return }
+            guard let uid = currentUID else { return }
             
             var messageDictionary = [String : Message]()
             let userMessagesRef = database.child("user-messages").child(uid)
@@ -108,7 +106,7 @@ class ChatAPI {
 
     
     func filterMessagesPerUser(_ user: User, completion: @escaping (Result<[Message], Error>) -> Void) {
-         guard let uid = currentUid else { return }
+         guard let uid = currentUID else { return }
          
          let partnerUserId = user.uid
          
@@ -127,7 +125,7 @@ class ChatAPI {
  
     
     func sendMessage(text: String, toId: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        guard let fromId = currentUid else { return }
+        guard let fromId = currentUID else { return }
 
         let ref = database.child("messages")
         let childRef = ref.childByAutoId()

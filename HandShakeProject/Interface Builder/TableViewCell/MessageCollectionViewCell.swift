@@ -1,21 +1,24 @@
-//
-//  MessageCollectionViewCell.swift
-//  HandShakeProject
-//
-//  Created by Марк on 7.08.23.
-//
-
 import UIKit
 
 class MessageCollectionViewCell: UICollectionViewCell {
     
     lazy var messageTextView = interfaceBuilder.createTextView()
     lazy var timeTextLabel = interfaceBuilder.createDescriptionLabel()
-
     let interfaceBuilder = InterfaceBuilder()
+    
+    var isMessegeForUser: Bool? {
+        didSet {
+            setupConstraints() // Добавляем вызов метода setupConstraints()
+        }
+    }
+
+    var partnerUID: String?
+    var currentUID = UserChatViewModel.currentUID
     
     var message: Message? {
         didSet {
+            isMessegeForUser = currentUID == message?.fromId ? true : false
+            print(1, isMessegeForUser)
             messageTextView.text = message?.text
             timeTextLabel.text = convertTimestampToDate(message?.timeStamp ?? 0)
         }
@@ -41,6 +44,5 @@ class MessageCollectionViewCell: UICollectionViewCell {
 
     private func setSubviews() {
         addSubviews(messageTextView, timeTextLabel)
-
     }
 }

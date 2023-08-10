@@ -73,7 +73,6 @@ extension MainTabBarViewController {
 
 extension MainTabBarViewController: UITabBarControllerDelegate {
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
-
         return true
     }
 }

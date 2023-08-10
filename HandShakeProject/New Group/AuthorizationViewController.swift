@@ -24,11 +24,11 @@ class AuthorizationViewController: UIViewController {
     weak var delegate: AuthorizationViewControllerDelegate?
 
     let interfaceBuilder = InterfaceBuilder()
-    lazy var authViewModel = AuthViewModel()
+    private lazy var authViewModel = AuthViewModel()
     
-    let authState = ["Sign up", "Log in"]
+    private let authState = ["Sign up", "Log in"]
     
-    var isSignup = true
+    private var isSignup = true
     
     
     override func viewDidLoad() {

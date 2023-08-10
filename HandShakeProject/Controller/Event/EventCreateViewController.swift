@@ -30,10 +30,8 @@ class EventCreateViewController: UIViewController {
     
     let interfaceBuilder = InterfaceBuilder()
     
-    let deadlineState = ["No time", "Low", "Medium", "High"]
-    
-    var isSignup = true
-    
+    private let deadlineState = ["No time", "Low", "Medium", "High"]
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()

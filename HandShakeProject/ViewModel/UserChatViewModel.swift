@@ -5,50 +5,39 @@ class UserChatViewModel {
     let userAPI = UserAPI.shared
     let chatAPI = ChatAPI.shared
     
-    var user = Bindable(User())
-    var users = Bindable([User()])
-    var messages = Bindable([Message()])
-    var messagesFromUser = Bindable([Message()])
+    var lastMessageArray: Bindable<[Message]> = Bindable([])
+    var newMessageReceived: Bindable<[Message]> = Bindable([]) 
+    var filterMessages: Bindable<[Message]> = Bindable([])
     
-    var messagesPerUser = Bindable([Message()])
+    var fetchUser: Bindable<User> = Bindable(User())
+    var users: Bindable<[User]> = Bindable([])
+    
+    static var currentUID = UserAPI.shared.currentUID
     
     init() {
     }
     
-    func loadData() {
-        userAPI.loadUsersFromDatabase { [weak self] _ in
-            guard let self = self else { return }
-        }
-        chatAPI.observeMessages { [weak self] _ in
-            guard let self = self else { return }
-        }
+    func loadMessages() {
+        lastMessageArray.value = chatAPI.lastMessageFromMessages
+        newMessageReceived.value = chatAPI.allMessages
+        print("messages:", lastMessageArray.value.count, newMessageReceived.value.count)
     }
     
-    func loadMessages() {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.messages.value = self.chatAPI.lastMessageFromMessages
-        }
+    func loadUsers() {
+        users.value = userAPI.users
+        print("users:", users.value.count)
     }
     
     func loadMessagesPerUser(_ user: User) {
-        chatAPI.filterMessagesPerUser(user) { [weak self] result in
+        chatAPI.filterMessagesPerUser(user) {[weak self] result in
             guard let self = self else { return }
             
             switch result {
             case .success(let messages):
-                messagesPerUser.value = messages
-                
+                self.filterMessages.value = messages
             case .failure(_):
                 break
             }
-        }
-    }
-    
-    func loadUsers() {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.users.value = self.userAPI.users
         }
     }
     
@@ -61,7 +50,7 @@ class UserChatViewModel {
                 
                 switch result {
                 case .success(let user):
-                    self.user.value = user
+                    self.fetchUser.value = user
                     completion(.success(()))
                     
                 case .failure(let error):
@@ -73,10 +62,11 @@ class UserChatViewModel {
     }
     
     func sendMessage(text: String, toId: String) {
-        chatAPI.sendMessage(text: text, toId: toId, completion: { _ in
-        })
+        chatAPI.sendMessage(text: text, toId: toId) { _ in
+        }
     }
 }
+
 
 
 
