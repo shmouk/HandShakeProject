@@ -9,14 +9,12 @@ class UserAPI {
     static var shared = UserAPI()
 
     var users = [User]()
+    var currentUID = User.fetchCurrentId()
     
     private init() {
-          self.database = SetupDatabase().setDatabase()
-          self.storage = Storage.storage().reference()
-          loadUsersFromDatabase { [weak self] _ in
-              guard let self = self else { return }
-              print("init \(self.users)")
-          }
+        database = SetupDatabase().setDatabase()
+        storage = Storage.storage().reference()
+        loadUsersFromDatabase{ _ in }
       }
 
     deinit {
@@ -24,11 +22,7 @@ class UserAPI {
     }
     
     func loadCurrentUser(completion: @escaping (Result<User, Error>) -> Void) {
-        guard let uid = Auth.auth().currentUser?.uid else {
-            let error = NSError(domain: "Current user is not authenticated", code: 401, userInfo: nil)
-            completion(.failure(error))
-            return
-        }
+        guard let uid = self.currentUID else { return }
         
         let userRef = database.child("users").child(uid)
         userRef.observeSingleEvent(of: .value) { [weak self] snapshot in
@@ -90,20 +84,14 @@ class UserAPI {
         }
 
     func loadUserChat(_ index: Int, messages: [Message], completion: @escaping (Result<User, Error>) -> Void) {
-            guard let uid = Auth.auth().currentUser?.uid else {
-                completion(.failure(NSError(domain: "Current user is not authenticated", code: 401, userInfo: nil)))
-                return
-            }
+            guard let uid = self.currentUID else { return }
             guard messages.indices.contains(index) else {
                 completion(.failure(NSError(domain: "Invalid index", code: 400, userInfo: nil)))
                 return
             }
             let message = messages[index]
-            print("message: \(message)")
-        
             let chatUserId = uid == message.toId ? message.fromId : message.toId
         
-            print("load users: \(users)")
             guard let user = users.first(where: { $0.uid == chatUserId }) else {
                 completion(.failure(NSError(domain: "User not found", code: 404, userInfo: nil)))
                 return
@@ -112,13 +100,8 @@ class UserAPI {
             completion(.success(user))
         }
     
-    
-    
     func uploadImageToFirebaseStorage(image: UIImage, completion: @escaping (Result<URL, Error>) -> Void) {
-        guard let uid = Auth.auth().currentUser?.uid else {
-            completion(.failure(NSError(domain: "Current user is not authenticated", code: 401, userInfo: nil)))
-            return
-        }
+        guard let uid = self.currentUID else { return }
         
         guard let imageData = image.jpegData(compressionQuality: 0.8) else {
             completion(.failure(NSError(domain: "Failed to convert image to data", code: 400, userInfo: nil)))

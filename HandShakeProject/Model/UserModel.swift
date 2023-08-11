@@ -1,4 +1,5 @@
 import UIKit
+import FirebaseAuth
 
 class User: NSObject {
     @objc dynamic var uid: String
@@ -15,4 +16,15 @@ class User: NSObject {
         self.image = image
         self.downloadURL = downloadURL
     }
+    
+    static func fetchCurrentId() -> String? {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            let error = NSError(domain: "Current user is not authenticated", code: 401, userInfo: nil)
+            print(error)
+            return nil
+        }
+        return uid
+    }
 }
+
+

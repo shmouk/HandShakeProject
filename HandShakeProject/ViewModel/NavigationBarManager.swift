@@ -32,9 +32,9 @@ class NavigationBarManager {
         navigationBar.isHidden = false
         
         if isAddButtonNeeded {
-            viewController.navigationItem.leftBarButtonItems?.first?.isEnabled = true
+            viewController.navigationItem.leftBarButtonItems?.first?.isHidden = false
         } else {
-            viewController.navigationItem.leftBarButtonItems?.first?.isEnabled = false
+            viewController.navigationItem.leftBarButtonItems?.first?.isHidden = true
         }
     }
     

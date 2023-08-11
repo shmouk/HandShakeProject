@@ -1,5 +1,5 @@
-
 import UIKit
+import FirebaseAuth
 
 class Message: NSObject {
     @objc dynamic var fromId: String
@@ -8,7 +8,7 @@ class Message: NSObject {
     @objc dynamic var timeStamp: Int
     @objc dynamic var text: String
     @objc dynamic var image: UIImage?
-
+    
     init(fromId: String = "", toId: String = "", name: String = "", timeStamp: Int = 0, text: String = "", image: UIImage? = nil) {
         self.fromId = fromId
         self.toId = toId

@@ -1,28 +1,35 @@
 import UIKit
 
-class MessageTableViewCell: UITableViewCell {
+class MessageCollectionViewCell: UICollectionViewCell {
     
-    lazy var nameLabel = interfaceBuilder.createTitleLabel()
-    lazy var messageTextLabel = interfaceBuilder.createDescriptionLabel()
-    lazy var userImageView = interfaceBuilder.createImageView()
+    lazy var messageTextView = interfaceBuilder.createTextView()
     lazy var timeTextLabel = interfaceBuilder.createDescriptionLabel()
-
     let interfaceBuilder = InterfaceBuilder()
+    
+    var isMessegeForUser: Bool? {
+        didSet {
+            setupConstraints() // Добавляем вызов метода setupConstraints()
+        }
+    }
+
+    var partnerUID: String?
+    var currentUID = UserChatViewModel.currentUID
     
     var message: Message? {
         didSet {
-            userImageView.image = message?.image
-            nameLabel.text = message?.name
-            messageTextLabel.text = message?.text
+            isMessegeForUser = currentUID == message?.fromId ? true : false
+            print(1, isMessegeForUser)
+            messageTextView.text = message?.text
             timeTextLabel.text = convertTimestampToDate(message?.timeStamp ?? 0)
         }
     }
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         setSubviews()
         setupConstraints()
     }
+
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -36,6 +43,6 @@ class MessageTableViewCell: UITableViewCell {
     }
 
     private func setSubviews() {
-        contentView.addSubviews(userImageView, nameLabel, messageTextLabel, timeTextLabel)
+        addSubviews(messageTextView, timeTextLabel)
     }
 }

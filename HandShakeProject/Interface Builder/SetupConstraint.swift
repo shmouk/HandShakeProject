@@ -239,6 +239,8 @@ extension UsersTableViewCell {
     }
 }
 
+// MARK: - MessageTableViewCell Constraint
+
 extension MessageTableViewCell {
     
     func setupConstraints() {
@@ -253,20 +255,20 @@ extension MessageTableViewCell {
         NSLayoutConstraint.activate([
             nameLabel.topAnchor.constraint(equalTo: topAnchor),
             nameLabel.leadingAnchor.constraint(equalTo: userImageView.trailingAnchor, constant: 10),
-            nameLabel.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 1/2),
+            nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -80),
             nameLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1/2)
         ])
         
         NSLayoutConstraint.activate([
             messageTextLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor),
             messageTextLabel.leadingAnchor.constraint(equalTo: userImageView.trailingAnchor, constant: 10),
-            messageTextLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30),
+            messageTextLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -80),
             messageTextLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1/2)
         ])
          
         NSLayoutConstraint.activate([
             timeTextLabel.topAnchor.constraint(equalTo: topAnchor),
-            timeTextLabel.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor, constant: 30),
+            timeTextLabel.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor, constant: 10),
             timeTextLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
             timeTextLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1/2)
         ])
@@ -303,6 +305,43 @@ extension ChatLogController {
     }
 }
 
+// MARK: - MessageCollectionViewCell Constraint
+
+extension MessageCollectionViewCell {
+    
+    func setupConstraints() {
+        guard let check = isMessegeForUser else { return }
+        
+        messageTextView.removeConstraints(messageTextView.constraints)
+        timeTextLabel.removeConstraints(messageTextView.constraints)
+        
+        NSLayoutConstraint.activate([
+            messageTextView.topAnchor.constraint(equalTo: topAnchor, constant: 10),
+            messageTextView.bottomAnchor.constraint(equalTo: bottomAnchor),
+        ])
+        
+        if check {
+            NSLayoutConstraint.activate([
+                messageTextView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 1/2),
+                messageTextView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10)
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                messageTextView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 1/2),
+                messageTextView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10)
+            ])
+        }
+        
+        NSLayoutConstraint.activate([
+            timeTextLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
+            timeTextLabel.leadingAnchor.constraint(equalTo: messageTextView.trailingAnchor, constant: -50),
+            timeTextLabel.trailingAnchor.constraint(equalTo: messageTextView.trailingAnchor),
+            timeTextLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1/2)
+        ])
+    }
+}
+
+    
 // MARK: - ProfileViewController Constraint
 
 extension ProfileViewController {

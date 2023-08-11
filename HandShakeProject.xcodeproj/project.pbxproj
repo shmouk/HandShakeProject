@@ -22,7 +22,6 @@
 		AD2F8BF02A6F0C0500743601 /* SetupDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2F8BEF2A6F0C0400743601 /* SetupDatabase.swift */; };
 		AD33F4D32A682C320028E919 /* EventsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD33F4D22A682C320028E919 /* EventsModel.swift */; };
 		AD33F4D52A6836C60028E919 /* UsersTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD33F4D42A6836C60028E919 /* UsersTableViewCell.swift */; };
-		AD33F4D72A6837060028E919 /* TemplateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD33F4D62A6837060028E919 /* TemplateModel.swift */; };
 		AD33F4DA2A684C880028E919 /* EventCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD33F4D92A684C880028E919 /* EventCreateViewController.swift */; };
 		AD33F4DC2A695D6A0028E919 /* NavigationBar + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD33F4DB2A695D6A0028E919 /* NavigationBar + Extension.swift */; };
 		AD47E5B02A62D8CD0060DD3F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AD47E5AF2A62D8CD0060DD3F /* GoogleService-Info.plist */; };
@@ -33,6 +32,7 @@
 		AD5C62EC2A6310F00069A53F /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5C62EB2A6310F00069A53F /* ChatViewController.swift */; };
 		AD5C62EE2A6310FA0069A53F /* TeamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5C62ED2A6310FA0069A53F /* TeamViewController.swift */; };
 		AD5C62F02A6311060069A53F /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5C62EF2A6311060069A53F /* ProfileViewController.swift */; };
+		AD86E0102A811DD6000306B2 /* MessageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD86E00F2A811DD6000306B2 /* MessageCollectionViewCell.swift */; };
 		ADACF2CF2A6186DB00550283 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADACF2CE2A6186DB00550283 /* AppDelegate.swift */; };
 		ADACF2D32A6186DB00550283 /* AuthorizationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADACF2D22A6186DB00550283 /* AuthorizationViewController.swift */; };
 		ADACF2D82A6186DF00550283 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ADACF2D72A6186DF00550283 /* Assets.xcassets */; };
@@ -64,7 +64,6 @@
 		AD2F8BEF2A6F0C0400743601 /* SetupDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupDatabase.swift; sourceTree = "<group>"; };
 		AD33F4D22A682C320028E919 /* EventsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsModel.swift; sourceTree = "<group>"; };
 		AD33F4D42A6836C60028E919 /* UsersTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersTableViewCell.swift; sourceTree = "<group>"; };
-		AD33F4D62A6837060028E919 /* TemplateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateModel.swift; sourceTree = "<group>"; };
 		AD33F4D92A684C880028E919 /* EventCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCreateViewController.swift; sourceTree = "<group>"; };
 		AD33F4DB2A695D6A0028E919 /* NavigationBar + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationBar + Extension.swift"; sourceTree = "<group>"; };
 		AD47E5AF2A62D8CD0060DD3F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -72,6 +71,7 @@
 		AD5C62EB2A6310F00069A53F /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		AD5C62ED2A6310FA0069A53F /* TeamViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamViewController.swift; sourceTree = "<group>"; };
 		AD5C62EF2A6311060069A53F /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		AD86E00F2A811DD6000306B2 /* MessageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCollectionViewCell.swift; sourceTree = "<group>"; };
 		ADACF2CB2A6186DB00550283 /* HandShakeProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HandShakeProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADACF2CE2A6186DB00550283 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		ADACF2D22A6186DB00550283 /* AuthorizationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AuthorizationViewController.swift; path = "../New Group/AuthorizationViewController.swift"; sourceTree = "<group>"; };
@@ -123,7 +123,6 @@
 				AD13F6352A61A5D4007F5449 /* UserModel.swift */,
 				AD1EB9052A7BE89700B78AEA /* MessageModel.swift */,
 				AD33F4D22A682C320028E919 /* EventsModel.swift */,
-				AD33F4D62A6837060028E919 /* TemplateModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -204,6 +203,7 @@
 				ADDF7F1F2A6704FA009FE3C2 /* EventTableViewCell.swift */,
 				AD33F4D42A6836C60028E919 /* UsersTableViewCell.swift */,
 				AD1EB90C2A7BFEF700B78AEA /* MessageTableViewCell.swift */,
+				AD86E00F2A811DD6000306B2 /* MessageCollectionViewCell.swift */,
 			);
 			path = TableViewCell;
 			sourceTree = "<group>";
@@ -334,6 +334,7 @@
 				AD1EB9062A7BE89700B78AEA /* MessageModel.swift in Sources */,
 				AD13F6382A61A6B0007F5449 /* AuthViewModel.swift in Sources */,
 				AD13F63B2A61A85F007F5449 /* InterfaceBuilder.swift in Sources */,
+				AD86E0102A811DD6000306B2 /* MessageCollectionViewCell.swift in Sources */,
 				AD33F4DA2A684C880028E919 /* EventCreateViewController.swift in Sources */,
 				AD33F4D32A682C320028E919 /* EventsModel.swift in Sources */,
 				ADDF7F202A6704FA009FE3C2 /* EventTableViewCell.swift in Sources */,
@@ -349,7 +350,6 @@
 				AD5C62EA2A6310E30069A53F /* EventsViewController.swift in Sources */,
 				AD1EB9042A7B118500B78AEA /* UsersListTableViewController.swift in Sources */,
 				AD2F8BF02A6F0C0500743601 /* SetupDatabase.swift in Sources */,
-				AD33F4D72A6837060028E919 /* TemplateModel.swift in Sources */,
 				AD1EB9022A7B0D3D00B78AEA /* NavigationBarManager.swift in Sources */,
 				AD33F4D52A6836C60028E919 /* UsersTableViewCell.swift in Sources */,
 				AD13F63D2A61AABB007F5449 /* UIView + Extension.swift in Sources */,
