@@ -32,6 +32,10 @@
 		AD5C62EC2A6310F00069A53F /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5C62EB2A6310F00069A53F /* ChatViewController.swift */; };
 		AD5C62EE2A6310FA0069A53F /* TeamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5C62ED2A6310FA0069A53F /* TeamViewController.swift */; };
 		AD5C62F02A6311060069A53F /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5C62EF2A6311060069A53F /* ProfileViewController.swift */; };
+		AD840ED62A86357A00BEAF7C /* TeamAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD840ED52A86357A00BEAF7C /* TeamAPI.swift */; };
+		AD840ED82A8635BA00BEAF7C /* TeamModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD840ED72A8635BA00BEAF7C /* TeamModel.swift */; };
+		AD840EDB2A86561600BEAF7C /* TeamCeateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD840EDA2A86561600BEAF7C /* TeamCeateViewController.swift */; };
+		AD840EDD2A865BC500BEAF7C /* TeamViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD840EDC2A865BC500BEAF7C /* TeamViewModel.swift */; };
 		AD86E0102A811DD6000306B2 /* MessageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD86E00F2A811DD6000306B2 /* MessageCollectionViewCell.swift */; };
 		ADACF2CF2A6186DB00550283 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADACF2CE2A6186DB00550283 /* AppDelegate.swift */; };
 		ADACF2D32A6186DB00550283 /* AuthorizationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADACF2D22A6186DB00550283 /* AuthorizationViewController.swift */; };
@@ -71,6 +75,10 @@
 		AD5C62EB2A6310F00069A53F /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		AD5C62ED2A6310FA0069A53F /* TeamViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamViewController.swift; sourceTree = "<group>"; };
 		AD5C62EF2A6311060069A53F /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		AD840ED52A86357A00BEAF7C /* TeamAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamAPI.swift; sourceTree = "<group>"; };
+		AD840ED72A8635BA00BEAF7C /* TeamModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamModel.swift; sourceTree = "<group>"; };
+		AD840EDA2A86561600BEAF7C /* TeamCeateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamCeateViewController.swift; sourceTree = "<group>"; };
+		AD840EDC2A865BC500BEAF7C /* TeamViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamViewModel.swift; sourceTree = "<group>"; };
 		AD86E00F2A811DD6000306B2 /* MessageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCollectionViewCell.swift; sourceTree = "<group>"; };
 		ADACF2CB2A6186DB00550283 /* HandShakeProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HandShakeProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADACF2CE2A6186DB00550283 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -110,7 +118,7 @@
 				AD13F6432A61E4F5007F5449 /* MainTabBarViewController.swift */,
 				AD1EB90A2A7BEBE200B78AEA /* Event */,
 				AD1EB9092A7BEBD600B78AEA /* Chat */,
-				AD5C62ED2A6310FA0069A53F /* TeamViewController.swift */,
+				AD840ED92A864C2700BEAF7C /* Team */,
 				AD1EB90B2A7BEBF000B78AEA /* Profile */,
 			);
 			path = Controller;
@@ -122,6 +130,7 @@
 				AD1EB9072A7BE8F800B78AEA /* API */,
 				AD13F6352A61A5D4007F5449 /* UserModel.swift */,
 				AD1EB9052A7BE89700B78AEA /* MessageModel.swift */,
+				AD840ED72A8635BA00BEAF7C /* TeamModel.swift */,
 				AD33F4D22A682C320028E919 /* EventsModel.swift */,
 			);
 			path = Model;
@@ -133,6 +142,7 @@
 				AD13F6372A61A6B0007F5449 /* AuthViewModel.swift */,
 				ADBFBB0F2A71612D00666533 /* ProfileViewModel.swift */,
 				ADBFBB172A754C6F00666533 /* UserChatViewModel.swift */,
+				AD840EDC2A865BC500BEAF7C /* TeamViewModel.swift */,
 				AD1EB9012A7B0D3D00B78AEA /* NavigationBarManager.swift */,
 				AD13F6402A61AD2D007F5449 /* Bindable */,
 			);
@@ -164,6 +174,7 @@
 			children = (
 				AD2F8BED2A6F014300743601 /* UserAPI.swift */,
 				ADBFBB152A72917500666533 /* ChatAPI.swift */,
+				AD840ED52A86357A00BEAF7C /* TeamAPI.swift */,
 				AD2F8BEF2A6F0C0400743601 /* SetupDatabase.swift */,
 			);
 			path = API;
@@ -206,6 +217,15 @@
 				AD86E00F2A811DD6000306B2 /* MessageCollectionViewCell.swift */,
 			);
 			path = TableViewCell;
+			sourceTree = "<group>";
+		};
+		AD840ED92A864C2700BEAF7C /* Team */ = {
+			isa = PBXGroup;
+			children = (
+				AD5C62ED2A6310FA0069A53F /* TeamViewController.swift */,
+				AD840EDA2A86561600BEAF7C /* TeamCeateViewController.swift */,
+			);
+			path = Team;
 			sourceTree = "<group>";
 		};
 		ADACF2C22A6186DB00550283 = {
@@ -347,14 +367,18 @@
 				ADACF2D32A6186DB00550283 /* AuthorizationViewController.swift in Sources */,
 				AD13F6362A61A5D4007F5449 /* UserModel.swift in Sources */,
 				ADBFBB102A71612D00666533 /* ProfileViewModel.swift in Sources */,
+				AD840EDD2A865BC500BEAF7C /* TeamViewModel.swift in Sources */,
 				AD5C62EA2A6310E30069A53F /* EventsViewController.swift in Sources */,
+				AD840ED82A8635BA00BEAF7C /* TeamModel.swift in Sources */,
 				AD1EB9042A7B118500B78AEA /* UsersListTableViewController.swift in Sources */,
 				AD2F8BF02A6F0C0500743601 /* SetupDatabase.swift in Sources */,
 				AD1EB9022A7B0D3D00B78AEA /* NavigationBarManager.swift in Sources */,
+				AD840EDB2A86561600BEAF7C /* TeamCeateViewController.swift in Sources */,
 				AD33F4D52A6836C60028E919 /* UsersTableViewCell.swift in Sources */,
 				AD13F63D2A61AABB007F5449 /* UIView + Extension.swift in Sources */,
 				ADACF2CF2A6186DB00550283 /* AppDelegate.swift in Sources */,
 				AD5C62EC2A6310F00069A53F /* ChatViewController.swift in Sources */,
+				AD840ED62A86357A00BEAF7C /* TeamAPI.swift in Sources */,
 				ADBFBB182A754C6F00666533 /* UserChatViewModel.swift in Sources */,
 				ADBFBB162A72917500666533 /* ChatAPI.swift in Sources */,
 				ADBFBB0B2A7009D900666533 /* PickerProfileImageView.swift in Sources */,

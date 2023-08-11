@@ -9,7 +9,6 @@ import UIKit
 
 class EventsViewController: UIViewController {
     private let navigationBarManager = NavigationBarManager()
-    private lazy var eventCreateViewController = EventCreateViewController()
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -28,9 +27,11 @@ class EventsViewController: UIViewController {
 
 extension EventsViewController: NavigationBarManagerDelegate {
       func didTapNotificationButton() {
-          navigationController?.pushViewController(eventCreateViewController, animated: true)
+         
       }
       
       func didTapAddButton() {
+          let eventCreateViewController = EventCreateViewController()
+          navigationController?.pushViewController(eventCreateViewController, animated: true)
       }
 }

@@ -14,7 +14,7 @@ class ProfileViewModel {
     let userAPI = UserAPI.shared
 
     func fetchUser() {
-        userAPI.loadCurrentUser { [weak self] result in
+        userAPI.fetchCurrentUser { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let user):

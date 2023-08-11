@@ -217,6 +217,29 @@ extension EventTableViewCell{
     }
 }
 
+// MARK: - TeamCeateViewController Constraint
+
+extension TeamCeateViewController {
+    func setupConstraints() {
+        
+        let heightForView = view.frame.height / 14
+        
+        NSLayoutConstraint.activate([
+            teamLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            teamLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            teamLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            teamLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
+        ])
+        
+        NSLayoutConstraint.activate([
+            namingTextField.topAnchor.constraint(equalTo: teamLabel.bottomAnchor, constant: 5),
+            namingTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            namingTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            namingTextField.heightAnchor.constraint(equalToConstant: heightForView * 0.6)
+        ])
+    }
+}
+
 // MARK: - ChatsTableVeiwCell Constraint
 
 extension UsersTableViewCell {

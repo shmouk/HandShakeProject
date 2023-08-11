@@ -14,14 +14,14 @@ class UserAPI {
     private init() {
         database = SetupDatabase().setDatabase()
         storage = Storage.storage().reference()
-        loadUsersFromDatabase{ _ in }
+        observeUsers{ _ in }
       }
 
     deinit {
         print("deinit UserAPI")
     }
     
-    func loadCurrentUser(completion: @escaping (Result<User, Error>) -> Void) {
+    func fetchCurrentUser(completion: @escaping (Result<User, Error>) -> Void) {
         guard let uid = self.currentUID else { return }
         
         let userRef = database.child("users").child(uid)
@@ -55,7 +55,7 @@ class UserAPI {
         }
     }
     
-    func loadUsersFromDatabase(completion: @escaping (Result<Void, Error>) -> Void) {
+    func observeUsers(completion: @escaping (Result<Void, Error>) -> Void) {
             database.child("users").observe(.childAdded) { [weak self] snapshot in
                 guard let userDict = snapshot.value as? [String: Any],
                       let imageUrlString = userDict["downloadURL"] as? String,
@@ -83,7 +83,7 @@ class UserAPI {
             }
         }
 
-    func loadUserChat(_ index: Int, messages: [Message], completion: @escaping (Result<User, Error>) -> Void) {
+    func fetchUserFromChat(_ index: Int, messages: [Message], completion: @escaping (Result<User, Error>) -> Void) {
             guard let uid = self.currentUID else { return }
             guard messages.indices.contains(index) else {
                 completion(.failure(NSError(domain: "Invalid index", code: 400, userInfo: nil)))
@@ -207,8 +207,8 @@ class UserAPI {
             guard self != nil else { return }
             
             switch result {
-            case .success(let string):
-                let data = ["downloadURL": string, "name": "User" + uid, "email": email]
+            case .success(let downloadURL):
+                let data = ["downloadURL": downloadURL, "name": "User" + uid, "email": email]
                 userRef.setValue(data) { (error, databaseRef) in
                     if let error = error {
                         print("Error writing to database: \(error.localizedDescription)")

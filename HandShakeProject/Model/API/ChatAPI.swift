@@ -130,8 +130,8 @@ class ChatAPI {
         let ref = database.child("messages")
         let childRef = ref.childByAutoId()
         let timestamp = Int(Date().timeIntervalSince1970)
-        let values = ["fromId": fromId, "toId": toId, "timestamp": timestamp, "text": text] as [String : Any]
-        childRef.updateChildValues(values) { (error, ref) in
+        let data = ["fromId": fromId, "toId": toId, "timestamp": timestamp, "text": text] as [String : Any]
+        childRef.updateChildValues(data) { (error, _) in
             if let error = error {
                 completion(.failure(error))
             } else {

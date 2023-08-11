@@ -1,5 +1,4 @@
 import UIKit
-import FirebaseAuth
 
 class Message: NSObject {
     @objc dynamic var fromId: String

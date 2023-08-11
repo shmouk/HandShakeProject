@@ -45,7 +45,7 @@ class UserChatViewModel {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             let messages = self.chatAPI.lastMessageFromMessages
-            self.userAPI.loadUserChat(index, messages: messages) { [weak self] result in
+            self.userAPI.fetchUserFromChat(index, messages: messages) { [weak self] result in
                 guard let self = self else { return }
                 
                 switch result {
