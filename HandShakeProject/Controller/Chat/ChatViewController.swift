@@ -5,14 +5,14 @@ class ChatViewController: UITableViewController {
     private let navigationBarManager = NavigationBarManager()
     private let cellId = "cellId"
     private let userChatViewModel = UserChatViewModel()
-    private var messages: [Message]? 
+    private var messages: [Message]?
     private var refreshCntrl = UIRefreshControl()
-
+    
     private var user: User?
     
     init() {
         super.init(style: .plain)
-
+        
     }
     
     required init?(coder: NSCoder) {
@@ -28,12 +28,12 @@ class ChatViewController: UITableViewController {
         setUI()
         reloadDataIfNeeded()
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         bindViewModel()
     }
-
+    
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? MessageTableViewCell else { return UITableViewCell() }
@@ -62,23 +62,23 @@ class ChatViewController: UITableViewController {
     }
     
     private func reloadDataIfNeeded() {
-           if messages?.isEmpty ?? true {
-               userChatViewModel.loadMessages()
-           }
-       }
-
-    private func bindViewModel() {
-            userChatViewModel.lastMessageArray.bind { [weak self] messages in
-                guard let self = self else { return }
-                self.messages = messages
-                self.reloadTable()
-            }
-            userChatViewModel.fetchUser.bind { [weak self] user in
-                guard let self = self else { return }
-                self.user = user
-            }
+        if messages?.isEmpty ?? true {
+            userChatViewModel.loadMessages()
         }
-
+    }
+    
+    private func bindViewModel() {
+        userChatViewModel.lastMessageArray.bind { [weak self] messages in
+            guard let self = self else { return }
+            self.messages = messages
+            self.reloadTable()
+        }
+        userChatViewModel.fetchUser.bind { [weak self] user in
+            guard let self = self else { return }
+            self.user = user
+        }
+    }
+    
     private func setupNavBarManager() {
         tabBarController?.tabBar.isHidden = false
         navigationBarManager.delegate = self
@@ -93,7 +93,7 @@ class ChatViewController: UITableViewController {
     }
     
     private func openUserChat(_ index: Int) {
-        userChatViewModel.fetchUserFromMessage(index, completion: { [weak self] result in
+        userChatViewModel.fetchUserFromMessage(index) { [weak self] result in
             guard let self = self, let user = self.user else { return }
             
             switch result {
@@ -103,7 +103,7 @@ class ChatViewController: UITableViewController {
             case .failure(_):
                 break
             }
-        })
+        }
     }
     
     private func reloadTable() {

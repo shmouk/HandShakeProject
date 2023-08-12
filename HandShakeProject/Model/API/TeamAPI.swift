@@ -6,47 +6,45 @@ class TeamAPI {
     let database: DatabaseReference
     let storage: StorageReference
     
-    var lastMessageFromMessages = [Message]()
-    var allMessages = [Message]()
-    var currentUID: String?
- 
-    static var shared = TeamAPI()
+    var teams = [Team]()
     
-    typealias TeamCompletion = (Result<(UIImage, String), Error>) -> Void
+    var currentUID: String?
+    
+    static var shared = TeamAPI()
     
     private init() {
         database = SetupDatabase().setDatabase()
         storage = Storage.storage().reference()
         fetchCurrentId()
+        observeTeams { _ in
+            print("load teams")
+        }
     }
     
     private func fetchCurrentId() {
         currentUID = User.fetchCurrentId()
     }
     
-    private func fetchTeam(teamId: String, completion: @escaping TeamCompletion) {
-        database.child("teams").child(teamId).observeSingleEvent(of: .value) { snapshot in
-            guard let userDict = snapshot.value as? [String: Any],
-                  let imageUrlString = userDict["downloadURL"] as? String,
-                  let teamName = userDict["teamName"] as? String,
+    private func fetchTeam(teamId: String, completion: @escaping (Result<UIImage, Error>) -> Void) {
+        let teamRef = database.child("teams").child(teamId)
+        
+        teamRef.observeSingleEvent(of: .value) { [weak self] snapshot in
+            guard let self = self,
+                  let teamDict = snapshot.value as? [String: Any],
+                  let imageUrlString = teamDict["downloadURL"] as? String,
                   let imageUrl = URL(string: imageUrlString) else {
+                completion(.failure(NSError(domain: "Invalid team data", code: 0, userInfo: nil)))
                 return
             }
             
             self.downloadImage(from: imageUrl) { result in
-                switch result {
-                case .success(let image):
-                    DispatchQueue.main.async {
-                        completion(.success((image, teamName)))
-                    }
-                case .failure(let error):
-                    DispatchQueue.main.async {
-                        completion(.failure(error))
-                    }
+                DispatchQueue.main.async {
+                    completion(result)
                 }
             }
         }
     }
+    
     
     func writeToDatabase(_ teamName: String, completion: @escaping (Result<Void, Error>) -> Void) {
         let ref = database.child("teams")
@@ -57,13 +55,12 @@ class TeamAPI {
             switch result {
             case .success(let downloadURL):
                 guard let teamID = childRef.key, let uid = currentUID else { return }
-                var userListWithIDs: [String: Any] = ["userList": ""]
-            
+                var userListWithIDs: [String: Any] = [uid: 1]
+                
                 let teamData: [String: Any] = [
                     "teamName": teamName,
                     "downloadURL": downloadURL,
-                    "userList": userListWithIDs,
-                    "currentID": uid
+                    "userList": userListWithIDs
                 ]
                 
                 childRef.setValue(teamData) { (error, _) in
@@ -73,53 +70,110 @@ class TeamAPI {
                         completion(.success(()))
                     }
                 }
+                
+                let userTeamRef = self.database.child("user-team").child(uid)
+                userTeamRef.updateChildValues([teamID: 1])
+                
             case .failure(let error):
-                completion(.failure(error))
+                completion(.failure(NSError(domain: "No teams found \(error.localizedDescription)", code: 0, userInfo: nil)))
             }
         }
-        
     }
     
     func observeTeams(completion: @escaping (Result<Void, Error>) -> Void) {
-            guard let uid = currentUID else { return }
+        guard let uid = currentUID else { return }
+        
+        let dispatchGroup = DispatchGroup()
+        
+        database.child("user-team").child(uid).observe(.childAdded) { [weak self] (snapshot) in
+            guard let self = self else { return }
             
-            var teamDictionary = [String : Team]()
-            let teamRef = database.child("team-users").child(uid)
+            let teamId = snapshot.key
             
-            teamRef.observe(.childAdded) { [weak self] (snapshot) in
-                guard let self = self else { return }
-                let teamId = snapshot.key
-                let teamReference = self.database.child("teams").child(teamId)
+            dispatchGroup.enter()
+            
+            let teamReference = self.database.child("teams").child(teamId)
+            
+            teamReference.observeSingleEvent(of: .value) { [weak self] (snapshot) in
+                guard let self = self,
+                      let dict = snapshot.value as? [String: Any],
+                      let teamName = dict["teamName"] as? String,
+                      let downloadURL = dict["downloadURL"] as? String
+                else {
+                    completion(.failure(NSError(domain: "Error retrieving team data", code: 0, userInfo: nil)))
+                    dispatchGroup.leave()
+                    return
+                }
                 
-                teamReference.observeSingleEvent(of: .value) { [weak self] (snapshot) in
+                var userIDs: [String] = []
+                var userCreatorID: String?
+                
+                self.fetchTeam(teamId: teamId) { [weak self] (result) in
                     guard let self = self else { return }
                     
-                    guard let dict = snapshot.value as? [String: Any],
-                          let teamName = dict["teamName"] as? String,
-                          let creatorId = dict["creatorId"] as? String,
-                          let downloadURL = dict["downloadURL"] as? String else {
-                        return
-                    }
-                    
-                    self.fetchTeam(teamId: uid) { [weak self] (result) in
-                        guard let self = self else { return }
-                        
-                        switch result {
-                        case .success(let (image, name)):
-                            DispatchQueue.main.async {
-                                
-                                completion(.success(()))
+                    switch result {
+                    case .success(let image):
+                        teamReference.child("userList").observeSingleEvent(of: .value) { (snapshot) in
+                            guard let users = snapshot.value as? [String: Int] else {
+                                completion(.failure(NSError(domain: "Error retrieving user list", code: 0, userInfo: nil)))
+                                dispatchGroup.leave()
+                                return
                             }
                             
-                        case .failure(let error):
-                            DispatchQueue.main.async {
-                                completion(.failure(error))
+                            for (uid, value) in users {
+                                switch value {
+                                case 0:
+                                    userIDs.append(uid)
+                                case 1:
+                                    userCreatorID = uid
+                                default:
+                                    break
+                                }
                             }
+                            let team = Team(teamName: teamName, creatorId: userCreatorID ?? "", image: image, downloadURL: downloadURL, userList: userIDs)
+                            self.teams.append(team)
+                            
+                            dispatchGroup.leave()
+                        }
+                    case .failure(let error):
+                        DispatchQueue.main.async {
+                            completion(.failure(NSError(domain: "Error fetching team image, \(error.localizedDescription)", code: 0, userInfo: nil)))
+                            dispatchGroup.leave()
                         }
                     }
                 }
             }
         }
+        
+        dispatchGroup.notify(queue: .main) {
+            if !self.teams.isEmpty {
+                completion(.success(()))
+            } else {
+                completion(.failure(NSError(domain: "No teams found", code: 0, userInfo: nil)))
+            }
+        }
+    }
+    
+    func filterTeams(completion: @escaping (Result<([Team], [Team]), Error>) -> Void) {
+        guard let uid = currentUID else { return }
+        
+        var partnerTeams: [Team] = []
+        var ownTeams: [Team] = []
+        
+        for team in teams {
+            if team.creatorId == uid {
+                ownTeams.append(team)
+            } else {
+                partnerTeams.append(team)
+            }
+        }
+        
+        if !ownTeams.isEmpty || !partnerTeams.isEmpty {
+            completion(.success((ownTeams, partnerTeams)))
+        } else {
+            completion(.failure(NSError(domain: "No teams found", code: 0, userInfo: nil)))
+        }
+    }
     
     private func downloadImage(from url: URL, completion: @escaping (Result<UIImage, Error>) -> Void) {
         URLSession.shared.dataTask(with: url) { data, response, error in
@@ -143,7 +197,7 @@ class TeamAPI {
         }.resume()
     }
     
-    func downloadDefaultImageString(completion: @escaping (Result<String, Error>) -> Void) {
+    private func downloadDefaultImageString(completion: @escaping (Result<String, Error>) -> Void) {
         let defaultImageRef = storage.child("defaultPhoto").child("teamDefaultPicture.jpeg")
         defaultImageRef.downloadURL { url, error in
             guard let imageURL = url else {

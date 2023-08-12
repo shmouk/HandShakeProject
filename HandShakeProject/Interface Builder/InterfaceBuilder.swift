@@ -19,12 +19,21 @@ class InterfaceBuilder {
         navBar.largeTitleTextAttributes = [.foregroundColor: UIColor.black]
         return navBar
     }
+    
     func createView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .colorForView()
         view.layer.cornerRadius = 10
        return view
+    }
+    
+    func createTableView() -> UITableView {
+        let tableView = UITableView()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.backgroundColor = .colorForView()
+        tableView.layer.cornerRadius = 10
+        return tableView
     }
     
     func createSegmentControl(items: [Any]?) -> UISegmentedControl {

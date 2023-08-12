@@ -217,6 +217,20 @@ extension EventTableViewCell{
     }
 }
 
+// MARK: - TeamViewController
+
+extension TeamViewController {
+    func setupConstraints() {
+        
+//        NSLayoutConstraint.activate([
+//            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+//            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+//            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+//            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+//        ])
+    }
+}
+
 // MARK: - TeamCeateViewController Constraint
 
 extension TeamCeateViewController {
@@ -236,6 +250,28 @@ extension TeamCeateViewController {
             namingTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
             namingTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
             namingTextField.heightAnchor.constraint(equalToConstant: heightForView * 0.6)
+        ])
+    }
+}
+
+// MARK: - TeamTableViewCell Constraint
+
+extension TeamTableViewCell {
+    
+    func setupConstraints() {
+        
+        NSLayoutConstraint.activate([
+            teamImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            teamImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+            teamImageView.topAnchor.constraint(equalTo: topAnchor, constant: 10),
+            teamImageView.widthAnchor.constraint(equalTo: teamImageView.heightAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            teamNameLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            teamNameLabel.leadingAnchor.constraint(equalTo: teamImageView.trailingAnchor, constant: 20),
+            teamNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -frame.width / 2),
+            teamNameLabel.heightAnchor.constraint(equalTo: teamImageView.heightAnchor)
         ])
     }
 }

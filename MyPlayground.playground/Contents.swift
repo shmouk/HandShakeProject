@@ -34,7 +34,6 @@ let currentUserId = "333"
 let partnerUserId = "222"
 var resMessages = [Message]()
 
-
 var messagesDict = [String: [Message]]()
 
     DispatchQueue.global().async {
@@ -49,3 +48,61 @@ var messagesDict = [String: [Message]]()
            }
        }
 
+class ViewController: UIViewController {
+    
+    private let tableView: UITableView = {
+        let tableView = UITableView(frame: .zero, style: .grouped)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        return tableView
+    }()
+    
+    private let sectionTitles = ["Section 1", "Section 2"]
+    private let section1Data = ["Item 1", "Item 2", "Item 3"]
+    private let section2Data = ["Item A", "Item B", "Item C"]
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        
+        view.addSubview(tableView)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        tableView.frame = view.bounds
+    }
+}
+
+extension ViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return sectionTitles.count
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return sectionTitles[section]
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == 0 {
+            return section1Data.count
+        } else {
+            return section2Data.count
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        
+        if indexPath.section == 0 {
+            cell.textLabel?.text = section1Data[indexPath.row]
+        } else {
+            cell.textLabel?.text = section2Data[indexPath.row]
+        }
+        
+        return cell
+    }
+}

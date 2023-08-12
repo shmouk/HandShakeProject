@@ -48,7 +48,7 @@ class ChatAPI {
                     }
                 case .failure(let error):
                     DispatchQueue.main.async {
-                        completion(.failure(error))
+                        completion(.failure(NSError(domain: "Error user, \(error.localizedDescription)", code: 0, userInfo: nil)))
                     }
                 }
             }
@@ -56,54 +56,66 @@ class ChatAPI {
     }
     
     func observeMessages(completion: @escaping (Result<Void, Error>) -> Void) {
-            guard let uid = currentUID else { return }
+        guard let uid = currentUID else { return }
+        
+        var messageDictionary = [String : Message]()
+        let userMessagesRef = database.child("user-messages").child(uid)
+        
+        let dispatchGroup = DispatchGroup()
+        
+        userMessagesRef.observe(.childAdded) { [weak self] (snapshot) in
+            guard let self = self else { return }
             
-            var messageDictionary = [String : Message]()
-            let userMessagesRef = database.child("user-messages").child(uid)
+            dispatchGroup.enter()
             
-            userMessagesRef.observe(.childAdded) { [weak self] (snapshot) in
+            let messageId = snapshot.key
+            let messagesReference = self.database.child("messages").child(messageId)
+            
+            messagesReference.observeSingleEvent(of: .value) { [weak self] (snapshot) in
                 guard let self = self else { return }
-                let messageId = snapshot.key
-                let messagesReference = self.database.child("messages").child(messageId)
                 
-                messagesReference.observeSingleEvent(of: .value) { [weak self] (snapshot) in
+                guard let dict = snapshot.value as? [String: Any],
+                      let fromId = dict["fromId"] as? String,
+                      let toId = dict["toId"] as? String,
+                      let timestamp = dict["timestamp"] as? Int,
+                      let text = dict["text"] as? String else {
+                    dispatchGroup.leave()
+                    return
+                }
+                
+                var withId = fromId == uid ? toId : fromId
+                
+                dispatchGroup.enter()
+                
+                self.fetchUser(userId: withId) { [weak self] (result) in
                     guard let self = self else { return }
                     
-                    guard let dict = snapshot.value as? [String: Any],
-                          let fromId = dict["fromId"] as? String,
-                          let toId = dict["toId"] as? String,
-                          let timestamp = dict["timestamp"] as? Int,
-                          let text = dict["text"] as? String else {
-                        return
-                    }
-                    
-                    var withId = fromId == uid ? toId : fromId
-                    
-                    self.fetchUser(userId: withId) { [weak self] (result) in
-                        guard let self = self else { return }
+                    switch result {
+                    case .success(let (image, name)):
+                        let message = Message(fromId: fromId, toId: toId, name: name, timeStamp: timestamp, text: text, image: image)
                         
-                        switch result {
-                        case .success(let (image, name)):
-                            DispatchQueue.main.async {
-                                let message = Message(fromId: fromId, toId: toId, name: name, timeStamp: timestamp, text: text, image: image)
-                                
-                                self.allMessages.append(message)
-                                messageDictionary[withId] = message
-                                self.lastMessageFromMessages = Array(messageDictionary.values.sorted(by: {$0.timeStamp > $1.timeStamp}))
-                                
-                                completion(.success(()))
-                            }
-                            
-                        case .failure(let error):
-                            DispatchQueue.main.async {
-                                completion(.failure(error))
-                            }
+                        DispatchQueue.main.async {
+                            self.allMessages.append(message)
+                            messageDictionary[withId] = message
+                            self.lastMessageFromMessages = Array(messageDictionary.values.sorted(by: {$0.timeStamp > $1.timeStamp}))
+                            dispatchGroup.leave()
+                        }
+                    case .failure(let error):
+                        DispatchQueue.main.async {
+                            completion(.failure(NSError(domain: "No message found, \(error.localizedDescription)", code: 0, userInfo: nil)))
+                            dispatchGroup.leave()
                         }
                     }
                 }
+                
+                dispatchGroup.leave()
             }
         }
-
+        
+        dispatchGroup.notify(queue: .main) {
+            completion(.success(()))
+        }
+    }
     
     func filterMessagesPerUser(_ user: User, completion: @escaping (Result<[Message], Error>) -> Void) {
          guard let uid = currentUID else { return }
@@ -116,9 +128,12 @@ class ChatAPI {
              let filteredMessages = self.allMessages.filter { message in
                  return (message.fromId == uid && message.toId == partnerUserId) || (message.fromId == partnerUserId && message.toId == uid)
              }
-             
              DispatchQueue.main.async {
-                 completion(.success(filteredMessages))
+                 if !filteredMessages.isEmpty {
+                     completion(.success(filteredMessages))
+                 } else {
+                     completion(.failure(NSError(domain: "No message found", code: 0, userInfo: nil)))
+                 }
              }
          }
      }
@@ -133,7 +148,7 @@ class ChatAPI {
         let data = ["fromId": fromId, "toId": toId, "timestamp": timestamp, "text": text] as [String : Any]
         childRef.updateChildValues(data) { (error, _) in
             if let error = error {
-                completion(.failure(error))
+                completion(.failure(NSError(domain: "Message does not send, \(error)", code: 0, userInfo: nil)))
             } else {
                 guard let messageId = childRef.key else { return }
                 

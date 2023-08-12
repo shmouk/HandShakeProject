@@ -36,6 +36,7 @@
 		AD840ED82A8635BA00BEAF7C /* TeamModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD840ED72A8635BA00BEAF7C /* TeamModel.swift */; };
 		AD840EDB2A86561600BEAF7C /* TeamCeateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD840EDA2A86561600BEAF7C /* TeamCeateViewController.swift */; };
 		AD840EDD2A865BC500BEAF7C /* TeamViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD840EDC2A865BC500BEAF7C /* TeamViewModel.swift */; };
+		AD840EDF2A86976E00BEAF7C /* TeamTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD840EDE2A86976E00BEAF7C /* TeamTableViewCell.swift */; };
 		AD86E0102A811DD6000306B2 /* MessageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD86E00F2A811DD6000306B2 /* MessageCollectionViewCell.swift */; };
 		ADACF2CF2A6186DB00550283 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADACF2CE2A6186DB00550283 /* AppDelegate.swift */; };
 		ADACF2D32A6186DB00550283 /* AuthorizationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADACF2D22A6186DB00550283 /* AuthorizationViewController.swift */; };
@@ -79,6 +80,7 @@
 		AD840ED72A8635BA00BEAF7C /* TeamModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamModel.swift; sourceTree = "<group>"; };
 		AD840EDA2A86561600BEAF7C /* TeamCeateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamCeateViewController.swift; sourceTree = "<group>"; };
 		AD840EDC2A865BC500BEAF7C /* TeamViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamViewModel.swift; sourceTree = "<group>"; };
+		AD840EDE2A86976E00BEAF7C /* TeamTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamTableViewCell.swift; sourceTree = "<group>"; };
 		AD86E00F2A811DD6000306B2 /* MessageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCollectionViewCell.swift; sourceTree = "<group>"; };
 		ADACF2CB2A6186DB00550283 /* HandShakeProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HandShakeProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADACF2CE2A6186DB00550283 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -213,6 +215,7 @@
 			children = (
 				ADDF7F1F2A6704FA009FE3C2 /* EventTableViewCell.swift */,
 				AD33F4D42A6836C60028E919 /* UsersTableViewCell.swift */,
+				AD840EDE2A86976E00BEAF7C /* TeamTableViewCell.swift */,
 				AD1EB90C2A7BFEF700B78AEA /* MessageTableViewCell.swift */,
 				AD86E00F2A811DD6000306B2 /* MessageCollectionViewCell.swift */,
 			);
@@ -351,6 +354,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				ADDBC56D2A6589BD004CD8E6 /* Coordinator.swift in Sources */,
+				AD840EDF2A86976E00BEAF7C /* TeamTableViewCell.swift in Sources */,
 				AD1EB9062A7BE89700B78AEA /* MessageModel.swift in Sources */,
 				AD13F6382A61A6B0007F5449 /* AuthViewModel.swift in Sources */,
 				AD13F63B2A61A85F007F5449 /* InterfaceBuilder.swift in Sources */,
