@@ -154,6 +154,38 @@ class TeamAPI {
         }
     }
     
+    func fetchSelectedTeam(_ selectedTeam: Team, completion: @escaping (Team?) -> Void) {
+        guard let uid = currentUID else { return }
+        var resTeam: Team?
+        
+        
+        DispatchQueue.global(qos: .userInitiated).async { [self] in
+            for team in teams {
+                if team == selectedTeam {
+                    resTeam = team
+                }
+                
+            }
+            DispatchQueue.main.async {
+                completion(resTeam)
+            }
+        }
+    }
+    
+    func fetchUserFromTeam(_ team: Team, completion: @escaping ([User]) -> Void) {
+        guard let teamList = team.userList else { return } 
+
+        let users = UserAPI.shared.users
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            let resUsers = users.filter { teamList.contains($0.uid) }
+            
+            DispatchQueue.main.async {
+                completion(resUsers)
+            }
+        }
+    }
+    
     func filterTeams(completion: @escaping (Result<([Team], [Team]), Error>) -> Void) {
         guard let uid = currentUID else { return }
         

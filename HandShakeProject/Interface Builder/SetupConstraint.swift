@@ -222,12 +222,50 @@ extension EventTableViewCell{
 extension TeamViewController {
     func setupConstraints() {
         
-//        NSLayoutConstraint.activate([
-//            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-//            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-//            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-//            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-//        ])
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+}
+
+// MARK: - TeamInfoViewController Constraint
+
+extension TeamInfoViewController {
+
+    func setupConstraints() {
+        
+        let heightForView = view.frame.height / 14
+
+        NSLayoutConstraint.activate([
+                  teamImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 130),
+                  teamImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+                  teamImageView.heightAnchor.constraint(equalToConstant: heightForView * 1.2),
+                  teamImageView.widthAnchor.constraint(equalTo: teamImageView.heightAnchor)
+              ])
+
+              NSLayoutConstraint.activate([
+                nameLabel.centerYAnchor.constraint(equalTo: teamImageView.centerYAnchor),
+                  nameLabel.leadingAnchor.constraint(equalTo: teamImageView.trailingAnchor, constant: 30),
+                  nameLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -100),
+                  nameLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
+              ])
+
+              NSLayoutConstraint.activate([
+                  editTeamButton.centerYAnchor.constraint(equalTo: teamImageView.centerYAnchor),
+                  editTeamButton.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor, constant: 10),
+                  editTeamButton.heightAnchor.constraint(equalToConstant: heightForView * 0.7),
+                  editTeamButton.widthAnchor.constraint(equalTo: editTeamButton.heightAnchor)
+              ])
+
+              NSLayoutConstraint.activate([
+                  userListButton.topAnchor.constraint(equalTo: teamImageView.bottomAnchor, constant: 10),
+                  userListButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+                  userListButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+                  userListButton.heightAnchor.constraint(equalToConstant: heightForView)
+              ])
     }
 }
 
@@ -276,6 +314,43 @@ extension TeamTableViewCell {
     }
 }
 
+// MARK: - UsersListTableViewController Constraint
+
+extension UsersListTableViewController {
+    
+    func setupConstraints() {
+        
+        NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: view.topAnchor),
+            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            titleLabel.heightAnchor.constraint(equalToConstant: view.frame.height / 14)
+        ])
+        
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+}
+
+
+// MARK: - ChatViewController Constraint
+
+extension ChatViewController {
+    
+    func setupConstraints() {
+        
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+}
 // MARK: - ChatsTableVeiwCell Constraint
 
 extension UsersTableViewCell {
@@ -305,10 +380,10 @@ extension MessageTableViewCell {
     func setupConstraints() {
         
         NSLayoutConstraint.activate([
-            userImageView.topAnchor.constraint(equalTo: topAnchor),
             userImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            userImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10 ),
-            userImageView.heightAnchor.constraint(equalTo: userImageView.widthAnchor, multiplier: 1)
+            userImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+            userImageView.topAnchor.constraint(equalTo: topAnchor, constant: 10),
+            userImageView.widthAnchor.constraint(equalTo: userImageView.heightAnchor)
         ])
              
         NSLayoutConstraint.activate([

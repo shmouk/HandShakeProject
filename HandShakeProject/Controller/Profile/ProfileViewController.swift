@@ -47,6 +47,7 @@ class ProfileViewController: UIViewController {
         setupNavBarManager()
         setSubviews()
         settingButton()
+        settingImage()
         setupConstraints()
         setupTargets()
     }
@@ -72,8 +73,11 @@ class ProfileViewController: UIViewController {
         }
     }
     
-    private func settingButton() {
+    private func settingImage() {
         editProfileButton.setImage(UIImage(systemName: "pencil.line"), for: .normal)
+    }
+    
+    private func settingButton() {
         friendsButton.setTitle("Friends", for: .normal)
         logoutButton.setTitle("Logout", for: .normal)
     }

@@ -70,7 +70,6 @@ class ChatLogController: UICollectionViewController {
     
     private func loadData() {
         guard let user = self.user else { return }
-            self.userChatViewModel.loadMessages()
             self.userChatViewModel.loadMessagesPerUser(user)
     }
     
@@ -79,15 +78,13 @@ class ChatLogController: UICollectionViewController {
             loadData()
         }
     }
-
+    
     private func bindViewModel() {
-        userChatViewModel.newMessageReceived.bind { [weak self] _ in
+        userChatViewModel.filterMessages.bind { [weak self] messages in
             guard let self = self else { return }
-            userChatViewModel.filterMessages.bind { [weak self] messages in
-                guard let self = self else { return }
-                self.messages = messages
-                self.reloadTable()
-            }
+            self.messages = messages
+            self.reloadTable()
+            
         }
     }
 

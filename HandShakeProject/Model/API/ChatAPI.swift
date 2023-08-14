@@ -2,9 +2,9 @@ import Firebase
 import FirebaseStorage
 import UIKit
 
-class ChatAPI {
-    let database: DatabaseReference
-    let storage: StorageReference
+class ChatAPI{
+    private let database: DatabaseReference
+    private let storage: StorageReference
     
     var lastMessageFromMessages = [Message]()
     var allMessages = [Message]()
@@ -22,11 +22,7 @@ class ChatAPI {
             print("load messages")
         }
     }
-    
-    deinit {
-        print("deinit ChatAPI")
-    }
-    
+
     private func fetchCurrentId() {
         currentUID = User.fetchCurrentId()
     }
@@ -58,7 +54,6 @@ class ChatAPI {
     func observeMessages(completion: @escaping (Result<Void, Error>) -> Void) {
         guard let uid = currentUID else { return }
         
-        var messageDictionary = [String : Message]()
         let userMessagesRef = database.child("user-messages").child(uid)
         
         let dispatchGroup = DispatchGroup()
@@ -74,70 +69,108 @@ class ChatAPI {
             messagesReference.observeSingleEvent(of: .value) { [weak self] (snapshot) in
                 guard let self = self else { return }
                 
-                guard let dict = snapshot.value as? [String: Any],
-                      let fromId = dict["fromId"] as? String,
-                      let toId = dict["toId"] as? String,
-                      let timestamp = dict["timestamp"] as? Int,
-                      let text = dict["text"] as? String else {
+                guard let dict = snapshot.value as? [String: Any] else {
                     dispatchGroup.leave()
                     return
                 }
-                
-                var withId = fromId == uid ? toId : fromId
-                
                 dispatchGroup.enter()
-                
-                self.fetchUser(userId: withId) { [weak self] (result) in
+                fetchMessageFromUser(dict, uid) { [weak self] (result) in
                     guard let self = self else { return }
                     
                     switch result {
-                    case .success(let (image, name)):
-                        let message = Message(fromId: fromId, toId: toId, name: name, timeStamp: timestamp, text: text, image: image)
-                        
-                        DispatchQueue.main.async {
-                            self.allMessages.append(message)
-                            messageDictionary[withId] = message
-                            self.lastMessageFromMessages = Array(messageDictionary.values.sorted(by: {$0.timeStamp > $1.timeStamp}))
-                            dispatchGroup.leave()
-                        }
-                    case .failure(let error):
-                        DispatchQueue.main.async {
-                            completion(.failure(NSError(domain: "No message found, \(error.localizedDescription)", code: 0, userInfo: nil)))
-                            dispatchGroup.leave()
-                        }
+                    case .success(let message):
+                        self.allMessages.append(message)
+                        dispatchGroup.leave()
+                    case .failure(_):
+                        dispatchGroup.leave()
                     }
                 }
-                
-                dispatchGroup.leave()
             }
         }
-        
         dispatchGroup.notify(queue: .main) {
             completion(.success(()))
         }
     }
     
+    private func fetchMessageFromUser(_ dict: [String: Any], _ uid: String, completion: @escaping (Result<Message, Error>) -> Void) {
+        guard let fromId = dict["fromId"] as? String,
+              let toId = dict["toId"] as? String,
+              let timestamp = dict["timestamp"] as? Int,
+              let text = dict["text"] as? String else {
+            return
+        }
+        let withId = fromId == uid ? toId : fromId
+        
+        self.fetchUser(userId: withId) { [weak self] (result) in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let (image, name)):
+                let message = Message(fromId: fromId, toId: toId, name: name, timestamp: timestamp, text: text, image: image)
+                DispatchQueue.main.async {
+                    completion(.success((message)))
+                }
+            case .failure(let error):
+                completion(.failure(NSError(domain: "No message found", code: 0, userInfo: nil)))
+                
+            }
+        }
+    }
+    
     func filterMessagesPerUser(_ user: User, completion: @escaping (Result<[Message], Error>) -> Void) {
-         guard let uid = currentUID else { return }
-         
-         let partnerUserId = user.uid
-         
-         DispatchQueue.global().async { [weak self] in
-             guard let self = self else { return }
-             
-             let filteredMessages = self.allMessages.filter { message in
-                 return (message.fromId == uid && message.toId == partnerUserId) || (message.fromId == partnerUserId && message.toId == uid)
-             }
-             DispatchQueue.main.async {
-                 if !filteredMessages.isEmpty {
-                     completion(.success(filteredMessages))
-                 } else {
-                     completion(.failure(NSError(domain: "No message found", code: 0, userInfo: nil)))
-                 }
-             }
-         }
-     }
+        guard let uid = currentUID else { return }
+        
+        let partnerUserId = user.uid
+        
+        DispatchQueue.global().async { [weak self] in
+            guard let self = self else { return }
+            
+            let filteredMessages = self.allMessages.filter { message in
+                return (message.fromId == uid && message.toId == partnerUserId) || (message.fromId == partnerUserId && message.toId == uid)
+            }
+            
+            let sortedMessages = filteredMessages.sorted { $0.timestamp < $1.timestamp }
+            
+            DispatchQueue.main.async {
+                if !sortedMessages.isEmpty {
+                    completion(.success(sortedMessages))
+                } else {
+                    completion(.failure(NSError(domain: "No message found", code: 0, userInfo: nil)))
+                }
+            }
+        }
+    }
  
+    func filterLastMessagePerUser(completion: @escaping (Result<[Message], Error>) -> Void) {
+        guard let uid = currentUID else { return }
+        
+        DispatchQueue.global().async { [weak self] in
+            guard let self = self else { return }
+            
+            var lastMessages: [String: Message] = [:]
+            
+            for message in self.allMessages {
+                        let partnerUserId = message.fromId == uid ? message.toId : message.fromId
+                        if let existingMessage = lastMessages[partnerUserId] {
+                            if message.timestamp > existingMessage.timestamp {
+                                lastMessages[partnerUserId] = message
+                            }
+                        } else {
+                            lastMessages[partnerUserId] = message
+                        }
+                    }
+
+            let filteredMessages = Array(lastMessages.values)
+            
+            DispatchQueue.main.async {
+                if !filteredMessages.isEmpty {
+                    completion(.success(filteredMessages))
+                } else {
+                    completion(.failure(NSError(domain: "No message found", code: 0, userInfo: nil)))
+                }
+            }
+        }
+    }
     
     func sendMessage(text: String, toId: String, completion: @escaping (Result<Void, Error>) -> Void) {
         guard let fromId = currentUID else { return }

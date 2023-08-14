@@ -14,7 +14,7 @@ class TeamViewController: UIViewController {
     
     let interfaceBuilder = InterfaceBuilder()
     
-    private lazy var tableView = interfaceBuilder.createTableView()
+    lazy var tableView = interfaceBuilder.createTableView()
     
     private var sectionTitles: [String] = []
     private var firstSectionTeams: [Team]?
@@ -30,12 +30,6 @@ class TeamViewController: UIViewController {
         super.viewDidLoad()
         bindViewModel()
     }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        tableView.frame = view.bounds
-    }
-    
     
     deinit {
         print("3")
@@ -78,9 +72,20 @@ class TeamViewController: UIViewController {
         }
     }
     
-    private func openUsersListVC() {
+    private func openCreateTeamVC() {
         let usersListTableViewController = TeamCeateViewController()
         navigationController?.pushViewController(usersListTableViewController, animated: true)
+    }
+    
+    private func openSelectedTeamVC(_ selectedTeam: Team) {
+        teamViewModel.fetchSelectedTeam(selectedTeam) 
+        self.teamViewModel.selectedTeam.bind { [weak self] team in
+            guard let self = self else { return }
+            let teamInfoViewController = TeamInfoViewController(team: team)
+            //            usersListTableViewController.delegate = self
+            navigationController?.pushViewController(teamInfoViewController, animated: true)
+            
+        }
     }
     
     private func reloadTable() {
@@ -92,7 +97,7 @@ extension TeamViewController: NavigationBarManagerDelegate {
     func didTapNotificationButton() {}
     
     func didTapAddButton() {
-        openUsersListVC()
+        openCreateTeamVC()
     }
 }
 
@@ -121,7 +126,7 @@ extension TeamViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? TeamTableViewCell else { return UITableViewCell() }
-
+        cell.selectionStyle = .default
         switch indexPath.section {
         case 0:
             cell.team = firstSectionTeams?[indexPath.row]
@@ -129,6 +134,23 @@ extension TeamViewController: UITableViewDelegate, UITableViewDataSource {
             cell.team = secondSectionTeams?[indexPath.row]
         }
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        var team: Team?
+        tableView.allowsSelection
+        switch indexPath.section {
+        case 0:
+            let index = indexPath.row
+            team = firstSectionTeams?[index]
+        case 1:
+            let index = indexPath.row
+            team = secondSectionTeams?[index]
+        default:
+            break
+        }
+        guard let team = team else { return }
+        openSelectedTeamVC(team)
     }
 }
 

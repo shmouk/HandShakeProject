@@ -6,8 +6,9 @@ class TeamViewModel {
     var fetchUser = Bindable(User())
     var ownTeams = Bindable([Team()])
     var otherTeams = Bindable([Team()])
-    
-    
+    var selectedTeam = Bindable(Team())
+    var fetchUsersFromSelectedTeam = Bindable([User()])
+
     init() {
     }
     
@@ -28,6 +29,21 @@ class TeamViewModel {
             case .failure(_):
                 break
             }
+        }
+    }
+    
+    func fetchUserFromUserList(team : Team) {
+        teamAPI.fetchUserFromTeam(team) { [weak self] users in
+            guard let self = self else { return }
+            self.fetchUsersFromSelectedTeam.value = users
+            print(1)
+        }
+    }
+    
+    func fetchSelectedTeam(_ selectedTeam: Team) {
+        teamAPI.fetchSelectedTeam(selectedTeam) { [weak self] team in
+            guard let self = self, let team = team else { return }
+            self.selectedTeam.value = team
         }
     }
     

@@ -8,19 +8,17 @@ class MessageCollectionViewCell: UICollectionViewCell {
     
     var isMessegeForUser: Bool? {
         didSet {
-            setupConstraints() // Добавляем вызов метода setupConstraints()
+            setupConstraints()
         }
     }
 
     var partnerUID: String?
-    var currentUID = UserChatViewModel.currentUID
     
     var message: Message? {
         didSet {
-            isMessegeForUser = currentUID == message?.fromId ? true : false
-            print(1, isMessegeForUser)
+            isMessegeForUser = partnerUID == message?.fromId ? false : true
             messageTextView.text = message?.text
-            timeTextLabel.text = convertTimestampToDate(message?.timeStamp ?? 0)
+            timeTextLabel.text = convertTimestampToDate(message?.timestamp ?? 0)
         }
     }
     

@@ -32,7 +32,6 @@ class InterfaceBuilder {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.backgroundColor = .colorForView()
-        tableView.layer.cornerRadius = 10
         return tableView
     }
     

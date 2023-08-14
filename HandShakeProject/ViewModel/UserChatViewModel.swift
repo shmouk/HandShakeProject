@@ -2,34 +2,38 @@ import FirebaseAuth
 import Foundation
 
 class UserChatViewModel {
-    let userAPI = UserAPI.shared
-    let chatAPI = ChatAPI.shared
+    private let chatAPI = ChatAPI.shared
+    private let userAPI = UserAPI.shared
+
     
-    var lastMessageArray: Bindable<[Message]> = Bindable([])
-    var newMessageReceived: Bindable<[Message]> = Bindable([]) 
-    var filterMessages: Bindable<[Message]> = Bindable([])
+    var lastMessageArray = Bindable([Message()])
+    var filterMessages = Bindable([Message()])
     
-    var fetchUser: Bindable<User> = Bindable(User())
-    var users: Bindable<[User]> = Bindable([])
+    var fetchUser = Bindable(User())
+    var users = Bindable([User()])
     
     static var currentUID = UserAPI.shared.currentUID
     
-    init() {
-    }
-    
-    func loadMessages() {
-        lastMessageArray.value = chatAPI.lastMessageFromMessages
-        newMessageReceived.value = chatAPI.allMessages
-        print("messages:", lastMessageArray.value.count, newMessageReceived.value.count)
+    func loadLastMessagePerUser() {
+        chatAPI.filterLastMessagePerUser { [weak self] result in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let messages):
+                self.lastMessageArray.value = messages
+                print(messages)
+            case .failure(_):
+                break
+            }
+        }
     }
     
     func loadUsers() {
         users.value = userAPI.users
-        print("users:", users.value.count)
     }
     
     func loadMessagesPerUser(_ user: User) {
-        chatAPI.filterMessagesPerUser(user) {[weak self] result in
+        chatAPI.filterMessagesPerUser(user) { [weak self] result in
             guard let self = self else { return }
             
             switch result {
@@ -44,7 +48,7 @@ class UserChatViewModel {
     func fetchUserFromMessage(_ index: Int, completion: @escaping (Result<Void, Error>) -> Void) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            let messages = self.chatAPI.lastMessageFromMessages
+            let messages = self.lastMessageArray.value 
             self.userAPI.fetchUserFromChat(index, messages: messages) { [weak self] result in
                 guard let self = self else { return }
                 
@@ -66,6 +70,7 @@ class UserChatViewModel {
         }
     }
 }
+
 
 
 

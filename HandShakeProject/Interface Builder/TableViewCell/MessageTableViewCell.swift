@@ -14,7 +14,7 @@ class MessageTableViewCell: UITableViewCell {
             userImageView.image = message?.image
             nameLabel.text = message?.name
             messageTextLabel.text = message?.text
-            timeTextLabel.text = convertTimestampToDate(message?.timeStamp ?? 0)
+            timeTextLabel.text = convertTimestampToDate(message?.timestamp ?? 0)
         }
     }
     
