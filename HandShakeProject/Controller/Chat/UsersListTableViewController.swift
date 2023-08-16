@@ -1,7 +1,6 @@
 import Foundation
 import UIKit
 
-
 protocol UsersListTableViewControllerDelegate: AnyObject {
     func openChatWithChosenUser(_ user: User)
 }
@@ -10,15 +9,15 @@ class UsersListTableViewController: UIViewController {
     private let cellId = "cellId"
     weak var delegate: UsersListTableViewControllerDelegate?
     private let userChatViewModel = UserChatViewModel()
-    private var refreshCntrl = UIRefreshControl()
+    private let interfaceBuilder = InterfaceBuilder()
     private var users: [User]
-    
-    let interfaceBuilder = InterfaceBuilder()
+    private var isCellBeUsed: Bool
     
     lazy var tableView = interfaceBuilder.createTableView()
     lazy var titleLabel = interfaceBuilder.createTitleLabel()
     
-    init(users: [User]) {
+    init(users: [User], isCellBeUsed: Bool) {
+        self.isCellBeUsed = isCellBeUsed
         self.users = users
         super.init(nibName: nil, bundle: nil)
     }
@@ -31,12 +30,12 @@ class UsersListTableViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setUI()
-//        reloadDataIfNeeded()
+
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        bindViewModel()
+
     }
    
     private func setUI() {
@@ -45,27 +44,11 @@ class UsersListTableViewController: UIViewController {
         settingTextLabel()
         setupConstraints()
     }
-//
-//    private func bindViewModel() {
-//        userChatViewModel.users.bind { [weak self] users in
-//            guard let self = self else { return }
-//            self.users = users
-//            self.tableView.reloadData()
-//        }
-//    }
-//
-//    private func reloadDataIfNeeded() {
-//        if users?.isEmpty ?? true {
-//            userChatViewModel.loadUsers()
-//            bindViewModel()
-//        }
-//    }
     
     private func setSubviews() {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(UsersTableViewCell.self, forCellReuseIdentifier: cellId)
-        tableView.addSubview(refreshCntrl)
         view.addSubviews(titleLabel, tableView)
         view.backgroundColor = .colorForView()
     }
@@ -76,14 +59,6 @@ class UsersListTableViewController: UIViewController {
     }
     
     private func setupTargets() {
-        refreshCntrl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
-    }
-}
-
-extension UsersListTableViewController {
-    @objc
-    private func handleRefresh(_ sender: UIRefreshControl) {
-        refreshCntrl.endRefreshing()
     }
 }
 
@@ -96,11 +71,12 @@ extension UsersListTableViewController: UITableViewDelegate, UITableViewDataSour
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? UsersTableViewCell else { return UITableViewCell() }
         let user = users[indexPath.row]
         cell.user = user
+        cell.selectionStyle = isCellBeUsed == true ? .default : .none
         return cell
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return users.count ?? 0
+        return users.count 
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

@@ -111,7 +111,7 @@ class ChatAPI{
                     completion(.success((message)))
                 }
             case .failure(let error):
-                completion(.failure(NSError(domain: "No message found", code: 0, userInfo: nil)))
+                completion(.failure(NSError(domain: "No message found \(error)", code: 0, userInfo: nil)))
                 
             }
         }

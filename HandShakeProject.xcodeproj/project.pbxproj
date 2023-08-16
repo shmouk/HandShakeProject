@@ -33,6 +33,7 @@
 		AD5C62EC2A6310F00069A53F /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5C62EB2A6310F00069A53F /* ChatViewController.swift */; };
 		AD5C62EE2A6310FA0069A53F /* TeamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5C62ED2A6310FA0069A53F /* TeamViewController.swift */; };
 		AD5C62F02A6311060069A53F /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5C62EF2A6311060069A53F /* ProfileViewController.swift */; };
+		AD70293D2A8D2C42004FF7A9 /* AddUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD70293C2A8D2C42004FF7A9 /* AddUserViewController.swift */; };
 		AD840ED62A86357A00BEAF7C /* TeamAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD840ED52A86357A00BEAF7C /* TeamAPI.swift */; };
 		AD840ED82A8635BA00BEAF7C /* TeamModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD840ED72A8635BA00BEAF7C /* TeamModel.swift */; };
 		AD840EDB2A86561600BEAF7C /* TeamCeateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD840EDA2A86561600BEAF7C /* TeamCeateViewController.swift */; };
@@ -78,6 +79,7 @@
 		AD5C62EB2A6310F00069A53F /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		AD5C62ED2A6310FA0069A53F /* TeamViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamViewController.swift; sourceTree = "<group>"; };
 		AD5C62EF2A6311060069A53F /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		AD70293C2A8D2C42004FF7A9 /* AddUserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUserViewController.swift; sourceTree = "<group>"; };
 		AD840ED52A86357A00BEAF7C /* TeamAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamAPI.swift; sourceTree = "<group>"; };
 		AD840ED72A8635BA00BEAF7C /* TeamModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamModel.swift; sourceTree = "<group>"; };
 		AD840EDA2A86561600BEAF7C /* TeamCeateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamCeateViewController.swift; sourceTree = "<group>"; };
@@ -156,6 +158,7 @@
 		AD13F6392A61A83E007F5449 /* Interface Builder */ = {
 			isa = PBXGroup;
 			children = (
+				AD70293E2A8D2DB6004FF7A9 /* UserTableView */,
 				AD33F4D82A6849960028E919 /* TableViewCell */,
 				AD13F63A2A61A85F007F5449 /* InterfaceBuilder.swift */,
 				AD13F6412A61B337007F5449 /* SetupConstraint.swift */,
@@ -224,12 +227,20 @@
 			path = TableViewCell;
 			sourceTree = "<group>";
 		};
+		AD70293E2A8D2DB6004FF7A9 /* UserTableView */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = UserTableView;
+			sourceTree = "<group>";
+		};
 		AD840ED92A864C2700BEAF7C /* Team */ = {
 			isa = PBXGroup;
 			children = (
 				AD5C62ED2A6310FA0069A53F /* TeamViewController.swift */,
 				AD840EDA2A86561600BEAF7C /* TeamCeateViewController.swift */,
 				AD1C61722A8A461000E095C9 /* TeamInfoViewController.swift */,
+				AD70293C2A8D2C42004FF7A9 /* AddUserViewController.swift */,
 			);
 			path = Team;
 			sourceTree = "<group>";
@@ -363,6 +374,7 @@
 				AD13F63B2A61A85F007F5449 /* InterfaceBuilder.swift in Sources */,
 				AD86E0102A811DD6000306B2 /* MessageCollectionViewCell.swift in Sources */,
 				AD33F4DA2A684C880028E919 /* EventCreateViewController.swift in Sources */,
+				AD70293D2A8D2C42004FF7A9 /* AddUserViewController.swift in Sources */,
 				AD33F4D32A682C320028E919 /* EventsModel.swift in Sources */,
 				ADDF7F202A6704FA009FE3C2 /* EventTableViewCell.swift in Sources */,
 				AD1C61732A8A461000E095C9 /* TeamInfoViewController.swift in Sources */,

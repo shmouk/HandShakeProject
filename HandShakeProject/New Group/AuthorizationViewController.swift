@@ -117,9 +117,7 @@ private extension AuthorizationViewController {
                 let password = passwordTextField.text,
                 let rPassword = repeatPasswordTextField.text else { return }
         
-        authViewModel.userLoginAction(email: email, password: password, repeatPassword: rPassword, completion: { [weak self] (success) in
-            guard success else { return }
-        })
+        authViewModel.userLoginAction(email: email, password: password, repeatPassword: rPassword)
     }
 
     @objc

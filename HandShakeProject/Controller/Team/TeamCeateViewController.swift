@@ -10,7 +10,6 @@ import UIKit
 class TeamCeateViewController: UIViewController {
     lazy var namingTextField = interfaceBuilder.createTextField()
     lazy var teamLabel = interfaceBuilder.createTitleLabel()
-    lazy var tableView = interfaceBuilder.createTableView()
 
     let interfaceBuilder = InterfaceBuilder()
     let teamViewModel = TeamViewModel()
@@ -55,6 +54,7 @@ class TeamCeateViewController: UIViewController {
         navItem.rightBarButtonItem = rightButton
         self.navigationItem.setRightBarButton(rightButton, animated: false)
         self.navigationItem.title = navItem.title
+        tabBarController?.tabBar.isHidden = true
     }
     
     private func createTeam() {

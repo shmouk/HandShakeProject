@@ -11,7 +11,7 @@ class AuthViewModel {
         isSigningUp.value = !isSigningUp.value
     }
     
-    func userLoginAction(email: String, password: String, repeatPassword: String, completion: @escaping (Bool) -> Void) {
+    func userLoginAction(email: String, password: String, repeatPassword: String) {
         guard !email.isEmpty, !password.isEmpty else {
             statusText.value = "Error: Empty fields"
             return
@@ -32,7 +32,6 @@ class AuthViewModel {
                 
                 self.userAPI.writeToDatabase(uid: result?.user.uid ?? "", email: email)
                 self.statusText.value = "Success: User created"
-                completion(true)
             }
         } else {
             firebaseAuth.signIn(withEmail: email, password: password) { [weak self] (result, error) in
@@ -44,7 +43,6 @@ class AuthViewModel {
                 }
                 
                 self.statusText.value = "Success: User logged in"
-                completion(true)
             }
         }
     }

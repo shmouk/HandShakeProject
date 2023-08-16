@@ -36,6 +36,8 @@ class ProfileViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setUI()
+        bindViewModel()
+
     }
     
     override func viewDidLoad() {
@@ -54,10 +56,10 @@ class ProfileViewController: UIViewController {
     
     private func setSubviews() {
         view.addSubviews(profileImageView, editProfileButton, emailLabel, nameLabel, friendsButton, logoutButton)
+        view.backgroundColor = .colorForView()
     }
     
     private func loadData() {
-        bindViewModel()
         profileViewModel.fetchUser()
     }
     

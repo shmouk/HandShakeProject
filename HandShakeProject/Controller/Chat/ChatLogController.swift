@@ -107,7 +107,7 @@ class ChatLogController: UICollectionViewController {
     }
     
     private func getLastIndexPath() -> IndexPath? {
-        guard let messages = self.messages else {
+        guard self.messages != nil else {
             return nil
         }
         

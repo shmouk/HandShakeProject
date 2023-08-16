@@ -81,7 +81,8 @@ class EventCreateViewController: UIViewController {
     }
     
     private func settingButton() {
-        addToListButton.setImage(.add, for: .normal)
+        addToListButton.setImage(UIImage(systemName: "person.badge.plus"), for: .normal)
+        addToListButton.tintColor = .colorForTitleText()
         chooseTeamButton.setTitle("Choose team", for: .normal)
         chooseExecutorButton.setTitle("Choose executor", for: .normal)
         chooseDateButton.setTitle("Choose date", for: .normal)
@@ -98,12 +99,13 @@ class EventCreateViewController: UIViewController {
     }
     
     private func updateNavItem() {
-        
         let navItem = UINavigationItem(title: "Create event")
         let rightButton = UIBarButtonItem(title: "Create", style: .plain, target: self, action: #selector(createEvent))
         navItem.rightBarButtonItem = rightButton
         self.navigationItem.setRightBarButton(rightButton, animated: false)
         self.navigationItem.title = navItem.title
+        tabBarController?.tabBar.isHidden = true
+
     }
 }
 

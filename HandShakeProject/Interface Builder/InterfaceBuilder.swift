@@ -89,8 +89,12 @@ class InterfaceBuilder {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = .colorForButton()
         button.layer.cornerRadius = 10
-        button.layer.masksToBounds = true
-        button.setTitleColor(.black, for: .normal)
+        button.layer.masksToBounds = false
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOpacity = 0.2
+        button.layer.shadowOffset = CGSize(width: 2, height: 2)
+        button.layer.shadowRadius = 10
+        button.setTitleColor(.colorForTitleText(), for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
         return button
     }

@@ -29,7 +29,9 @@ class UserChatViewModel {
     }
     
     func loadUsers() {
-        users.value = userAPI.users
+        DispatchQueue.main.async { [self] in
+            users.value = userAPI.users
+        }
     }
     
     func loadMessagesPerUser(_ user: User) {

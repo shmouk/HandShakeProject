@@ -22,6 +22,7 @@ class EventsViewController: UIViewController {
     private func setupNavBarManager() {
         navigationBarManager.delegate = self
         navigationBarManager.updateNavigationBar(for: self, isAddButtonNeeded: true)
+        tabBarController?.tabBar.isHidden = false
     }
 }
 

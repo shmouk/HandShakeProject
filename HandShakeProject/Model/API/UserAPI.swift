@@ -84,21 +84,25 @@ class UserAPI {
         }
 
     func fetchUserFromChat(_ index: Int, messages: [Message], completion: @escaping (Result<User, Error>) -> Void) {
-            guard let uid = self.currentUID else { return }
-            guard messages.indices.contains(index) else {
-                completion(.failure(NSError(domain: "Invalid index", code: 400, userInfo: nil)))
-                return
-            }
-            let message = messages[index]
-            let chatUserId = uid == message.toId ? message.fromId : message.toId
-        
-            guard let user = users.first(where: { $0.uid == chatUserId }) else {
+        guard let uid = self.currentUID else { return }
+        guard messages.indices.contains(index) else {
+            completion(.failure(NSError(domain: "Invalid index", code: 400, userInfo: nil)))
+            return
+        }
+        let message = messages[index]
+        let chatUserId = uid == message.toId ? message.fromId : message.toId
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self = self else { return }
+            
+            guard let user = self.users.first(where: { $0.uid == chatUserId }) else {
                 completion(.failure(NSError(domain: "User not found", code: 404, userInfo: nil)))
                 return
             }
-
-            completion(.success(user))
+            DispatchQueue.main.async {
+                completion(.success(user))
+            }
         }
+    }
     
     func uploadImageToFirebaseStorage(image: UIImage, completion: @escaping (Result<URL, Error>) -> Void) {
         guard let uid = self.currentUID else { return }
@@ -208,7 +212,7 @@ class UserAPI {
             
             switch result {
             case .success(let downloadURL):
-                let data = ["downloadURL": downloadURL, "name": "User" + uid, "email": email]
+                let data = ["downloadURL": downloadURL, "name": "User" + uid.prefix(4), "email": email]
                 userRef.setValue(data) { (error, databaseRef) in
                     if let error = error {
                         print("Error writing to database: \(error.localizedDescription)")

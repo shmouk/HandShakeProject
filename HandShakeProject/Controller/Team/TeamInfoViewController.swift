@@ -3,6 +3,7 @@ import UIKit
 class TeamInfoViewController: UIViewController {
     lazy var userListButton = interfaceBuilder.createButton()
     lazy var editTeamButton = interfaceBuilder.createButton()
+    lazy var creatorID = interfaceBuilder.createDescriptionLabel()
     lazy var nameLabel = interfaceBuilder.createTitleLabel()
     lazy var teamImageView = interfaceBuilder.createImageView()
     
@@ -30,6 +31,7 @@ class TeamInfoViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        loadData()
     }
     
     private func setUI() {
@@ -43,12 +45,13 @@ class TeamInfoViewController: UIViewController {
     }
     
     private func setSubviews() {
-        view.addSubviews(teamImageView, nameLabel, editTeamButton, userListButton)
-        view.backgroundColor = .white
+        view.addSubviews(teamImageView, creatorID, nameLabel, editTeamButton, userListButton)
+        view.backgroundColor = .colorForView()
     }
     
     private func loadData() {
-
+        teamViewModel.convertIdToUserName(team.creatorId)
+        teamViewModel.fetchUserFromUserList(team: team)
     }
     
     private func bindViewModel() {
@@ -57,10 +60,15 @@ class TeamInfoViewController: UIViewController {
     
     private func settingButton() {
         editTeamButton.setImage(UIImage(systemName: "pencil.line"), for: .normal)
-        userListButton.setTitle("Users", for: .normal)
+        userListButton.setTitle("User list", for: .normal)
     }
     
     private func settingLabel() {
+        teamViewModel.creatorName.bind { [weak self] name in
+            guard let self = self else { return }
+            creatorID.text = "Id: " + name
+        }
+        
         nameLabel.text = team.teamName
     }
     
@@ -69,11 +77,12 @@ class TeamInfoViewController: UIViewController {
     }
     
     private func setupNavBarManager() {
-        let navItem = UINavigationItem(title: "team info")
-        let rightButton = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(AddUser))
+        let navItem = UINavigationItem(title: "Team info")
+        let rightButton = UIBarButtonItem(image: UIImage(systemName: "person.badge.plus"), style: .plain, target: self, action: #selector(AddUser))
         navItem.rightBarButtonItem = rightButton
         self.navigationItem.setRightBarButton(rightButton, animated: false)
         self.navigationItem.title = navItem.title
+        tabBarController?.tabBar.isHidden = true
     }
     
     private func setupTargets() {
@@ -82,15 +91,18 @@ class TeamInfoViewController: UIViewController {
     }
     
     private func openUsersListVC() {
-        teamViewModel.fetchUserFromUserList(team: team)
         teamViewModel.fetchUsersFromSelectedTeam.bind { [weak self] users in
             guard let self = self else { return }
             
-            let usersListTableViewController = UsersListTableViewController(users: users)
-//            usersListTableViewController.delegate = self
+            let usersListTableViewController = UsersListTableViewController(users: users, isCellBeUsed: false)
             usersListTableViewController.modalPresentationStyle = .automatic
             present(usersListTableViewController, animated: true)
         }
+    }
+    
+    private func openAddUserVC() {
+        let addUserViewController = AddUserViewController(team: team)
+        navigationController?.pushViewController(addUserViewController, animated: true)
     }
 }
 
@@ -110,7 +122,7 @@ private extension TeamInfoViewController {
     
     @objc
     private func AddUser(_ sender: Any) {
-        
+        openAddUserVC()
     }
 }
 

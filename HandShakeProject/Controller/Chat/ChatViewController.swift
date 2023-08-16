@@ -70,8 +70,7 @@ class ChatViewController: UIViewController {
         userChatViewModel.loadUsers()
         userChatViewModel.users.bind { [weak self] users in
             guard let self = self else { return }
-            
-            let usersListTableViewController = UsersListTableViewController(users: users)
+            let usersListTableViewController = UsersListTableViewController(users: users, isCellBeUsed: true)
             usersListTableViewController.delegate = self
             usersListTableViewController.modalPresentationStyle = .automatic
             present(usersListTableViewController, animated: true)
@@ -91,7 +90,6 @@ class ChatViewController: UIViewController {
             }
         }
     }
-    
     
     private func reloadTable() {
         tableView.reloadData()
@@ -155,7 +153,11 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let index = indexPath.row
-        openSelectedChat(index)
+        openSelectedChat(indexPath.row)
+    }
+    
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? MessageTableViewCell else { return }
+        cell.contentView.backgroundColor = .white
     }
 }

@@ -1,10 +1,3 @@
-//
-//  TeamViewController.swift
-//  HandShakeProject
-//
-//  Created by Марк on 15.07.23.
-//
-
 import UIKit
 
 class TeamViewController: UIViewController {
@@ -44,6 +37,7 @@ class TeamViewController: UIViewController {
     private func setupNavBarManager() {
         navigationBarManager.delegate = self
         navigationBarManager.updateNavigationBar(for: self, isAddButtonNeeded: true)
+        tabBarController?.tabBar.isHidden = false
     }
     
     private func setSubviews() {
@@ -82,9 +76,7 @@ class TeamViewController: UIViewController {
         self.teamViewModel.selectedTeam.bind { [weak self] team in
             guard let self = self else { return }
             let teamInfoViewController = TeamInfoViewController(team: team)
-            //            usersListTableViewController.delegate = self
             navigationController?.pushViewController(teamInfoViewController, animated: true)
-            
         }
     }
     
