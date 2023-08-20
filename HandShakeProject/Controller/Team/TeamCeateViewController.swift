@@ -8,12 +8,12 @@
 import UIKit
 
 class TeamCeateViewController: UIViewController {
+    private let interfaceBuilder = InterfaceBuilder()
+    private let teamViewModel = TeamViewModel()
+    
     lazy var namingTextField = interfaceBuilder.createTextField()
     lazy var teamLabel = interfaceBuilder.createTitleLabel()
 
-    let interfaceBuilder = InterfaceBuilder()
-    let teamViewModel = TeamViewModel()
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setUI()

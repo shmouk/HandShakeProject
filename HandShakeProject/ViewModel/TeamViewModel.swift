@@ -54,13 +54,12 @@ class TeamViewModel {
         }
     }
     
-    func fetchUserFromUserList(team : Team) {
+    func fetchUsersFromUserList(team : Team) {
         teamAPI.fetchUserFromTeam(team) { [weak self] users in
             guard let self = self else { return }
             self.fetchUsersFromSelectedTeam.value = users
         }
     }
-    
     
     func fetchSelectedTeam(_ selectedTeam: Team) {
         teamAPI.fetchSelectedTeam(selectedTeam) { [weak self] team in
@@ -69,29 +68,15 @@ class TeamViewModel {
         }
     }
     
-    func addUserToTeam(_ user: User, to team: Team, completion: @escaping () -> ()) {
+    func addUserToTeam(_ user: User, to team: Team) {
         teamAPI.addUserToDatabase(user, to: team) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(_):
                 self.satusText.value = "Add to team!"
-                completion()
             case .failure(let error):
-                break
+                self.satusText.value = error.localizedDescription
             }
         }
-    }
-    
-    func settingSections() -> [String] {
-        let firstSection = "Your Teams"
-        let secondSection = "Other Teams"
-        var sections: [String] = []
-        if !ownTeams.value.isEmpty {
-            sections.append(firstSection)
-        }
-        if !otherTeams.value.isEmpty {
-            sections.append(secondSection)
-        }
-        return sections
     }
 }

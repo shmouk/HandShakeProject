@@ -4,12 +4,11 @@ class TeamViewController: UIViewController {
     private let navigationBarManager = NavigationBarManager()
     private let teamViewModel = TeamViewModel()
     private let cellId = "cellId"
-    
-    let interfaceBuilder = InterfaceBuilder()
+    private let interfaceBuilder = InterfaceBuilder()
     
     lazy var tableView = interfaceBuilder.createTableView()
     
-    private var sectionTitles: [String] = []
+    private var sectionTitles = ["Your Teams", "Other Teams"]
     private var firstSectionTeams: [Team]?
     private var secondSectionTeams: [Team]?
     
@@ -50,7 +49,6 @@ class TeamViewController: UIViewController {
     private func reloadDataIfNeeded() {
         if firstSectionTeams?.isEmpty ?? true || secondSectionTeams?.isEmpty ?? true {
             teamViewModel.filterTeam()
-            sectionTitles = teamViewModel.settingSections()
         }
     }
     private func bindViewModel() {
@@ -107,8 +105,10 @@ extension TeamViewController: UITableViewDelegate, UITableViewDataSource {
         switch section {
         case 0:
             return firstSectionTeams?.count ?? 0
-        default:
+        case 1:
             return secondSectionTeams?.count ?? 0
+        default:
+            return 0
         }
     }
     
@@ -118,19 +118,19 @@ extension TeamViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? TeamTableViewCell else { return UITableViewCell() }
-        cell.selectionStyle = .default
         switch indexPath.section {
         case 0:
             cell.team = firstSectionTeams?[indexPath.row]
-        default:
+        case 1:
             cell.team = secondSectionTeams?[indexPath.row]
+        default:
+            break
         }
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         var team: Team?
-        tableView.allowsSelection
         switch indexPath.section {
         case 0:
             let index = indexPath.row

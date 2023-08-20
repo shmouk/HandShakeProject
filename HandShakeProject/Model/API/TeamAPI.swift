@@ -120,14 +120,10 @@ class TeamAPI {
                             }
                             
                             for (uid, value) in users {
-                                switch value {
-                                case 0:
-                                    userIDs.append(uid)
-                                case 1:
+                                if value == 1 {
                                     userCreatorID = uid
-                                default:
-                                    break
                                 }
+                                userIDs.append(uid)
                             }
                             let team = Team(teamName: teamName, creatorId: userCreatorID ?? "", teamId: teamId, image: image, downloadURL: downloadURL, userList: userIDs)
                             self.teams.append(team)
@@ -187,9 +183,14 @@ class TeamAPI {
         }
     }
     
-    func addUserToDatabase(_ user: User, to team: Team, completion: @escaping (Result<Void, Error>) -> Void)  {
-        guard let uid = currentUID, uid == team.creatorId else {
+    func addUserToDatabase(_ user: User, to team: Team, completion: @escaping (Result<Void, Error>) -> Void) {
+        guard let currentUID = currentUID, currentUID == team.creatorId else {
             completion(.failure(NSError(domain: "No permission", code: 0, userInfo: nil)))
+            return
+        }
+        
+        if team.userList?.contains(user.uid) ?? false {
+            completion(.failure(NSError(domain: "Current user is on the user list", code: 0, userInfo: nil)))
             return
         }
         
@@ -200,7 +201,10 @@ class TeamAPI {
             userId: 0
         ]
         
-        teamReference.setValue(teamData) { (error,_) in
+        let userTeamRef = database.child("user-team").child(userId)
+        userTeamRef.updateChildValues([team.teamId: 0])
+        
+        teamReference.updateChildValues(teamData) { (error, _) in
             if let error = error {
                 completion(.failure(error))
             } else {
@@ -212,7 +216,6 @@ class TeamAPI {
     func fetchUserFromTeam(_ team: Team, completion: @escaping ([User]) -> Void) {
         guard let teamList = team.userList else { return }
         let users = UserAPI.shared.users
-        
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard self != nil else { return }
             let resUsers = users.filter { teamList.contains($0.uid) }

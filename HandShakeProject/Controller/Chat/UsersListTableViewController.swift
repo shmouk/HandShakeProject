@@ -7,12 +7,13 @@ protocol UsersListTableViewControllerDelegate: AnyObject {
 
 class UsersListTableViewController: UIViewController {
     private let cellId = "cellId"
-    weak var delegate: UsersListTableViewControllerDelegate?
     private let userChatViewModel = UserChatViewModel()
     private let interfaceBuilder = InterfaceBuilder()
-    private var users: [User]
-    private var isCellBeUsed: Bool
+    private let users: [User]
+    private let isCellBeUsed: Bool
     
+    weak var delegate: UsersListTableViewControllerDelegate?
+
     lazy var tableView = interfaceBuilder.createTableView()
     lazy var titleLabel = interfaceBuilder.createTitleLabel()
     
@@ -26,16 +27,13 @@ class UsersListTableViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setUI()
-
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
     }
    
     private func setUI() {
@@ -81,9 +79,11 @@ extension UsersListTableViewController: UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let user = users[indexPath.row]
-        dismiss(animated: true) { [weak self] in
-            guard let self = self else { return }
-            self.delegate?.openChatWithChosenUser(user)
+        if isCellBeUsed {
+            dismiss(animated: true) { [weak self] in
+                guard let self = self else { return }
+                self.delegate?.openChatWithChosenUser(user)
+            }
         }
     }
 }

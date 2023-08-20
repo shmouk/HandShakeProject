@@ -25,6 +25,7 @@
 		AD33F4D52A6836C60028E919 /* UsersTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD33F4D42A6836C60028E919 /* UsersTableViewCell.swift */; };
 		AD33F4DA2A684C880028E919 /* EventCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD33F4D92A684C880028E919 /* EventCreateViewController.swift */; };
 		AD33F4DC2A695D6A0028E919 /* NavigationBar + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD33F4DB2A695D6A0028E919 /* NavigationBar + Extension.swift */; };
+		AD3F55822A92590600896977 /* SkeletonView in Frameworks */ = {isa = PBXBuildFile; productRef = AD3F55812A92590600896977 /* SkeletonView */; };
 		AD47E5B02A62D8CD0060DD3F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AD47E5AF2A62D8CD0060DD3F /* GoogleService-Info.plist */; };
 		AD5C62E22A62DE580069A53F /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = AD5C62E12A62DE580069A53F /* FirebaseAnalytics */; };
 		AD5C62E42A62DE580069A53F /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = AD5C62E32A62DE580069A53F /* FirebaseAuth */; };
@@ -40,6 +41,7 @@
 		AD840EDD2A865BC500BEAF7C /* TeamViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD840EDC2A865BC500BEAF7C /* TeamViewModel.swift */; };
 		AD840EDF2A86976E00BEAF7C /* TeamTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD840EDE2A86976E00BEAF7C /* TeamTableViewCell.swift */; };
 		AD86E0102A811DD6000306B2 /* MessageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD86E00F2A811DD6000306B2 /* MessageCollectionViewCell.swift */; };
+		ADA1BA202A8E75160008E353 /* KeyboardNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA1BA1F2A8E75160008E353 /* KeyboardNotificationManager.swift */; };
 		ADACF2CF2A6186DB00550283 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADACF2CE2A6186DB00550283 /* AppDelegate.swift */; };
 		ADACF2D32A6186DB00550283 /* AuthorizationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADACF2D22A6186DB00550283 /* AuthorizationViewController.swift */; };
 		ADACF2D82A6186DF00550283 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ADACF2D72A6186DF00550283 /* Assets.xcassets */; };
@@ -86,6 +88,7 @@
 		AD840EDC2A865BC500BEAF7C /* TeamViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamViewModel.swift; sourceTree = "<group>"; };
 		AD840EDE2A86976E00BEAF7C /* TeamTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamTableViewCell.swift; sourceTree = "<group>"; };
 		AD86E00F2A811DD6000306B2 /* MessageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCollectionViewCell.swift; sourceTree = "<group>"; };
+		ADA1BA1F2A8E75160008E353 /* KeyboardNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardNotificationManager.swift; sourceTree = "<group>"; };
 		ADACF2CB2A6186DB00550283 /* HandShakeProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HandShakeProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADACF2CE2A6186DB00550283 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		ADACF2D22A6186DB00550283 /* AuthorizationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AuthorizationViewController.swift; path = "../New Group/AuthorizationViewController.swift"; sourceTree = "<group>"; };
@@ -111,6 +114,7 @@
 				ADBFBB0E2A70166100666533 /* FirebaseStorage in Frameworks */,
 				AD5C62E22A62DE580069A53F /* FirebaseAnalytics in Frameworks */,
 				AD5C62E42A62DE580069A53F /* FirebaseAuth in Frameworks */,
+				AD3F55822A92590600896977 /* SkeletonView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,7 +162,6 @@
 		AD13F6392A61A83E007F5449 /* Interface Builder */ = {
 			isa = PBXGroup;
 			children = (
-				AD70293E2A8D2DB6004FF7A9 /* UserTableView */,
 				AD33F4D82A6849960028E919 /* TableViewCell */,
 				AD13F63A2A61A85F007F5449 /* InterfaceBuilder.swift */,
 				AD13F6412A61B337007F5449 /* SetupConstraint.swift */,
@@ -227,13 +230,6 @@
 			path = TableViewCell;
 			sourceTree = "<group>";
 		};
-		AD70293E2A8D2DB6004FF7A9 /* UserTableView */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = UserTableView;
-			sourceTree = "<group>";
-		};
 		AD840ED92A864C2700BEAF7C /* Team */ = {
 			isa = PBXGroup;
 			children = (
@@ -268,6 +264,7 @@
 				ADACF2CE2A6186DB00550283 /* AppDelegate.swift */,
 				ADDA9CA02A6579FD0008C481 /* SceneDelegate.swift */,
 				ADDBC56C2A6589BD004CD8E6 /* Coordinator.swift */,
+				ADA1BA1F2A8E75160008E353 /* KeyboardNotificationManager.swift */,
 				AD13F6332A61A59C007F5449 /* Model */,
 				AD13F6342A61A5B3007F5449 /* ViewModel */,
 				AD13F6322A61A437007F5449 /* Controller */,
@@ -308,6 +305,7 @@
 				AD5C62E32A62DE580069A53F /* FirebaseAuth */,
 				AD5C62E52A62DE580069A53F /* FirebaseDatabase */,
 				ADBFBB0D2A70166100666533 /* FirebaseStorage */,
+				AD3F55812A92590600896977 /* SkeletonView */,
 			);
 			productName = HandShakeProject;
 			productReference = ADACF2CB2A6186DB00550283 /* HandShakeProject.app */;
@@ -339,6 +337,7 @@
 			mainGroup = ADACF2C22A6186DB00550283;
 			packageReferences = (
 				AD5C62E02A62DE580069A53F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				AD3F55802A92590500896977 /* XCRemoteSwiftPackageReference "SkeletonView" */,
 			);
 			productRefGroup = ADACF2CC2A6186DB00550283 /* Products */;
 			projectDirPath = "";
@@ -368,6 +367,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				ADDBC56D2A6589BD004CD8E6 /* Coordinator.swift in Sources */,
+				ADA1BA202A8E75160008E353 /* KeyboardNotificationManager.swift in Sources */,
 				AD840EDF2A86976E00BEAF7C /* TeamTableViewCell.swift in Sources */,
 				AD1EB9062A7BE89700B78AEA /* MessageModel.swift in Sources */,
 				AD13F6382A61A6B0007F5449 /* AuthViewModel.swift in Sources */,
@@ -621,6 +621,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		AD3F55802A92590500896977 /* XCRemoteSwiftPackageReference "SkeletonView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Juanpe/SkeletonView";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		AD5C62E02A62DE580069A53F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -632,6 +640,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		AD3F55812A92590600896977 /* SkeletonView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AD3F55802A92590500896977 /* XCRemoteSwiftPackageReference "SkeletonView" */;
+			productName = SkeletonView;
+		};
 		AD5C62E12A62DE580069A53F /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = AD5C62E02A62DE580069A53F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

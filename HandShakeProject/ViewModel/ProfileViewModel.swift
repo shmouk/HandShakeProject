@@ -8,25 +8,23 @@
 import UIKit
 
 class ProfileViewModel {
-    var nameText = Bindable("")
-    var emailText = Bindable("")
-    var profileImage = Bindable(UIImage())
+    var currentUser = Bindable(User())
     let userAPI = UserAPI.shared
 
-    func fetchUser() {
+    func fetchUser(completion: @escaping () -> ()) {
         userAPI.fetchCurrentUser { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let user):
-                guard let image = user.image else { return }
-                self.profileImage.value = image
-                self.nameText.value = user.name
-                self.emailText.value = user.email
+                self.currentUser.value = user
+                completion()
             case .failure(let error):
                 print(error.localizedDescription)
+                completion()
             }
         }
     }
+    
     func loadImagePicker(image: UIImage) {
         userAPI.uploadImageToFirebaseStorage(image: image, completion: { result in
             

@@ -13,6 +13,10 @@ protocol AuthorizationViewControllerDelegate: AnyObject {
 }
 
 class AuthorizationViewController: UIViewController {
+    private let interfaceBuilder = InterfaceBuilder()
+    private let authViewModel = AuthViewModel()
+    
+    weak var delegate: AuthorizationViewControllerDelegate?
     
     lazy var loginTextField = interfaceBuilder.createTextField()
     lazy var passwordTextField = interfaceBuilder.createTextField()
@@ -20,16 +24,9 @@ class AuthorizationViewController: UIViewController {
     lazy var statusAuthLabel = interfaceBuilder.createTitleLabel()
     lazy var loginButton = interfaceBuilder.createButton()
     lazy var authSegmentControl = interfaceBuilder.createSegmentControl(items: authState)
-    
-    weak var delegate: AuthorizationViewControllerDelegate?
 
-    let interfaceBuilder = InterfaceBuilder()
-    private lazy var authViewModel = AuthViewModel()
-    
     private let authState = ["Sign up", "Log in"]
-    
     private var isSignup = true
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()

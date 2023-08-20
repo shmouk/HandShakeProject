@@ -9,6 +9,8 @@ import UIKit
 
 class EventCreateViewController: UIViewController {
     
+    private let interfaceBuilder = InterfaceBuilder()
+
     lazy var namingTextField = interfaceBuilder.createTextField()
     lazy var descriptionTextView = interfaceBuilder.createTextView()
     lazy var readingListTextView = interfaceBuilder.createTextView()
@@ -28,10 +30,10 @@ class EventCreateViewController: UIViewController {
     lazy var chooseDateButton = interfaceBuilder.createButton()
     lazy var importanceSegmentControl = interfaceBuilder.createSegmentControl(items: deadlineState)
     
-    let interfaceBuilder = InterfaceBuilder()
-    
     private let deadlineState = ["No time", "Low", "Medium", "High"]
-        
+    
+    private var keyboardManager: KeyboardNotificationManager?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
@@ -51,6 +53,7 @@ class EventCreateViewController: UIViewController {
     }
     
     private func setSubviews() {
+        keyboardManager = KeyboardNotificationManager(view: view)
         view.addSubviews(namingTextField, chooseTeamButton, chooseExecutorButton, descriptionTextView, teamLabel, namingLabel,
                          deadlineTypeLabel, dateLabel, descriptionLabel, executorLabel, familiarizationLabel,
                          readingListTextView, addToListButton, chooseDateButton, importanceSegmentControl)
@@ -105,7 +108,6 @@ class EventCreateViewController: UIViewController {
         self.navigationItem.setRightBarButton(rightButton, animated: false)
         self.navigationItem.title = navItem.title
         tabBarController?.tabBar.isHidden = true
-
     }
 }
 

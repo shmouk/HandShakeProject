@@ -8,11 +8,10 @@
 import UIKit
 
 class TeamTableViewCell: UITableViewCell {
-    
+    private let interfaceBuilder = InterfaceBuilder()
+
     lazy var teamNameLabel = interfaceBuilder.createTitleLabel()
     lazy var teamImageView = interfaceBuilder.createImageView()
-    
-    let interfaceBuilder = InterfaceBuilder()
     
     var team: Team? {
         didSet {

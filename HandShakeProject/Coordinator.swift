@@ -10,11 +10,11 @@ import FirebaseAuth
 
 class Coordinator {
     
-    private var window: UIWindow
+    private let window: UIWindow
     
     private let authVC = AuthorizationViewController()
     
-    init(window: UIWindow) {
+    init(_ window: UIWindow) {
         self.window = window
     }
     

@@ -3,21 +3,27 @@ import UIKit
 
 
 class ChatLogController: UICollectionViewController {
+    private let interfaceBuilder = InterfaceBuilder()
+    private let userChatViewModel = UserChatViewModel()
+    
+    private let cellId = "cellId"
     
     lazy var containerView = interfaceBuilder.createView()
     lazy var sendButton = interfaceBuilder.createButton()
     lazy var textField = interfaceBuilder.createTextField()
-    lazy var separatorView = interfaceBuilder.createView()
     
-    let interfaceBuilder = InterfaceBuilder()
-    private let userChatViewModel = UserChatViewModel()
-    private let cellId = "cellId"
     private var messages: [Message]?
+    private var keyboardManager: KeyboardNotificationManager?
+    private let user: User
     
-    var user: User? {
-        didSet {
-            navigationItem.title = user?.name
-        }
+    init(user: User, collectionViewLayout layout: UICollectionViewLayout) {
+        self.user = user
+        super.init(collectionViewLayout: layout)
+    }
+
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -36,9 +42,9 @@ class ChatLogController: UICollectionViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let uid = self.user?.uid, let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? MessageCollectionViewCell else { return UICollectionViewCell() }
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? MessageCollectionViewCell else { return UICollectionViewCell() }
         let message = messages?[indexPath.row]
-        cell.partnerUID = uid
+        cell.partnerUID = user.uid
         cell.message = message
         return cell
     }
@@ -46,18 +52,29 @@ class ChatLogController: UICollectionViewController {
     private func setUI() {
         setSubviews()
         setupConstraints()
-        settingTextField()
-        settingButton()
+        setSettings()
         setupTargets()
     }
     
-    private func setSubviews() {
-        tabBarController?.tabBar.isHidden = true
-        collectionView.register(MessageCollectionViewCell.self, forCellWithReuseIdentifier: cellId)
-        view.addSubviews(containerView)
-        view.addSubviews(textField, sendButton)
+    private func setSettings() {
+        settingTextField()
+        settingTextLabel()
+        settingButton()
     }
     
+    private func setSubviews() {
+        keyboardManager = KeyboardNotificationManager(view: view)
+        tabBarController?.tabBar.isHidden = true
+        collectionView.register(MessageCollectionViewCell.self, forCellWithReuseIdentifier: cellId)
+        containerView.addSubviews(textField, sendButton)
+        view.addSubviews(containerView)
+  
+    }
+    
+    private func settingTextLabel() {
+        navigationItem.title = user.name
+    }
+
     private func settingTextField() {
         textField.delegate = self
         textField.placeholder = "Input text..."
@@ -69,8 +86,8 @@ class ChatLogController: UICollectionViewController {
     }
     
     private func loadData() {
-        guard let user = self.user else { return }
-            self.userChatViewModel.loadMessagesPerUser(user)
+        userChatViewModel.setChattingUser(user)
+        userChatViewModel.loadMessagesPerUser()
     }
     
     private func reloadDataIfNeeded() {
@@ -89,9 +106,8 @@ class ChatLogController: UICollectionViewController {
     }
 
     private func sendText() {
-        guard let text = textField.text,
-              let uid = user?.uid else { return }
-        userChatViewModel.sendMessage(text: text, toId: uid)
+        guard let text = textField.text else { return }
+        userChatViewModel.sendMessage(text: text, toId: user.uid )
     }
     
     private func setupTargets() {
@@ -130,6 +146,7 @@ extension ChatLogController {
     @objc
     private func sendAction(_ sender: Any) {
         sendText()
+        textField.deleteBackward()
     }
 }
 

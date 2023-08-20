@@ -325,7 +325,7 @@ extension AddUserViewController {
             statusLabel.topAnchor.constraint(equalTo: namingTextField.bottomAnchor, constant: 10),
             statusLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             statusLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            statusLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
+            statusLabel.heightAnchor.constraint(equalToConstant: heightForView)
         ])
         
         NSLayoutConstraint.activate([
@@ -529,6 +529,11 @@ extension ProfileViewController {
         
         let heightForView = view.frame.height / 14
 
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: profileImageView.centerYAnchor)
+        ])
+        
         NSLayoutConstraint.activate([
             profileImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 130),
             profileImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),

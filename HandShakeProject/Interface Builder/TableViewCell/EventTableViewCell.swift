@@ -1,13 +1,12 @@
 import UIKit
 
 class EventTableViewCell : UITableViewCell {
-    
+    let interfaceBuilder = InterfaceBuilder()
+
     lazy var titleLabel = interfaceBuilder.createTitleLabel()
     lazy var descriptionLabel = interfaceBuilder.createDescriptionLabel()
     lazy var dateLabel = interfaceBuilder.createTitleLabel()
     lazy var teamImageView = interfaceBuilder.createImageView()
-    
-    let interfaceBuilder = InterfaceBuilder()
     
     var event: Events? {
         didSet {

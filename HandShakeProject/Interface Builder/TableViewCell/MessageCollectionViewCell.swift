@@ -1,10 +1,10 @@
 import UIKit
 
 class MessageCollectionViewCell: UICollectionViewCell {
-    
+    private let interfaceBuilder = InterfaceBuilder()
+
     lazy var messageTextView = interfaceBuilder.createTextView()
     lazy var timeTextLabel = interfaceBuilder.createDescriptionLabel()
-    let interfaceBuilder = InterfaceBuilder()
     
     var isMessegeForUser: Bool? {
         didSet {

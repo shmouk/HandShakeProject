@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SkeletonView
 
 class InterfaceBuilder {
     
@@ -32,6 +33,7 @@ class InterfaceBuilder {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.backgroundColor = .colorForView()
+        tableView.isSkeletonable = true
         return tableView
     }
     
@@ -63,6 +65,7 @@ class InterfaceBuilder {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
+        imageView.isSkeletonable = true
         return imageView
     }
     
@@ -72,6 +75,7 @@ class InterfaceBuilder {
         label.textColor = .colorForTitleText()
         label.font = UIFont.boldSystemFont(ofSize: 18)
         label.textAlignment = .left
+        label.isSkeletonable = true
         return label
     }
     
@@ -81,6 +85,7 @@ class InterfaceBuilder {
         label.textColor = .colorForDescriptionText()
         label.font = UIFont.boldSystemFont(ofSize: 14)
         label.textAlignment = .left
+        label.isSkeletonable = true
         return label
     }
     
@@ -96,6 +101,7 @@ class InterfaceBuilder {
         button.layer.shadowRadius = 10
         button.setTitleColor(.colorForTitleText(), for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
+        button.isSkeletonable = true
         return button
     }
     
@@ -109,5 +115,10 @@ class InterfaceBuilder {
         textView.textAlignment = .left
         textView.text = "..."
         return textView
+    }
+    func createActivityIndicator() -> UIActivityIndicatorView {
+        let activityIndicator = UIActivityIndicatorView(style: .medium)
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        return activityIndicator
     }
 }

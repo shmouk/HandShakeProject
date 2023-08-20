@@ -1,15 +1,22 @@
 import Foundation
 import UIKit
+import SkeletonView
 
 class ChatViewController: UIViewController {
     private let navigationBarManager = NavigationBarManager()
-    private let cellId = "cellId"
+    private let cellId = "MessageTableViewCell"
     private let userChatViewModel = UserChatViewModel()
-    let interfaceBuilder = InterfaceBuilder()
+    private let interfaceBuilder = InterfaceBuilder()
     
     lazy var tableView = interfaceBuilder.createTableView()
+    
     private var user: User?
-    private var messages: [Message]?
+    private var messages: [Message]? {
+        didSet {
+            reloadTable()
+        }
+    }
+    
     private var refreshCntrl = UIRefreshControl()
     
     init() {
@@ -26,17 +33,19 @@ class ChatViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        setUI()
         reloadDataIfNeeded()
     }
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        setUI()
         bindViewModel()
     }
     
     private func setUI() {
         setupNavBarManager()
+        settingTableView()
         setSubviews()
         setupTargets()
         setupConstraints()
@@ -45,6 +54,7 @@ class ChatViewController: UIViewController {
     private func reloadDataIfNeeded() {
         if messages?.isEmpty ?? true {
             userChatViewModel.loadLastMessagePerUser()
+            
         }
     }
     
@@ -52,7 +62,6 @@ class ChatViewController: UIViewController {
         userChatViewModel.lastMessageArray.bind { [weak self] messages in
             guard let self = self else { return }
             self.messages = messages
-            self.reloadTable()
         }
         userChatViewModel.fetchUser.bind { [weak self] user in
             guard let self = self else { return }
@@ -92,14 +101,20 @@ class ChatViewController: UIViewController {
     }
     
     private func reloadTable() {
+        tableView.stopSkeletonAnimation()
+        tableView.hideSkeleton()
         tableView.reloadData()
     }
     
-    private func setSubviews() {
+    private func settingTableView() {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(MessageTableViewCell.self, forCellReuseIdentifier: cellId)
         tableView.addSubview(refreshCntrl)
+        tableView.showSkeleton(usingColor: .skeletonDefault, transition: .crossDissolve(0.5))
+    }
+    
+    private func setSubviews() {
         view.addSubviews(tableView)
         view.backgroundColor = .colorForView()
     }
@@ -109,12 +124,10 @@ class ChatViewController: UIViewController {
     }
 }
 
-
 extension ChatViewController {
     @objc
     private func handleRefresh(_ sender: UIRefreshControl) {
         userChatViewModel.loadLastMessagePerUser()
-        bindViewModel()
         refreshCntrl.endRefreshing()
     }
 }
@@ -127,16 +140,14 @@ extension ChatViewController: NavigationBarManagerDelegate {
     }
 }
 
-
 extension ChatViewController: UsersListTableViewControllerDelegate {
     func openChatWithChosenUser(_ user: User) {
-        let chatLogController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
-        chatLogController.user = user
+        let chatLogController = ChatLogController(user: user, collectionViewLayout: UICollectionViewFlowLayout())
         navigationController?.pushViewController(chatLogController, animated: true)
     }
 }
 
-extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
+extension ChatViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? MessageTableViewCell else { return UITableViewCell() }
         let message = messages?[indexPath.row]
@@ -159,5 +170,26 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? MessageTableViewCell else { return }
         cell.contentView.backgroundColor = .white
+    }
+}
+
+extension ChatViewController: SkeletonTableViewDataSource {
+    func numSections(in collectionSkeletonView: UITableView) -> Int {
+        1
+    }
+    
+    func collectionSkeletonView(_ skeletonView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        userChatViewModel.loadMessagesIntoUserDefaults()
+    }
+    
+    func collectionSkeletonView(_ skeletonView: UITableView, cellIdentifierForRowAt indexPath: IndexPath) -> ReusableCellIdentifier {
+        cellId
+    }
+    
+    private func collectionSkeletonView(_ skeletonView: UITableView, skeletonCellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? MessageTableViewCell else {
+            return UITableViewCell()
+        }
+        return cell
     }
 }

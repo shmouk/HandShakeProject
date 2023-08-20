@@ -8,18 +8,20 @@
 import UIKit
 
 class ProfileViewController: UIViewController {
+    private let navigationBarManager = NavigationBarManager()
+    private let interfaceBuilder = InterfaceBuilder()
+    private let authViewModel = AuthViewModel()
+
+    let profileViewModel = ProfileViewModel()
     
+    lazy var activityIndicator = interfaceBuilder.createActivityIndicator()
     lazy var logoutButton = interfaceBuilder.createButton()
     lazy var friendsButton = interfaceBuilder.createButton()
     lazy var editProfileButton = interfaceBuilder.createButton()
     lazy var nameLabel = interfaceBuilder.createTitleLabel()
     lazy var emailLabel = interfaceBuilder.createDescriptionLabel()
     lazy var profileImageView = interfaceBuilder.createImageView()
-    
-    private let navigationBarManager = NavigationBarManager()
-    private let interfaceBuilder = InterfaceBuilder()
-    private lazy var authViewModel = AuthViewModel()
-    lazy var profileViewModel = ProfileViewModel()
+ 
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -28,20 +30,19 @@ class ProfileViewController: UIViewController {
     deinit {
         print("4")
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        setUI()
         bindViewModel()
-
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setUI()
         loadData()
     }
     
@@ -55,23 +56,33 @@ class ProfileViewController: UIViewController {
     }
     
     private func setSubviews() {
-        view.addSubviews(profileImageView, editProfileButton, emailLabel, nameLabel, friendsButton, logoutButton)
+        view.addSubviews(activityIndicator, profileImageView, editProfileButton, emailLabel, nameLabel, friendsButton, logoutButton)
         view.backgroundColor = .colorForView()
     }
-    
-    private func loadData() {
-        profileViewModel.fetchUser()
+
+    func loadData() {
+        activityIndicator.startAnimating()
+        DispatchQueue.global().async { [weak self] in
+            guard let self = self else { return }
+            
+            self.profileViewModel.fetchUser() { [weak self] in
+                guard let self = self else { return }
+                
+                DispatchQueue.main.async {
+                    self.activityIndicator.stopAnimating()
+                }
+            }
+        }
     }
     
+    
+    
     private func bindViewModel() {
-        profileViewModel.nameText.bind { [self](nameText) in
-            nameLabel.text = nameText
-        }
-        profileViewModel.emailText.bind { [self](emailText) in
-            emailLabel.text = emailText
-        }
-        profileViewModel.profileImage.bind { [self](image) in
-            profileImageView.image = image
+        profileViewModel.currentUser.bind { [weak self] user in
+            guard let self = self else { return }
+            nameLabel.text = user.name
+            emailLabel.text = user.email
+            profileImageView.image = user.image
         }
     }
     
@@ -102,7 +113,7 @@ private extension ProfileViewController {
     
     @objc
     private func openFriend(_ sender: Any) {
-
+        
     }
     
     @objc

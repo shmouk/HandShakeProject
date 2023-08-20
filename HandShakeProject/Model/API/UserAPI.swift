@@ -25,32 +25,35 @@ class UserAPI {
         guard let uid = self.currentUID else { return }
         
         let userRef = database.child("users").child(uid)
-        userRef.observeSingleEvent(of: .value) { [weak self] snapshot in
-            guard let userDict = snapshot.value as? [String: Any] else {
-                let error = NSError(domain: "Invalid user data", code: 400, userInfo: nil)
-                completion(.failure(error))
-                return
-            }
-            
-            if let email = userDict["email"] as? String,
-               let name = userDict["name"] as? String,
-               let imageUrlString = userDict["downloadURL"] as? String,
-               let imageUrl = URL(string: imageUrlString) {
-                guard let self = self else { return }
-                self.downloadImage(from: imageUrl) { result in
-                    DispatchQueue.main.async {
-                        switch result {
-                        case .success(let image):
-                            let user = User(email: email, name: name, image: image)
-                            completion(.success(user))
-                        case .failure(let error):
-                            completion(.failure(error))
+        
+        DispatchQueue.global().async {
+            userRef.observeSingleEvent(of: .value) { [weak self] snapshot in
+                guard let userDict = snapshot.value as? [String: Any] else {
+                    let error = NSError(domain: "Invalid user data", code: 400, userInfo: nil)
+                    completion(.failure(error))
+                    return
+                }
+                
+                if let email = userDict["email"] as? String,
+                   let name = userDict["name"] as? String,
+                   let imageUrlString = userDict["downloadURL"] as? String,
+                   let imageUrl = URL(string: imageUrlString) {
+                    guard let self = self else { return }
+                    self.downloadImage(from: imageUrl) { result in
+                        DispatchQueue.main.async {
+                            switch result {
+                            case .success(let image):
+                                let user = User(email: email, name: name, image: image)
+                                completion(.success(user))
+                            case .failure(let error):
+                                completion(.failure(error))
+                            }
                         }
                     }
+                } else {
+                    let error = NSError(domain: "Invalid user data", code: 400, userInfo: nil)
+                    completion(.failure(error))
                 }
-            } else {
-                let error = NSError(domain: "Invalid user data", code: 400, userInfo: nil)
-                completion(.failure(error))
             }
         }
     }

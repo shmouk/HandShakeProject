@@ -2,15 +2,22 @@ import Firebase
 import FirebaseStorage
 import UIKit
 
-class ChatAPI{
+class ChatAPI {
     private let database: DatabaseReference
     private let storage: StorageReference
     
-    var lastMessageFromMessages = [Message]()
-    var allMessages = [Message]()
-    var currentUID: String?
+    static let shared = ChatAPI()
+    static let messageUpdateNotification = Notification.Name("MessageUpdateNotification")
 
-    static var shared = ChatAPI()
+    var lastMessageFromMessages = [Message]()
+    var allMessages = [Message]() {
+        didSet {
+            NotificationCenter.default.post(name: ChatAPI.messageUpdateNotification, object: nil)
+
+        }
+    }
+    
+    var currentUID: String?
     
     typealias UserCompletion = (Result<(UIImage, String), Error>) -> Void
     

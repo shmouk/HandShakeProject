@@ -1,15 +1,17 @@
 import UIKit
 
 class TeamInfoViewController: UIViewController {
+    private let interfaceBuilder = InterfaceBuilder()
+    private let teamViewModel = TeamViewModel()
+    
     lazy var userListButton = interfaceBuilder.createButton()
     lazy var editTeamButton = interfaceBuilder.createButton()
     lazy var creatorID = interfaceBuilder.createDescriptionLabel()
     lazy var nameLabel = interfaceBuilder.createTitleLabel()
     lazy var teamImageView = interfaceBuilder.createImageView()
     
-    private let interfaceBuilder = InterfaceBuilder()
-    private let teamViewModel = TeamViewModel()
-    let team: Team
+    private let team: Team
+    private var users: [User]?
     
     init(team: Team) {
         self.team = team
@@ -32,6 +34,7 @@ class TeamInfoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         loadData()
+        bindViewModel()
     }
     
     private func setUI() {
@@ -51,11 +54,14 @@ class TeamInfoViewController: UIViewController {
     
     private func loadData() {
         teamViewModel.convertIdToUserName(team.creatorId)
-        teamViewModel.fetchUserFromUserList(team: team)
+        teamViewModel.fetchUsersFromUserList(team: team)
     }
     
     private func bindViewModel() {
-        
+        teamViewModel.fetchUsersFromSelectedTeam.bind { [weak self] users in
+            guard let self = self else { return }
+            self.users = users
+        }
     }
     
     private func settingButton() {
@@ -66,7 +72,7 @@ class TeamInfoViewController: UIViewController {
     private func settingLabel() {
         teamViewModel.creatorName.bind { [weak self] name in
             guard let self = self else { return }
-            creatorID.text = "Id: " + name
+            creatorID.text = "Creator: " + name
         }
         
         nameLabel.text = team.teamName
@@ -91,13 +97,11 @@ class TeamInfoViewController: UIViewController {
     }
     
     private func openUsersListVC() {
-        teamViewModel.fetchUsersFromSelectedTeam.bind { [weak self] users in
-            guard let self = self else { return }
-            
-            let usersListTableViewController = UsersListTableViewController(users: users, isCellBeUsed: false)
-            usersListTableViewController.modalPresentationStyle = .automatic
-            present(usersListTableViewController, animated: true)
-        }
+        guard let users = users else { return }
+        let usersListTableViewController = UsersListTableViewController(users: users, isCellBeUsed: false)
+        usersListTableViewController.modalPresentationStyle = .automatic
+        present(usersListTableViewController, animated: true)
+        
     }
     
     private func openAddUserVC() {

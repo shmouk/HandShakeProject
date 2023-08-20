@@ -60,7 +60,9 @@ class AddUserViewController: UIViewController {
     private func settingTextLabel() {
         userNameLabel.text = "Input user email:"
         statusLabel.textAlignment = .center
+        statusLabel.numberOfLines = 2
     }
+    
     private func setSubviews() {
         tableView.delegate = self
         tableView.dataSource = self
@@ -81,6 +83,11 @@ class AddUserViewController: UIViewController {
     private func searchUser() {
         guard let text = namingTextField.text else { return }
         teamViewModel.searchUserEmail(text)
+    }
+    
+    private func addUserToTeam() {
+        guard let user = user else { return }
+        teamViewModel.addUserToTeam(user, to: team)
     }
     
     private func bindViewModel() {
@@ -113,10 +120,7 @@ private extension AddUserViewController {
     
     @objc
     private func addUserAction(_ sender: Any) {
-        guard let user = user else { return }
-        teamViewModel.addUserToTeam(user, to: team) {
-            self.navigationController?.popToRootViewController(animated: true)
-        }
+        addUserToTeam() 
     }
 }
 
@@ -147,4 +151,12 @@ extension AddUserViewController: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? UsersTableViewCell else { return }
         cell.contentView.backgroundColor = .white
     }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            user = nil
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
+    }
+
 }

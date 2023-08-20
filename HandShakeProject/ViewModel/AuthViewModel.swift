@@ -59,11 +59,6 @@ class AuthViewModel {
     func clearSingletonData() {
             userAPI.users.removeAll()
             ChatAPI.shared.allMessages.removeAll()
-            ChatAPI.shared.lastMessageFromMessages.removeAll()
-        
-        print(userAPI.users)
-        print(ChatAPI.shared.allMessages)
-        print(ChatAPI.shared.lastMessageFromMessages)
-        
+            ChatAPI.shared.lastMessageFromMessages.removeAll() 
     }
 }
