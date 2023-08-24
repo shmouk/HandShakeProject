@@ -13,25 +13,14 @@ class ChatAPI {
     var allMessages = [Message]() {
         didSet {
             NotificationCenter.default.post(name: ChatAPI.messageUpdateNotification, object: nil)
-
         }
     }
     
     var currentUID: String?
     
-    typealias UserCompletion = (Result<(UIImage, String), Error>) -> Void
-    
     private init() {
         database = SetupDatabase().setDatabase()
         storage = Storage.storage().reference()
-        fetchCurrentId()
-        observeMessages{ _ in
-            print("load messages")
-        }
-    }
-
-    private func fetchCurrentId() {
-        currentUID = User.fetchCurrentId()
     }
     
     private func fetchUser(userId: String, completion: @escaping UserCompletion) {
@@ -58,7 +47,8 @@ class ChatAPI {
         }
     }
     
-    func observeMessages(completion: @escaping (Result<Void, Error>) -> Void) {
+    func observeMessages(completion: @escaping VoidCompletion) {
+        currentUID = User.fetchCurrentId()
         guard let uid = currentUID else { return }
         
         let userMessagesRef = database.child("user-messages").child(uid)
@@ -179,7 +169,7 @@ class ChatAPI {
         }
     }
     
-    func sendMessage(text: String, toId: String, completion: @escaping (Result<Void, Error>) -> Void) {
+    func sendMessage(text: String, toId: String, completion: @escaping VoidCompletion) {
         guard let fromId = currentUID else { return }
 
         let ref = database.child("messages")

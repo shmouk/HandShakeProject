@@ -10,7 +10,7 @@
 		AD13F6362A61A5D4007F5449 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD13F6352A61A5D4007F5449 /* UserModel.swift */; };
 		AD13F6382A61A6B0007F5449 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD13F6372A61A6B0007F5449 /* AuthViewModel.swift */; };
 		AD13F63B2A61A85F007F5449 /* InterfaceBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD13F63A2A61A85F007F5449 /* InterfaceBuilder.swift */; };
-		AD13F63D2A61AABB007F5449 /* UIView + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD13F63C2A61AABB007F5449 /* UIView + Extension.swift */; };
+		AD13F63D2A61AABB007F5449 /* Extension + typealias.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD13F63C2A61AABB007F5449 /* Extension + typealias.swift */; };
 		AD13F63F2A61AD28007F5449 /* Bindable.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD13F63E2A61AD28007F5449 /* Bindable.swift */; };
 		AD13F6422A61B337007F5449 /* SetupConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD13F6412A61B337007F5449 /* SetupConstraint.swift */; };
 		AD13F6442A61E4F5007F5449 /* MainTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD13F6432A61E4F5007F5449 /* MainTabBarViewController.swift */; };
@@ -19,6 +19,10 @@
 		AD1EB9042A7B118500B78AEA /* UsersListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1EB9032A7B118500B78AEA /* UsersListTableViewController.swift */; };
 		AD1EB9062A7BE89700B78AEA /* MessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1EB9052A7BE89700B78AEA /* MessageModel.swift */; };
 		AD1EB90D2A7BFEF700B78AEA /* MessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1EB90C2A7BFEF700B78AEA /* MessageTableViewCell.swift */; };
+		AD2199722A9633E10015A409 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2199712A9633E10015A409 /* DataManager.swift */; };
+		AD2199742A96ABA90015A409 /* EventAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2199732A96ABA90015A409 /* EventAPI.swift */; };
+		AD2199762A96AE150015A409 /* EventViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2199752A96AE150015A409 /* EventViewModel.swift */; };
+		AD2199782A97527A0015A409 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2199772A97527A0015A409 /* AlertManager.swift */; };
 		AD2F8BEE2A6F014300743601 /* UserAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2F8BED2A6F014300743601 /* UserAPI.swift */; };
 		AD2F8BF02A6F0C0500743601 /* SetupDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2F8BEF2A6F0C0400743601 /* SetupDatabase.swift */; };
 		AD33F4D32A682C320028E919 /* EventsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD33F4D22A682C320028E919 /* EventsModel.swift */; };
@@ -61,7 +65,7 @@
 		AD13F6352A61A5D4007F5449 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		AD13F6372A61A6B0007F5449 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		AD13F63A2A61A85F007F5449 /* InterfaceBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceBuilder.swift; sourceTree = "<group>"; };
-		AD13F63C2A61AABB007F5449 /* UIView + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView + Extension.swift"; sourceTree = "<group>"; };
+		AD13F63C2A61AABB007F5449 /* Extension + typealias.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension + typealias.swift"; sourceTree = "<group>"; };
 		AD13F63E2A61AD28007F5449 /* Bindable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bindable.swift; sourceTree = "<group>"; };
 		AD13F6412A61B337007F5449 /* SetupConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupConstraint.swift; sourceTree = "<group>"; };
 		AD13F6432A61E4F5007F5449 /* MainTabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarViewController.swift; sourceTree = "<group>"; };
@@ -70,6 +74,10 @@
 		AD1EB9032A7B118500B78AEA /* UsersListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersListTableViewController.swift; sourceTree = "<group>"; };
 		AD1EB9052A7BE89700B78AEA /* MessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModel.swift; sourceTree = "<group>"; };
 		AD1EB90C2A7BFEF700B78AEA /* MessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTableViewCell.swift; sourceTree = "<group>"; };
+		AD2199712A9633E10015A409 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		AD2199732A96ABA90015A409 /* EventAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventAPI.swift; sourceTree = "<group>"; };
+		AD2199752A96AE150015A409 /* EventViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewModel.swift; sourceTree = "<group>"; };
+		AD2199772A97527A0015A409 /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
 		AD2F8BED2A6F014300743601 /* UserAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAPI.swift; sourceTree = "<group>"; };
 		AD2F8BEF2A6F0C0400743601 /* SetupDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupDatabase.swift; sourceTree = "<group>"; };
 		AD33F4D22A682C320028E919 /* EventsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsModel.swift; sourceTree = "<group>"; };
@@ -149,11 +157,12 @@
 		AD13F6342A61A5B3007F5449 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				AD2199792A9752830015A409 /* Managers */,
 				AD13F6372A61A6B0007F5449 /* AuthViewModel.swift */,
-				ADBFBB0F2A71612D00666533 /* ProfileViewModel.swift */,
 				ADBFBB172A754C6F00666533 /* UserChatViewModel.swift */,
+				AD2199752A96AE150015A409 /* EventViewModel.swift */,
 				AD840EDC2A865BC500BEAF7C /* TeamViewModel.swift */,
-				AD1EB9012A7B0D3D00B78AEA /* NavigationBarManager.swift */,
+				ADBFBB0F2A71612D00666533 /* ProfileViewModel.swift */,
 				AD13F6402A61AD2D007F5449 /* Bindable */,
 			);
 			path = ViewModel;
@@ -162,10 +171,10 @@
 		AD13F6392A61A83E007F5449 /* Interface Builder */ = {
 			isa = PBXGroup;
 			children = (
-				AD33F4D82A6849960028E919 /* TableViewCell */,
+				AD33F4D82A6849960028E919 /* ViewCell */,
 				AD13F63A2A61A85F007F5449 /* InterfaceBuilder.swift */,
 				AD13F6412A61B337007F5449 /* SetupConstraint.swift */,
-				AD13F63C2A61AABB007F5449 /* UIView + Extension.swift */,
+				AD13F63C2A61AABB007F5449 /* Extension + typealias.swift */,
 				AD33F4DB2A695D6A0028E919 /* NavigationBar + Extension.swift */,
 			);
 			path = "Interface Builder";
@@ -185,6 +194,7 @@
 				AD2F8BED2A6F014300743601 /* UserAPI.swift */,
 				ADBFBB152A72917500666533 /* ChatAPI.swift */,
 				AD840ED52A86357A00BEAF7C /* TeamAPI.swift */,
+				AD2199732A96ABA90015A409 /* EventAPI.swift */,
 				AD2F8BEF2A6F0C0400743601 /* SetupDatabase.swift */,
 			);
 			path = API;
@@ -218,7 +228,18 @@
 			path = Profile;
 			sourceTree = "<group>";
 		};
-		AD33F4D82A6849960028E919 /* TableViewCell */ = {
+		AD2199792A9752830015A409 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				AD1EB9012A7B0D3D00B78AEA /* NavigationBarManager.swift */,
+				ADA1BA1F2A8E75160008E353 /* KeyboardNotificationManager.swift */,
+				AD2199712A9633E10015A409 /* DataManager.swift */,
+				AD2199772A97527A0015A409 /* AlertManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		AD33F4D82A6849960028E919 /* ViewCell */ = {
 			isa = PBXGroup;
 			children = (
 				ADDF7F1F2A6704FA009FE3C2 /* EventTableViewCell.swift */,
@@ -227,7 +248,7 @@
 				AD1EB90C2A7BFEF700B78AEA /* MessageTableViewCell.swift */,
 				AD86E00F2A811DD6000306B2 /* MessageCollectionViewCell.swift */,
 			);
-			path = TableViewCell;
+			path = ViewCell;
 			sourceTree = "<group>";
 		};
 		AD840ED92A864C2700BEAF7C /* Team */ = {
@@ -264,7 +285,6 @@
 				ADACF2CE2A6186DB00550283 /* AppDelegate.swift */,
 				ADDA9CA02A6579FD0008C481 /* SceneDelegate.swift */,
 				ADDBC56C2A6589BD004CD8E6 /* Coordinator.swift */,
-				ADA1BA1F2A8E75160008E353 /* KeyboardNotificationManager.swift */,
 				AD13F6332A61A59C007F5449 /* Model */,
 				AD13F6342A61A5B3007F5449 /* ViewModel */,
 				AD13F6322A61A437007F5449 /* Controller */,
@@ -378,10 +398,13 @@
 				AD33F4D32A682C320028E919 /* EventsModel.swift in Sources */,
 				ADDF7F202A6704FA009FE3C2 /* EventTableViewCell.swift in Sources */,
 				AD1C61732A8A461000E095C9 /* TeamInfoViewController.swift in Sources */,
+				AD2199782A97527A0015A409 /* AlertManager.swift in Sources */,
 				AD13F6422A61B337007F5449 /* SetupConstraint.swift in Sources */,
 				AD5C62EE2A6310FA0069A53F /* TeamViewController.swift in Sources */,
 				ADDA9CA12A6579FD0008C481 /* SceneDelegate.swift in Sources */,
+				AD2199742A96ABA90015A409 /* EventAPI.swift in Sources */,
 				AD13F63F2A61AD28007F5449 /* Bindable.swift in Sources */,
+				AD2199722A9633E10015A409 /* DataManager.swift in Sources */,
 				AD5C62F02A6311060069A53F /* ProfileViewController.swift in Sources */,
 				AD2F8BEE2A6F014300743601 /* UserAPI.swift in Sources */,
 				ADACF2D32A6186DB00550283 /* AuthorizationViewController.swift in Sources */,
@@ -395,8 +418,9 @@
 				AD1EB9022A7B0D3D00B78AEA /* NavigationBarManager.swift in Sources */,
 				AD840EDB2A86561600BEAF7C /* TeamCeateViewController.swift in Sources */,
 				AD33F4D52A6836C60028E919 /* UsersTableViewCell.swift in Sources */,
-				AD13F63D2A61AABB007F5449 /* UIView + Extension.swift in Sources */,
+				AD13F63D2A61AABB007F5449 /* Extension + typealias.swift in Sources */,
 				ADACF2CF2A6186DB00550283 /* AppDelegate.swift in Sources */,
+				AD2199762A96AE150015A409 /* EventViewModel.swift in Sources */,
 				AD5C62EC2A6310F00069A53F /* ChatViewController.swift in Sources */,
 				AD840ED62A86357A00BEAF7C /* TeamAPI.swift in Sources */,
 				ADBFBB182A754C6F00666533 /* UserChatViewModel.swift in Sources */,

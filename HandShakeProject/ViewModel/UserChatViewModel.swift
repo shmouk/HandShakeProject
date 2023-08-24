@@ -4,17 +4,15 @@ import Foundation
 class UserChatViewModel {
     private let chatAPI = ChatAPI.shared
     private let userAPI = UserAPI.shared
-    
+    private let userDefaults = UserDefaultsManager.shared
     private var withUser: User?
-
+    
     var lastMessageArray = Bindable([Message()])
     var filterMessages = Bindable([Message()])
     
     var fetchUser = Bindable(User())
     var users = Bindable([User()])
-    
-    static var currentUID = UserAPI.shared.currentUID
-    
+        
     init() {
         NotificationCenter.default.addObserver(self, selector: #selector(updateMessages), name: ChatAPI.messageUpdateNotification, object: nil)
     }
@@ -26,7 +24,7 @@ class UserChatViewModel {
     func setChattingUser(_ user: User) {
         self.withUser = user
     }
-
+    
     func loadUsers() {
         DispatchQueue.main.async { [self] in
             users.value = userAPI.users
@@ -40,7 +38,8 @@ class UserChatViewModel {
             switch result {
             case .success(let messages):
                 self.lastMessageArray.value = messages
-                saveMessagesToUserDefaults()
+                userDefaults.saveValue(messages.count, forKey: "messagesCount")
+                
             case .failure(_):
                 break
             }
@@ -63,7 +62,7 @@ class UserChatViewModel {
         }
     }
     
-    func fetchUserFromMessage(_ index: Int, completion: @escaping (Result<Void, Error>) -> Void) {
+    func fetchUserFromMessage(_ index: Int, completion: @escaping VoidCompletion) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             let messages = self.lastMessageArray.value
@@ -88,12 +87,9 @@ class UserChatViewModel {
         }
     }
     
-    private func saveMessagesToUserDefaults() {
-        UserDefaults.standard.set(lastMessageArray.value.count , forKey: "messagesCount")
-    }
-    
     func loadMessagesIntoUserDefaults() -> Int {
-        UserDefaults.standard.integer(forKey: "messagesCount")
+        guard let count: Int = userDefaults.getValue(forKey: "messagesCount") else { return 0 }
+        return count
     }
 }
 

@@ -34,12 +34,12 @@ class ChatViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         reloadDataIfNeeded()
+        setUI()
     }
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUI()
         bindViewModel()
     }
     
@@ -54,7 +54,10 @@ class ChatViewController: UIViewController {
     private func reloadDataIfNeeded() {
         if messages?.isEmpty ?? true {
             userChatViewModel.loadLastMessagePerUser()
-            
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            self.reloadTable()
         }
     }
     
@@ -92,7 +95,7 @@ class ChatViewController: UIViewController {
             
             switch result {
             case .success():
-                self.openChatWithChosenUser(user)
+                self.chooseUser(user)
                 
             case .failure(_):
                 break
@@ -141,8 +144,8 @@ extension ChatViewController: NavigationBarManagerDelegate {
 }
 
 extension ChatViewController: UsersListTableViewControllerDelegate {
-    func openChatWithChosenUser(_ user: User) {
-        let chatLogController = ChatLogController(user: user, collectionViewLayout: UICollectionViewFlowLayout())
+    func chooseUser(_ user: User) {
+        let chatLogController = ChatLogController(user: user)
         navigationController?.pushViewController(chatLogController, animated: true)
     }
 }

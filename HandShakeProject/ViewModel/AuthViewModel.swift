@@ -1,11 +1,11 @@
 import Firebase
 
 class AuthViewModel {
-    
-    var statusText = Bindable("")
+    private let userDefaults = UserDefaultsManager.shared
+    private let userAPI = UserAPI.shared
+
+    var statusText = Bindable(String())
     var isSigningUp = Bindable(true)
-    lazy var firebaseAuth = Auth.auth()
-    let userAPI = UserAPI.shared
     
     func toggleAuthState() {
         isSigningUp.value = !isSigningUp.value
@@ -23,7 +23,7 @@ class AuthViewModel {
                 return
             }
             
-            firebaseAuth.createUser(withEmail: email, password: password) { [weak self] (result, error) in
+            Auth.auth().createUser(withEmail: email, password: password) { [weak self] (result, error) in
                 guard let self = self else { return }
                 guard error == nil else {
                     self.statusText.value = "Error: \(error!.localizedDescription)"
@@ -31,34 +31,40 @@ class AuthViewModel {
                 }
                 
                 self.userAPI.writeToDatabase(uid: result?.user.uid ?? "", email: email)
-                self.statusText.value = "Success: User created"
             }
         } else {
-            firebaseAuth.signIn(withEmail: email, password: password) { [weak self] (result, error) in
+            Auth.auth().signIn(withEmail: email, password: password) { [weak self] (result, error) in
                 guard let self = self else { return }
                 
                 guard error == nil else {
                     self.statusText.value = "Error: \(error!.localizedDescription)"
                     return
                 }
-                
-                self.statusText.value = "Success: User logged in"
+            }
+        }
+    }
+    
+    func authStateListener(completion: @escaping VoidCompletion) {
+        Auth.auth().addStateDidChangeListener { [weak self](auth, user) in
+            guard let self = self else { return }
+            if user == nil {
+                completion(.failure(NSError(domain: "User logout", code: 403, userInfo: nil)))
+            }
+            else {
+                SingletonDataManager.loadSingletonData()
+                completion(.success(()))
+                print(123)
             }
         }
     }
     
     func userLogoutAction() {
-        clearSingletonData()
+        SingletonDataManager.clearSingletonData()
+        userDefaults.removeData(forKey: "messagesCount")
         do {
-            try firebaseAuth.signOut()
+            try Auth.auth().signOut()
         } catch let signOutError as NSError {
             print("Error signing out: %@", signOutError)
         }
-    }
-    
-    func clearSingletonData() {
-            userAPI.users.removeAll()
-            ChatAPI.shared.allMessages.removeAll()
-            ChatAPI.shared.lastMessageFromMessages.removeAll() 
     }
 }

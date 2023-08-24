@@ -1,159 +1,102 @@
-Исправленный и переписанный код с использованием `SkeletonView`:
+Для реализации данной функциональности вам понадобится расширение UITableView delegate метода `tableView(_:heightForRowAt:)` для вычисления высоты ячейки, а также расширение UITableViewCell метода `layoutSubviews()` для настройки ширины текстового поля.
+
+Вот пример кода на Swift UIKit для реализации требуемого поведения:
 
 ```swift
-import SkeletonView
+import UIKit
 
-class ChatViewController: UIViewController {
-    private let navigationBarManager = NavigationBarManager()
-    private let cellId = "MessageTableViewCell"
-    private let userChatViewModel = UserChatViewModel()
-    private let interfaceBuilder = InterfaceBuilder()
+class CustomTableViewCell: UITableViewCell {
+    let textView: UITextView = {
+        let view = UITextView()
+        view.isScrollEnabled = false
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     
-    lazy var tableView: UITableView = {
-        let tableView = interfaceBuilder.createTableView()
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(MessageTableViewCell.self, forCellReuseIdentifier: cellId)
-  
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        contentView.addSubview(textView)
+        
+        NSLayoutConstraint.activate([
+            textView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            textView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            textView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            textView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+        ])
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        let screenWidth = UIScreen.main.bounds.width
+        textView.frame.size.width = screenWidth
+        
+        let halfScreenWidth = screenWidth / 2
+        if textView.contentSize.width > halfScreenWidth {
+            textView.textContainer.size = textView.contentSize
+            textView.frame.size.height = textView.contentSize.height
+        } else {
+            textView.frame.size.height = textView.sizeThatFits(CGSize(width: halfScreenWidth, height: CGFloat.infinity)).height
+        }
+        
+        frame.size.height = textView.frame.size.height
+    }
+}
+
+class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+
+    let tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
     
-    private var user: User?
-    private var messages: [Message]? {
-        didSet {
-            self.tableView.stopSkeletonAnimation()
-            self.tableView.hideSkeleton()
-            self.reloadTable()
-        }
-    }
-    
-    private var refreshControl = UIRefreshControl()
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        reloadDataIfNeeded()
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUI()
-        bindViewModel()
-    }
-    
-    private func setUI() {
-        setupNavBarManager()
-        setSubviews()
-        setupTargets()
-        setupConstraints()
-    }
-    
-    private func reloadDataIfNeeded() {
-        if messages?.isEmpty ?? true {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
-                self?.userChatViewModel.loadLastMessagePerUser()
-            }
-        }
-    }
-    
-    private func bindViewModel() {
-        userChatViewModel.lastMessageArray.bind { [weak self] messages in
-            guard let self = self else { return }
-            self.messages = messages
-        }
         
-        userChatViewModel.fetchUser.bind { [weak self] user in
-            guard let self = self else { return }
-            self.user = user
-        }
-    }
-    
-    private func setupNavBarManager() {
-        tabBarController?.tabBar.isHidden = false
-        navigationBarManager.delegate = self
-        navigationBarManager.updateNavigationBar(for: self, isAddButtonNeeded: true)
-    }
-    
-    private func reloadTable() {
-        tableView.reloadData()
-    }
-    
-    private func setSubviews() {
-        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+        tableView.dataSource = self
+        tableView.delegate = self
         
-        tableView.addSubview(refreshControl)
+        tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: "CustomCell")
+        
         view.addSubview(tableView)
-        view.backgroundColor = .colorForView()
-    }
-    
-    @objc private func refreshData() {
-        userChatViewModel.loadLastMessagePerUser()
-    }
-}
-
-extension ChatViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? MessageTableViewCell else {
-            return UITableViewCell()
-        }
         
-        let message = messages?[indexPath.row]
-        cell.message = message
-        return cell
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return messages?.count ?? 0
+        // Верните количество ячеек в таблице
+        return 5
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell", for: indexPath) as! CustomTableViewCell
+        
+        cell.textView.text = "Some long text that may or may not wrap to a new line depending on its width"
+        
+        return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 64
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        openSelectedChat(indexPath.row)
-    }
-    
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        guard let cell = tableView.cellForRow(at: indexPath) as? MessageTableViewCell else {
-            return
-        }
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell") as! CustomTableViewCell
         
-        cell.contentView.backgroundColor = .white
-    }
-}
-
-extension ChatViewController: SkeletonTableViewDataSource {
-    func numSections(in collectionSkeletonView: UITableView) -> Int {
-        return 1
-    }
-    
-    func collectionSkeletonView(_ skeletonView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 12
-    }
-    
-    func collectionSkeletonView(_ skeletonView: UITableView, cellIdentifierForRowAt indexPath: IndexPath) -> ReusableCellIdentifier {
-        return cellId
-    }
-    
-    func collectionSkeletonView(_ skeletonView: UITableView, skeletonCellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? MessageTableViewCell else {
-            return UITableViewCell()
-        }
+        cell.textView.text = "Some long text that may or may not wrap to a new line depending on its width"
+        cell.setNeedsLayout()
+        cell.layoutIfNeeded()
         
-        cell.isSkeletonable = true
-        cell.showAnimatedSkeleton()
-        return cell
+        return cell.textView.frame.size.height
     }
 }
 ```
 
-В этом коде произведены следующие исправления и изменения:
-
-- Включен `SkeletonView` для таблицы путем вызова `showSkeleton()` в ленивом свойстве `tableView`.
-- Таблица помечена как `isSkeletonable = true`, чтобы каждая ячейка таблицы была визуализирована как `SkeletonView`.
-- Добавлен `UIRefreshControl` для возможности обновления данных путем вызова метода `refreshData()` при событии `.valueChanged`.
-- В методе `viewDidLoad()` был использован `[weak self]` в блоках замыканий, чтобы избежать сильных ссылок.
-- Обновлен `setSubviews()` для добавления `refreshControl` к таблице и добавления `tableView` на представление.
-- В методе `didDeselectRowAt` `cellForRowAt` и `skeletonCellForRowAt` изменена проверка ячейки на ячейку типа `MessageTableViewCell`.
-
-Теперь код должен правильно работать и отображать анимацию `SkeletonView`.
+В этом коде используется кастомная ячейка CustomTableViewCell, которая содержит UITextView для отображения текста. В методе `layoutSubviews()` мы настраиваем ширину и высоту текстового поля с учетом условий, которые вы указали. Также в методе `tableView(_

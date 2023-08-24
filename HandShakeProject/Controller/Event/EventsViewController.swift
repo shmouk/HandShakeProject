@@ -23,6 +23,7 @@ class EventsViewController: UIViewController {
         navigationBarManager.delegate = self
         navigationBarManager.updateNavigationBar(for: self, isAddButtonNeeded: true)
         tabBarController?.tabBar.isHidden = false
+        view.backgroundColor = .colorForView()
     }
 }
 

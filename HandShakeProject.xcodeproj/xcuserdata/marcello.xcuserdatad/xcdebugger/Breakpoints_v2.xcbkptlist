@@ -3,4 +3,54 @@
    uuid = "B7CF71C9-7B0B-4C88-A7D3-76ED323FB9B9"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "5619749A-675C-4167-AFB6-4B40787953C4"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "HandShakeProject/ViewModel/AuthViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "63"
+            endingLineNumber = "63"
+            landmarkName = "userLogoutAction()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "5619749A-675C-4167-AFB6-4B40787953C4 - 356477bfc3994023"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "HandShakeProject.AuthViewModel.userLogoutAction() -&gt; ()"
+                  moduleName = "HandShakeProject"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/marcello/Documents/GitHub/HandShakeProject/HandShakeProject/ViewModel/AuthViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "63"
+                  endingLineNumber = "63"
+                  offsetFromSymbolStart = "656">
+               </Location>
+               <Location
+                  uuid = "5619749A-675C-4167-AFB6-4B40787953C4 - 356477bfc3994023"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "HandShakeProject.AuthViewModel.userLogoutAction() -&gt; ()"
+                  moduleName = "HandShakeProject"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/marcello/Documents/GitHub/HandShakeProject/HandShakeProject/ViewModel/AuthViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "63"
+                  endingLineNumber = "63"
+                  offsetFromSymbolStart = "76">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

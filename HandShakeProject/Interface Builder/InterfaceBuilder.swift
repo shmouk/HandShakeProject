@@ -29,6 +29,18 @@ class InterfaceBuilder {
        return view
     }
     
+    func createCollectionView() -> UICollectionView {
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumLineSpacing = 8
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .colorForView()
+        collectionView.isScrollEnabled = true
+        collectionView.isPrefetchingEnabled = false
+        collectionView.isSkeletonable = true
+        return collectionView
+    }
+    
     func createTableView() -> UITableView {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -75,6 +87,8 @@ class InterfaceBuilder {
         label.textColor = .colorForTitleText()
         label.font = UIFont.boldSystemFont(ofSize: 18)
         label.textAlignment = .left
+        label.layer.masksToBounds = true
+        label.layer.cornerRadius = 10
         label.isSkeletonable = true
         return label
     }
@@ -111,14 +125,34 @@ class InterfaceBuilder {
         textView.backgroundColor = .colorForView()
         textView.textColor = .black
         textView.layer.cornerRadius = 10
-        textView.font = UIFont.systemFont(ofSize: 14)
+        textView.font = UIFont.systemFont(ofSize: 16)
         textView.textAlignment = .left
+        textView.textContainerInset = UIEdgeInsets(top: 8, left: 8, bottom: 24 , right: 8)
         textView.text = "..."
+        textView.isScrollEnabled = false
+        textView.textContainer.lineBreakMode = .byWordWrapping
         return textView
     }
+    
     func createActivityIndicator() -> UIActivityIndicatorView {
         let activityIndicator = UIActivityIndicatorView(style: .medium)
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         return activityIndicator
+    }
+
+    func createDatePicker() -> UIDatePicker {
+        let datePicker =  UIDatePicker()
+        datePicker.translatesAutoresizingMaskIntoConstraints = false
+        datePicker.datePickerMode = .date
+        datePicker.preferredDatePickerStyle = .wheels
+        let currentDate = Date()
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year,.month, .day], from: currentDate)
+        let minDate = calendar.date(from: components)
+        let maxDate = calendar.date(byAdding: .year, value: 1, to: currentDate)
+        datePicker.minimumDate = minDate
+        datePicker.maximumDate = maxDate
+    
+        return datePicker
     }
 }

@@ -13,7 +13,7 @@ class MessageTableViewCell: UITableViewCell {
             userImageView.image = message?.image
             nameLabel.text = message?.name
             messageTextLabel.text = message?.text
-            timeTextLabel.text = convertTimestampToDate(message?.timestamp ?? 0)
+            timeTextLabel.text = message?.timestamp.convertTimestampToDate()
         }
     }
     
@@ -25,13 +25,6 @@ class MessageTableViewCell: UITableViewCell {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-    }
-    
-    private func convertTimestampToDate(_ timestamp: Int) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "hh:mm"
-        let date = Date(timeIntervalSince1970: TimeInterval(timestamp))
-        return dateFormatter.string(from: date)
     }
 
     private func setSubviews() {

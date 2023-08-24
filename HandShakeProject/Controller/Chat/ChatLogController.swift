@@ -2,53 +2,41 @@ import Foundation
 import UIKit
 
 
-class ChatLogController: UICollectionViewController {
+class ChatLogController: UIViewController {
     private let interfaceBuilder = InterfaceBuilder()
     private let userChatViewModel = UserChatViewModel()
     
-    private let cellId = "cellId"
+    private let cellId = "MessageCollectionViewCell"
     
     lazy var containerView = interfaceBuilder.createView()
     lazy var sendButton = interfaceBuilder.createButton()
     lazy var textField = interfaceBuilder.createTextField()
+    lazy var collectionView = interfaceBuilder.createCollectionView()
     
     private var messages: [Message]?
     private var keyboardManager: KeyboardNotificationManager?
     private let user: User
-    
-    init(user: User, collectionViewLayout layout: UICollectionViewLayout) {
+
+    init(user: User) {
         self.user = user
-        super.init(collectionViewLayout: layout)
+        super.init(nibName: nil, bundle: nil)
     }
 
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        setUI()
         reloadDataIfNeeded()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setUI()
         bindViewModel()        
     }
-    
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        messages?.count ?? 0
-    }
-    
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? MessageCollectionViewCell else { return UICollectionViewCell() }
-        let message = messages?[indexPath.row]
-        cell.partnerUID = user.uid
-        cell.message = message
-        return cell
-    }
-    
+
     private func setUI() {
         setSubviews()
         setupConstraints()
@@ -60,15 +48,23 @@ class ChatLogController: UICollectionViewController {
         settingTextField()
         settingTextLabel()
         settingButton()
+        settingsCollectionView()
     }
     
     private func setSubviews() {
         keyboardManager = KeyboardNotificationManager(view: view)
         tabBarController?.tabBar.isHidden = true
-        collectionView.register(MessageCollectionViewCell.self, forCellWithReuseIdentifier: cellId)
         containerView.addSubviews(textField, sendButton)
-        view.addSubviews(containerView)
-  
+        view.addSubview(containerView)
+        view.addSubview(collectionView)
+        view.backgroundColor = .colorForView()
+    }
+    
+    private func settingsCollectionView() {
+        collectionView.dataSource = self
+        collectionView.delegate = self
+
+        collectionView.register(MessageCollectionViewCell.self, forCellWithReuseIdentifier: cellId)
     }
     
     private func settingTextLabel() {
@@ -82,7 +78,7 @@ class ChatLogController: UICollectionViewController {
     
     private func settingButton() {
         sendButton.setTitle("Send", for: .normal)
-        
+        sendButton.layer.masksToBounds = true
     }
     
     private func loadData() {
@@ -101,7 +97,6 @@ class ChatLogController: UICollectionViewController {
             guard let self = self else { return }
             self.messages = messages
             self.reloadTable()
-            
         }
     }
 
@@ -146,7 +141,7 @@ extension ChatLogController {
     @objc
     private func sendAction(_ sender: Any) {
         sendText()
-        textField.deleteBackward()
+        textField.text = ""
     }
 }
 
@@ -157,9 +152,31 @@ extension ChatLogController: UITextFieldDelegate {
     }
 }
 
+extension ChatLogController: UICollectionViewDataSource {
+}
+
 extension ChatLogController: UICollectionViewDelegateFlowLayout {
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width, height: view.frame.height / 14)
+        guard let text = messages?[indexPath.row].text else { return .zero }
+
+        var width = collectionView.frame.width
+        var height = collectionView.calculateCellHeight(withText: text, cellWidth: width).height + 36
+        return CGSize(width: width, height: height)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        messages?.count ?? 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? MessageCollectionViewCell,
+              let message = messages?[indexPath.row]  else { return UICollectionViewCell() }
+        var width = collectionView.frame.width
+        cell.partnerUID = user.uid
+        cell.message = message
+        cell.width = collectionView.calculateCellHeight(withText: message.text, cellWidth: width).width
+        return cell
     }
 }
 

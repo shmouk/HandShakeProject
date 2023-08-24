@@ -67,7 +67,6 @@ class ProfileViewController: UIViewController {
             
             self.profileViewModel.fetchUser() { [weak self] in
                 guard let self = self else { return }
-                
                 DispatchQueue.main.async {
                     self.activityIndicator.stopAnimating()
                 }

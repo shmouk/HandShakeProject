@@ -7,6 +7,7 @@ extension ProfileViewController: UIImagePickerControllerDelegate {
         let picker = UIImagePickerController()
         picker.delegate = self
         picker.allowsEditing = true
+        picker.sourceType = .savedPhotosAlbum
         present(picker, animated: true)
     }
     

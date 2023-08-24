@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 
 protocol UsersListTableViewControllerDelegate: AnyObject {
-    func openChatWithChosenUser(_ user: User)
+    func chooseUser(_ user: User)
 }
 
 class UsersListTableViewController: UIViewController {
@@ -82,7 +82,7 @@ extension UsersListTableViewController: UITableViewDelegate, UITableViewDataSour
         if isCellBeUsed {
             dismiss(animated: true) { [weak self] in
                 guard let self = self else { return }
-                self.delegate?.openChatWithChosenUser(user)
+                self.delegate?.chooseUser(user)
             }
         }
     }

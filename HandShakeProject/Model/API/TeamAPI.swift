@@ -3,8 +3,8 @@ import FirebaseStorage
 import UIKit
 
 class TeamAPI {
-    let database: DatabaseReference
-    let storage: StorageReference
+    private let database: DatabaseReference
+    private let storage: StorageReference
     
     var currentUID: String?
     var teams = [Team]()
@@ -14,14 +14,6 @@ class TeamAPI {
     private init() {
         database = SetupDatabase().setDatabase()
         storage = Storage.storage().reference()
-        fetchCurrentId()
-        observeTeams { _ in
-            print("load teams")
-        }
-    }
-    
-    private func fetchCurrentId() {
-        currentUID = User.fetchCurrentId()
     }
     
     private func fetchTeam(teamId: String, completion: @escaping (Result<UIImage, Error>) -> Void) {
@@ -44,7 +36,7 @@ class TeamAPI {
         }
     }
     
-    func writeToDatabase(_ teamName: String, completion: @escaping (Result<Void, Error>) -> Void) {
+    func writeToDatabase(_ teamName: String, completion: @escaping VoidCompletion) {
         let ref = database.child("teams")
         let childRef = ref.childByAutoId()
         
@@ -52,7 +44,7 @@ class TeamAPI {
             guard let self = self else { return }
             switch result {
             case .success(let downloadURL):
-                guard let teamId = childRef.key, let uid = currentUID else { return }
+                guard let teamId = childRef.key, let uid = User.fetchCurrentId() else { return }
                 let userListWithIDs: [String: Any] = [uid: 1]
                 
                 let teamData: [String: Any] = [
@@ -79,7 +71,9 @@ class TeamAPI {
         }
     }
     
-    func observeTeams(completion: @escaping (Result<Void, Error>) -> Void) {
+    func observeTeams(completion: @escaping VoidCompletion) {
+        currentUID = User.fetchCurrentId()
+        
         guard let uid = currentUID else { return }
         
         let dispatchGroup = DispatchGroup()
@@ -183,7 +177,7 @@ class TeamAPI {
         }
     }
     
-    func addUserToDatabase(_ user: User, to team: Team, completion: @escaping (Result<Void, Error>) -> Void) {
+    func addUserToDatabase(_ user: User, to team: Team, completion: @escaping VoidCompletion) {
         guard let currentUID = currentUID, currentUID == team.creatorId else {
             completion(.failure(NSError(domain: "No permission", code: 0, userInfo: nil)))
             return
@@ -256,7 +250,7 @@ class TeamAPI {
         if !ownTeams.isEmpty || !partnerTeams.isEmpty {
             completion(.success((ownTeams, partnerTeams)))
         } else {
-            completion(.failure(NSError(domain: "No teams found", code: 0, userInfo: nil)))
+            completion(.failure(NSError(domain: "No teams found", code: 401, userInfo: nil)))
         }
     }
     
@@ -282,7 +276,7 @@ class TeamAPI {
         }.resume()
     }
     
-    private func downloadDefaultImageString(completion: @escaping (Result<String, Error>) -> Void) {
+    private func downloadDefaultImageString(completion: @escaping ResultCompletion) {
         let defaultImageRef = storage.child("defaultPhoto").child("teamDefaultPicture.jpeg")
         defaultImageRef.downloadURL { url, error in
             guard let imageURL = url else {

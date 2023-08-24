@@ -3,20 +3,25 @@ import Firebase
 import FirebaseStorage
 
 class UserAPI {
-    let database: DatabaseReference
-    let storage: StorageReference
+    private let database: DatabaseReference
+    private let storage: StorageReference
+    private let userDefaults = UserDefaultsManager.shared
     
     static var shared = UserAPI()
-
+    
     var users = [User]()
-    var currentUID = User.fetchCurrentId()
+    
+    var currentUID: String? {
+        didSet {
+            print(currentUID)
+        }
+    }
     
     private init() {
         database = SetupDatabase().setDatabase()
         storage = Storage.storage().reference()
-        observeUsers{ _ in }
-      }
-
+    }
+    
     deinit {
         print("deinit UserAPI")
     }
@@ -58,34 +63,36 @@ class UserAPI {
         }
     }
     
-    func observeUsers(completion: @escaping (Result<Void, Error>) -> Void) {
-            database.child("users").observe(.childAdded) { [weak self] snapshot in
-                guard let userDict = snapshot.value as? [String: Any],
-                      let imageUrlString = userDict["downloadURL"] as? String,
-                      let imageUrl = URL(string: imageUrlString),
-                      let self = self else {
-                    return
-                }
-                self.downloadImage(from: imageUrl) { result in
-                    let uid = snapshot.key
-                    
-                    switch result {
-                    case .success(let image):
-                        DispatchQueue.main.async {
-                            let user = User(uid: uid, image: image)
-                            user.setValuesForKeys(userDict)
-                            self.users.append(user)
-                            completion(.success(()))
-                        }
-                    case .failure(let error):
-                        DispatchQueue.main.async {
-                            completion(.failure(error))
-                        }
+    func observeUsers(completion: @escaping VoidCompletion) {
+        currentUID = User.fetchCurrentId()
+        
+        database.child("users").observe(.childAdded) { [weak self] snapshot in
+            guard let userDict = snapshot.value as? [String: Any],
+                  let imageUrlString = userDict["downloadURL"] as? String,
+                  let imageUrl = URL(string: imageUrlString),
+                  let self = self else {
+                return
+            }
+            self.downloadImage(from: imageUrl) { result in
+                let uid = snapshot.key
+                
+                switch result {
+                case .success(let image):
+                    DispatchQueue.main.async {
+                        let user = User(uid: uid, image: image)
+                        user.setValuesForKeys(userDict)
+                        self.users.append(user)
+                        completion(.success(()))
+                    }
+                case .failure(let error):
+                    DispatchQueue.main.async {
+                        completion(.failure(error))
                     }
                 }
             }
         }
-
+    }
+    
     func fetchUserFromChat(_ index: Int, messages: [Message], completion: @escaping (Result<User, Error>) -> Void) {
         guard let uid = self.currentUID else { return }
         guard messages.indices.contains(index) else {
@@ -143,7 +150,7 @@ class UserAPI {
         }
     }
     
-    private func updateUserDownloadURL(uid: String, downloadURL: URL, completion: @escaping (Result<Void, Error>) -> Void) {
+    private func updateUserDownloadURL(uid: String, downloadURL: URL, completion: @escaping VoidCompletion) {
         database.child("users").child(uid).observeSingleEvent(of: .value) { snapshot in
             guard var userData = snapshot.value as? [String:Any] else {
                 completion(.failure(NSError(domain: "Invalid user data", code: 400, userInfo: nil)))
@@ -163,7 +170,7 @@ class UserAPI {
         }
     }
     
-    private func saveUserData(uid: String, userData: [String:Any], completion: @escaping (Result<Void, Error>) -> Void) {
+    private func saveUserData(uid: String, userData: [String:Any], completion: @escaping VoidCompletion) {
         database.child("users").child(uid).updateChildValues(userData) { error, ref in
             if let error = error {
                 completion(.failure(error))
@@ -195,7 +202,7 @@ class UserAPI {
         }.resume()
     }
     
-    func downloadDefaultImageString(completion: @escaping (Result<String, Error>) -> Void) {
+    func downloadDefaultImageString(completion: @escaping ResultCompletion) {
         let defaultImageRef = storage.child("defaultPhoto").child("defaultPicture.jpeg")
         defaultImageRef.downloadURL { url, error in
             guard let imageURL = url else {
@@ -211,7 +218,7 @@ class UserAPI {
         let userRef = database.child("users").child(uid)
         
         downloadDefaultImageString { [weak self] (result) in
-            guard self != nil else { return }
+            guard let self = self else { return }
             
             switch result {
             case .success(let downloadURL):
@@ -221,6 +228,7 @@ class UserAPI {
                         print("Error writing to database: \(error.localizedDescription)")
                     } else {
                         print("Data written successfully to database")
+                        //                        self.userDefaults.saveValue(data, forKey: "CurrentUserInfo")
                     }
                 }
                 

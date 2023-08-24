@@ -37,14 +37,14 @@ extension AuthorizationViewController {
         ])
         
         NSLayoutConstraint.activate([
-            statusAuthLabel.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 30 + heightForView),
+            statusAuthLabel.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 24 + heightForView),
             statusAuthLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             statusAuthLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            statusAuthLabel.heightAnchor.constraint(equalToConstant: heightForView)
+            statusAuthLabel.heightAnchor.constraint(equalToConstant: heightForView )
         ])
         
         NSLayoutConstraint.activate([
-            loginButton.topAnchor.constraint(equalTo: statusAuthLabel.bottomAnchor, constant: 30),
+            loginButton.topAnchor.constraint(equalTo: statusAuthLabel.bottomAnchor, constant: 8),
             loginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             loginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             loginButton.heightAnchor.constraint(equalToConstant: heightForView)
@@ -64,117 +64,131 @@ extension MainTabBarViewController {
 extension EventCreateViewController {
     func setupConstraints() {
         
-        let heightForView = view.frame.height / 14
+        let heightForView = view.frame.height / 15
         
         NSLayoutConstraint.activate([
-            teamLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
-            teamLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            teamLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            teamLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
+            teamTitleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            teamTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            teamTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            teamTitleLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
         ])
 
         NSLayoutConstraint.activate([
-            chooseTeamButton.topAnchor.constraint(equalTo: teamLabel.bottomAnchor, constant: 5),
-            chooseTeamButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            chooseTeamButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            chooseTeamButton.heightAnchor.constraint(equalToConstant: heightForView )
+            pickedTeamLabel.topAnchor.constraint(equalTo: teamTitleLabel.bottomAnchor, constant: 8),
+            pickedTeamLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            pickedTeamLabel.trailingAnchor.constraint(equalTo: chooseTeamButton.leadingAnchor, constant: -12),
+            pickedTeamLabel.heightAnchor.constraint(equalToConstant: heightForView)
         ])
         
         NSLayoutConstraint.activate([
-            namingLabel.topAnchor.constraint(equalTo: chooseTeamButton.bottomAnchor, constant: 10),
-            namingLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            namingLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            namingLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
+            chooseTeamButton.topAnchor.constraint(equalTo: teamTitleLabel.bottomAnchor, constant: 8),
+            chooseTeamButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            chooseTeamButton.heightAnchor.constraint(equalToConstant: heightForView),
+            chooseTeamButton.widthAnchor.constraint(equalTo: chooseTeamButton.heightAnchor)
+        ])
+   
+        
+        NSLayoutConstraint.activate([
+            nameTitleLabel.topAnchor.constraint(equalTo: chooseTeamButton.bottomAnchor, constant: 16),
+            nameTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            nameTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            nameTitleLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
         ])
    
         NSLayoutConstraint.activate([
-            namingTextField.topAnchor.constraint(equalTo: namingLabel.bottomAnchor, constant: 5),
+            namingTextField.topAnchor.constraint(equalTo: nameTitleLabel.bottomAnchor, constant: 8),
             namingTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             namingTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             namingTextField.heightAnchor.constraint(equalToConstant: heightForView * 0.6)
         ])
         
         NSLayoutConstraint.activate([
-            descriptionLabel.topAnchor.constraint(equalTo: namingTextField.bottomAnchor, constant: 10),
-            descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            descriptionLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
+            descriptionTitleLabel.topAnchor.constraint(equalTo: namingTextField.bottomAnchor, constant: 16),
+            descriptionTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            descriptionTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            descriptionTitleLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
         ])
         
         
         NSLayoutConstraint.activate([
-            descriptionTextView.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 5),
+            descriptionTextView.topAnchor.constraint(equalTo: descriptionTitleLabel.bottomAnchor, constant: 8),
             descriptionTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             descriptionTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             descriptionTextView.heightAnchor.constraint(equalToConstant: heightForView * 0.8)
         ])
         
         NSLayoutConstraint.activate([
-            deadlineTypeLabel.topAnchor.constraint(equalTo: descriptionTextView.bottomAnchor, constant: 10),
-            deadlineTypeLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            deadlineTypeLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            deadlineTypeLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
+            deadlineTypeTitleLabel.topAnchor.constraint(equalTo: descriptionTextView.bottomAnchor, constant: 16),
+            deadlineTypeTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            deadlineTypeTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            deadlineTypeTitleLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
         ])
         
         NSLayoutConstraint.activate([
-            importanceSegmentControl.topAnchor.constraint(equalTo: deadlineTypeLabel.bottomAnchor, constant: 5),
+            importanceSegmentControl.topAnchor.constraint(equalTo: deadlineTypeTitleLabel.bottomAnchor, constant: 8),
             importanceSegmentControl.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             importanceSegmentControl.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             importanceSegmentControl.heightAnchor.constraint(equalToConstant: heightForView * 0.6)
         ])
         
         NSLayoutConstraint.activate([
-            dateLabel.topAnchor.constraint(equalTo: importanceSegmentControl.bottomAnchor, constant: 10),
-            dateLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            dateLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            dateLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
-        ])
-
-        NSLayoutConstraint.activate([
-            chooseDateButton.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 5),
-            chooseDateButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            chooseDateButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            chooseDateButton.heightAnchor.constraint(equalToConstant: heightForView)
+            dateTitleLabel.topAnchor.constraint(equalTo: importanceSegmentControl.bottomAnchor, constant: 16),
+            dateTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            dateTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            dateTitleLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
         ])
         
         NSLayoutConstraint.activate([
-            executorLabel.topAnchor.constraint(equalTo: chooseDateButton.bottomAnchor, constant: 10),
-            executorLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            executorLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            executorLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
+            datePicker.topAnchor.constraint(equalTo: dateTitleLabel.bottomAnchor, constant: 0),
+            datePicker.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            datePicker.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            datePicker.heightAnchor.constraint(equalToConstant: heightForView * 1.7)
+        ])
+        
+        NSLayoutConstraint.activate([
+            executorTitleLabel.topAnchor.constraint(equalTo: datePicker.bottomAnchor, constant: 0),
+            executorTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            executorTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            executorTitleLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
         ])
 
         NSLayoutConstraint.activate([
-            chooseExecutorButton.topAnchor.constraint(equalTo: executorLabel.bottomAnchor, constant: 5),
-            chooseExecutorButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            pickedExecutorLabel.topAnchor.constraint(equalTo: executorTitleLabel.bottomAnchor, constant: 8),
+            pickedExecutorLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            pickedExecutorLabel.trailingAnchor.constraint(equalTo: chooseExecutorButton.leadingAnchor, constant: -12),
+            pickedExecutorLabel.heightAnchor.constraint(equalToConstant: heightForView)
+        ])
+        
+        NSLayoutConstraint.activate([
+            chooseExecutorButton.topAnchor.constraint(equalTo: executorTitleLabel.bottomAnchor, constant: 8),
             chooseExecutorButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            chooseExecutorButton.heightAnchor.constraint(equalToConstant: heightForView)
+            chooseExecutorButton.heightAnchor.constraint(equalToConstant: heightForView),
+            chooseExecutorButton.widthAnchor.constraint(equalTo: pickedExecutorLabel.heightAnchor)
         ])
 
         NSLayoutConstraint.activate([
-            familiarizationLabel.topAnchor.constraint(equalTo: chooseExecutorButton.bottomAnchor, constant: 10),
-            familiarizationLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            familiarizationLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            familiarizationLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
+            readerTitleLabel.topAnchor.constraint(equalTo: chooseExecutorButton.bottomAnchor, constant: 16),
+            readerTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            readerTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            readerTitleLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
         ])
 
         NSLayoutConstraint.activate([
-            readingListTextView.topAnchor.constraint(equalTo: familiarizationLabel.bottomAnchor, constant: 5),
+            readingListTextView.topAnchor.constraint(equalTo: readerTitleLabel.bottomAnchor, constant: 8),
             readingListTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            readingListTextView.trailingAnchor.constraint(equalTo: addToListButton.leadingAnchor, constant: -10),
+            readingListTextView.trailingAnchor.constraint(equalTo: shooseReaderButton.leadingAnchor, constant: -12),
             readingListTextView.heightAnchor.constraint(equalToConstant: heightForView)
         ])
 
         NSLayoutConstraint.activate([
-            addToListButton.topAnchor.constraint(equalTo: familiarizationLabel.bottomAnchor, constant: 5),
-            addToListButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            addToListButton.heightAnchor.constraint(equalToConstant: heightForView),
-            addToListButton.widthAnchor.constraint(equalTo: addToListButton.heightAnchor)
+            shooseReaderButton.topAnchor.constraint(equalTo: readerTitleLabel.bottomAnchor, constant: 8),
+            shooseReaderButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            shooseReaderButton.heightAnchor.constraint(equalToConstant: heightForView),
+            shooseReaderButton.widthAnchor.constraint(equalTo: shooseReaderButton.heightAnchor)
 
         ])
     }
 }
-
 
 // MARK: - EventTableViewCell Constraint
 
@@ -234,8 +248,8 @@ extension TeamInfoViewController {
         let heightForView = view.frame.height / 14
 
         NSLayoutConstraint.activate([
-            teamImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 130),
-            teamImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            teamImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 128),
+            teamImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 36),
             teamImageView.heightAnchor.constraint(equalToConstant: heightForView * 1.2),
             teamImageView.widthAnchor.constraint(equalTo: teamImageView.heightAnchor)
         ])
@@ -460,6 +474,12 @@ extension MessageTableViewCell {
 extension ChatLogController {
     
     func setupConstraints() {
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: containerView.topAnchor)
+        ])
         
         NSLayoutConstraint.activate([
             containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -487,35 +507,47 @@ extension ChatLogController {
 // MARK: - MessageCollectionViewCell Constraint
 
 extension MessageCollectionViewCell {
-    
     func setupConstraints() {
-        guard let check = isMessegeForUser else { return }
+        guard let isMessageForUser = isMessageForUser else { return }
         
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        messageTextView.translatesAutoresizingMaskIntoConstraints = false
+        timeTextLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        contentView.removeConstraints(contentView.constraints)
         messageTextView.removeConstraints(messageTextView.constraints)
-        timeTextLabel.removeConstraints(messageTextView.constraints)
+        timeTextLabel.removeConstraints(timeTextLabel.constraints)
+        
+        let width = calculateWidth(textView: messageTextView).width
         
         NSLayoutConstraint.activate([
-            messageTextView.topAnchor.constraint(equalTo: topAnchor, constant: 10),
-            messageTextView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            contentView.topAnchor.constraint(equalTo: topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
         
-        if check {
+        NSLayoutConstraint.activate([
+            messageTextView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            messageTextView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            messageTextView.widthAnchor.constraint(equalToConstant: width)
+        ])
+        
+        if isMessageForUser {
             NSLayoutConstraint.activate([
-                messageTextView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 1/2),
-                messageTextView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10)
+                messageTextView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
             ])
         } else {
             NSLayoutConstraint.activate([
-                messageTextView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 1/2),
-                messageTextView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10)
+                messageTextView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor)
             ])
         }
         
         NSLayoutConstraint.activate([
-            timeTextLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
-            timeTextLabel.leadingAnchor.constraint(equalTo: messageTextView.trailingAnchor, constant: -50),
-            timeTextLabel.trailingAnchor.constraint(equalTo: messageTextView.trailingAnchor),
-            timeTextLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1/2)
+            timeTextLabel.topAnchor.constraint(equalTo: messageTextView.bottomAnchor, constant: -24),
+            timeTextLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            timeTextLabel.leadingAnchor.constraint(equalTo: messageTextView.trailingAnchor, constant: -48),
+            timeTextLabel.trailingAnchor.constraint(equalTo: messageTextView.trailingAnchor)
         ])
     }
 }

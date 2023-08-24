@@ -2,6 +2,7 @@ import UIKit
 import FirebaseAuth
 
 class User: NSObject {
+    
     @objc dynamic var uid: String
     @objc dynamic var email: String
     @objc dynamic var name: String
@@ -23,6 +24,7 @@ class User: NSObject {
             print(error)
             return nil
         }
+        print(uid)
         return uid
     }
 }
