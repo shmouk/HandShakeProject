@@ -52,7 +52,6 @@ class ChatLogController: UIViewController {
     }
     
     private func setSubviews() {
-        keyboardManager = KeyboardNotificationManager(view: view)
         tabBarController?.tabBar.isHidden = true
         containerView.addSubviews(textField, sendButton)
         view.addSubview(containerView)

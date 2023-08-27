@@ -16,7 +16,6 @@ class ProfileViewController: UIViewController {
     
     lazy var activityIndicator = interfaceBuilder.createActivityIndicator()
     lazy var logoutButton = interfaceBuilder.createButton()
-    lazy var friendsButton = interfaceBuilder.createButton()
     lazy var editProfileButton = interfaceBuilder.createButton()
     lazy var nameLabel = interfaceBuilder.createTitleLabel()
     lazy var emailLabel = interfaceBuilder.createDescriptionLabel()
@@ -56,7 +55,7 @@ class ProfileViewController: UIViewController {
     }
     
     private func setSubviews() {
-        view.addSubviews(activityIndicator, profileImageView, editProfileButton, emailLabel, nameLabel, friendsButton, logoutButton)
+        view.addSubviews(activityIndicator, profileImageView, editProfileButton, emailLabel, nameLabel, logoutButton)
         view.backgroundColor = .colorForView()
     }
 
@@ -74,8 +73,6 @@ class ProfileViewController: UIViewController {
         }
     }
     
-    
-    
     private func bindViewModel() {
         profileViewModel.currentUser.bind { [weak self] user in
             guard let self = self else { return }
@@ -90,7 +87,6 @@ class ProfileViewController: UIViewController {
     }
     
     private func settingButton() {
-        friendsButton.setTitle("Friends", for: .normal)
         logoutButton.setTitle("Logout", for: .normal)
     }
     
@@ -102,18 +98,12 @@ class ProfileViewController: UIViewController {
     private func setupTargets() {
         editProfileButton.addTarget(self, action: #selector(editProfile), for: .touchUpInside)
         logoutButton.addTarget(self, action: #selector(logoutAction(_:)), for: .touchUpInside)
-        friendsButton.addTarget(self, action: #selector(openFriend(_:)), for: .touchUpInside)
     }
 }
 
 // MARK: - Action
 
 private extension ProfileViewController {
-    
-    @objc
-    private func openFriend(_ sender: Any) {
-        
-    }
     
     @objc
     private func editProfile(_ sender: Any) {

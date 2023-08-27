@@ -21,10 +21,8 @@ class User: NSObject {
     static func fetchCurrentId() -> String? {
         guard let uid = Auth.auth().currentUser?.uid else {
             let error = NSError(domain: "Current user is not authenticated", code: 401, userInfo: nil)
-            print(error)
             return nil
         }
-        print(uid)
         return uid
     }
 }

@@ -114,7 +114,7 @@ extension EventCreateViewController {
             descriptionTextView.topAnchor.constraint(equalTo: descriptionTitleLabel.bottomAnchor, constant: 8),
             descriptionTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             descriptionTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            descriptionTextView.heightAnchor.constraint(equalToConstant: heightForView * 0.8)
+            descriptionTextView.heightAnchor.constraint(equalToConstant: heightForView)
         ])
         
         NSLayoutConstraint.activate([
@@ -567,7 +567,7 @@ extension ProfileViewController {
         ])
         
         NSLayoutConstraint.activate([
-            profileImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 130),
+            profileImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 120),
             profileImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             profileImageView.heightAnchor.constraint(equalToConstant: heightForView * 1.2),
             profileImageView.widthAnchor.constraint(equalTo: profileImageView.heightAnchor)
@@ -593,16 +593,9 @@ extension ProfileViewController {
             editProfileButton.heightAnchor.constraint(equalToConstant: heightForView * 0.7),
             editProfileButton.widthAnchor.constraint(equalTo: editProfileButton.heightAnchor)
         ])
-        
+  
         NSLayoutConstraint.activate([
-            friendsButton.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 10),
-            friendsButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            friendsButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            friendsButton.heightAnchor.constraint(equalToConstant: heightForView)
-        ])
-        
-        NSLayoutConstraint.activate([
-            logoutButton.topAnchor.constraint(equalTo: friendsButton.bottomAnchor, constant: 30),
+            logoutButton.topAnchor.constraint(equalTo:  profileImageView.bottomAnchor, constant: 24),
             logoutButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             logoutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             logoutButton.heightAnchor.constraint(equalToConstant: heightForView)

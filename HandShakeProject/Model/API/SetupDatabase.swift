@@ -1,10 +1,3 @@
-//
-//  Firebase + Extension.swift
-//  HandShakeProject
-//
-//  Created by Марк on 24.07.23.
-//
-
 import Firebase
 
 final class SetupDatabase {

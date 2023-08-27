@@ -56,7 +56,7 @@ class AuthorizationViewController: UIViewController {
 
             case .failure(let error):
                 self.navigationController?.popToRootViewController(animated: false)
-                AlertManager.showAlert(title: "Failure", message: "Account logout \(error)", viewController: self)
+//                AlertManager.showAlert(title: "Failure", message: "Account logout \(error)", viewController: self)
             }
         }
     }

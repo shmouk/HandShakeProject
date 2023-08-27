@@ -3,18 +3,13 @@ import FirebaseStorage
 import UIKit
 
 class TeamAPI {
-    private let database: DatabaseReference
-    private let storage: StorageReference
-    
-    var currentUID: String?
-    var teams = [Team]()
-    
     static var shared = TeamAPI()
+    private let database = SetupDatabase().setDatabase()
+    private let storage = Storage.storage().reference()
     
-    private init() {
-        database = SetupDatabase().setDatabase()
-        storage = Storage.storage().reference()
-    }
+    var teams = [Team]()
+
+    private init() {}
     
     private func fetchTeam(teamId: String, completion: @escaping (Result<UIImage, Error>) -> Void) {
         let teamRef = database.child("teams").child(teamId)
@@ -24,7 +19,7 @@ class TeamAPI {
                   let teamDict = snapshot.value as? [String: Any],
                   let imageUrlString = teamDict["downloadURL"] as? String,
                   let imageUrl = URL(string: imageUrlString) else {
-                completion(.failure(NSError(domain: "Invalid team data", code: 0, userInfo: nil)))
+                completion(.failure(NSError(domain: "Invalid team data", code: 402, userInfo: nil)))
                 return
             }
             
@@ -66,19 +61,17 @@ class TeamAPI {
                 userTeamRef.updateChildValues([teamId: 1])
                 
             case .failure(let error):
-                completion(.failure(NSError(domain: "No teams found \(error.localizedDescription)", code: 0, userInfo: nil)))
+                completion(.failure(NSError(domain: "No teams found \(error.localizedDescription)", code: 401, userInfo: nil)))
             }
         }
     }
     
     func observeTeams(completion: @escaping VoidCompletion) {
-        currentUID = User.fetchCurrentId()
-        
-        guard let uid = currentUID else { return }
-        
+        guard let uid = User.fetchCurrentId() else { return }
+
         let dispatchGroup = DispatchGroup()
         
-        database.child("user-team").child(uid).observe(.childAdded) { [weak self] (snapshot) in
+        database.child("user-team").child(uid).observeSingleEvent(of: .childAdded) { [weak self] (snapshot) in
             guard let self = self else { return }
             
             let teamId = snapshot.key
@@ -93,7 +86,7 @@ class TeamAPI {
                       let teamName = dict["teamName"] as? String,
                       let downloadURL = dict["downloadURL"] as? String
                 else {
-                    completion(.failure(NSError(domain: "Error retrieving team data", code: 0, userInfo: nil)))
+                    completion(.failure(NSError(domain: "Error retrieving team data", code: 401, userInfo: nil)))
                     dispatchGroup.leave()
                     return
                 }
@@ -108,7 +101,7 @@ class TeamAPI {
                     case .success(let image):
                         teamReference.child("userList").observeSingleEvent(of: .value) { (snapshot) in
                             guard let users = snapshot.value as? [String: Int] else {
-                                completion(.failure(NSError(domain: "Error retrieving user list", code: 0, userInfo: nil)))
+                                completion(.failure(NSError(domain: "Error retrieving user list", code: 401, userInfo: nil)))
                                 dispatchGroup.leave()
                                 return
                             }
@@ -126,7 +119,7 @@ class TeamAPI {
                         }
                     case .failure(let error):
                         DispatchQueue.main.async {
-                            completion(.failure(NSError(domain: "Error fetching team image, \(error.localizedDescription)", code: 0, userInfo: nil)))
+                            completion(.failure(NSError(domain: "Error fetching team image, \(error.localizedDescription)", code: 500, userInfo: nil)))
                             dispatchGroup.leave()
                         }
                     }
@@ -138,31 +131,37 @@ class TeamAPI {
             if !self.teams.isEmpty {
                 completion(.success(()))
             } else {
-                completion(.failure(NSError(domain: "No teams found", code: 0, userInfo: nil)))
+                completion(.failure(NSError(domain: "No teams found", code: 401, userInfo: nil)))
             }
         }
     }
     
-    func fetchSelectedTeam(_ selectedTeam: Team, completion: @escaping (Team?) -> Void) {
-        guard currentUID != nil else { return }
-        var resTeam: Team?
-        
-        DispatchQueue.global(qos: .userInitiated).async { [self] in
+    func fetchSelectedTeam(_ selectedTeam: Team, completion: @escaping (Team) -> Void) {        
+        DispatchQueue.main.async { [self] in
             for team in teams {
                 if team == selectedTeam {
-                    resTeam = team
+                    completion(team)
                 }
-                
-            }
-            DispatchQueue.main.async {
-                completion(resTeam)
             }
         }
     }
+    
+    func convertIdToUserName(id: String, completion: @escaping (String) -> Void) {
+        let users = UserAPI.shared.users
+        DispatchQueue.global().async { [weak self] in
+            guard self != nil else { return }
+            let userName = users.first { $0.uid == id }?.name ?? ""
+            
+            DispatchQueue.main.async {
+                completion(userName)
+            }
+        }
+    }
+    
     func searchUserFromDatabase(_ email: String, completion: @escaping (Result<User, Error>) -> Void) {
         let users = UserAPI.shared.users
         
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+        DispatchQueue.global().async { [weak self] in
             guard self != nil else { return }
             
             if let user = users.first(where: { $0.email == email }) {
@@ -171,20 +170,20 @@ class TeamAPI {
                 }
             } else {
                 DispatchQueue.main.async {
-                    completion(.failure(NSError(domain: "No user found", code: 0, userInfo: nil)))
+                    completion(.failure(NSError(domain: "No user found", code: 500, userInfo: nil)))
                 }
             }
         }
     }
     
     func addUserToDatabase(_ user: User, to team: Team, completion: @escaping VoidCompletion) {
-        guard let currentUID = currentUID, currentUID == team.creatorId else {
-            completion(.failure(NSError(domain: "No permission", code: 0, userInfo: nil)))
+        guard let uid = User.fetchCurrentId(), uid == team.creatorId else {
+            completion(.failure(NSError(domain: "No permission", code: 403, userInfo: nil)))
             return
         }
         
         if team.userList?.contains(user.uid) ?? false {
-            completion(.failure(NSError(domain: "Current user is on the user list", code: 0, userInfo: nil)))
+            completion(.failure(NSError(domain: "Current user is on the user list", code: 400, userInfo: nil)))
             return
         }
         
@@ -210,7 +209,7 @@ class TeamAPI {
     func fetchUserFromTeam(_ team: Team, completion: @escaping ([User]) -> Void) {
         guard let teamList = team.userList else { return }
         let users = UserAPI.shared.users
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+        DispatchQueue.global().async { [weak self] in
             guard self != nil else { return }
             let resUsers = users.filter { teamList.contains($0.uid) }
             
@@ -220,22 +219,9 @@ class TeamAPI {
         }
     }
     
-    func convertIdToUserName(_ id: String, completion: @escaping (String) -> Void) {
-        let users = UserAPI.shared.users
-        
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            guard self != nil else { return }
-            let userName = users.first { $0.uid == id }?.name ?? ""
-            
-            DispatchQueue.main.async {
-                completion(userName)
-            }
-        }
-    }
-    
     func filterTeams(completion: @escaping (Result<([Team], [Team]), Error>) -> Void) {
-        guard let uid = currentUID else { return }
-        
+        guard let uid = User.fetchCurrentId() else { return }
+
         var partnerTeams: [Team] = []
         var ownTeams: [Team] = []
         

@@ -25,10 +25,10 @@ extension String {
 extension Int {
     func convertTimestampToDate() -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "hh:mm"
+        dateFormatter.timeStyle = .short
         let date = Date(timeIntervalSince1970: TimeInterval(self) ?? 0)
         return dateFormatter.string(from: date)
-        
+
     }
 }
 

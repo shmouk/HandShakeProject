@@ -1,10 +1,3 @@
-//
-//  ProfileViewModel.swift
-//  HandShakeProject
-//
-//  Created by Марк on 26.07.23.
-//
-
 import UIKit
 
 class ProfileViewModel {

@@ -87,7 +87,15 @@ class AddUserViewController: UIViewController {
     
     private func addUserToTeam() {
         guard let user = user else { return }
-        teamViewModel.addUserToTeam(user, to: team)
+        teamViewModel.addUserToTeam(user, to: team) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(_):
+                AlertManager.showAlert(title: "Success", message: "User added to team", viewController: self)
+            case .failure(_):
+                break
+            }
+        }
     }
     
     private func bindViewModel() {
@@ -120,7 +128,7 @@ private extension AddUserViewController {
     
     @objc
     private func addUserAction(_ sender: Any) {
-        addUserToTeam() 
+        addUserToTeam()
     }
 }
 
@@ -151,12 +159,4 @@ extension AddUserViewController: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? UsersTableViewCell else { return }
         cell.contentView.backgroundColor = .white
     }
-    
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            user = nil
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        }
-    }
-
 }

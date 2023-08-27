@@ -3,32 +3,22 @@ import Firebase
 import FirebaseStorage
 
 class UserAPI {
-    private let database: DatabaseReference
-    private let storage: StorageReference
+    static let shared = UserAPI()
+    private let database = SetupDatabase().setDatabase()
+    private let storage = Storage.storage().reference()
     private let userDefaults = UserDefaultsManager.shared
-    
-    static var shared = UserAPI()
-    
+
+    private init() { }
+
     var users = [User]()
-    
-    var currentUID: String? {
-        didSet {
-            print(currentUID)
-        }
-    }
-    
-    private init() {
-        database = SetupDatabase().setDatabase()
-        storage = Storage.storage().reference()
-    }
-    
+
     deinit {
         print("deinit UserAPI")
     }
     
     func fetchCurrentUser(completion: @escaping (Result<User, Error>) -> Void) {
-        guard let uid = self.currentUID else { return }
-        
+        guard let uid = User.fetchCurrentId() else { return }
+
         let userRef = database.child("users").child(uid)
         
         DispatchQueue.global().async {
@@ -64,8 +54,6 @@ class UserAPI {
     }
     
     func observeUsers(completion: @escaping VoidCompletion) {
-        currentUID = User.fetchCurrentId()
-        
         database.child("users").observe(.childAdded) { [weak self] snapshot in
             guard let userDict = snapshot.value as? [String: Any],
                   let imageUrlString = userDict["downloadURL"] as? String,
@@ -94,14 +82,14 @@ class UserAPI {
     }
     
     func fetchUserFromChat(_ index: Int, messages: [Message], completion: @escaping (Result<User, Error>) -> Void) {
-        guard let uid = self.currentUID else { return }
+        guard let uid = User.fetchCurrentId() else { return }
         guard messages.indices.contains(index) else {
             completion(.failure(NSError(domain: "Invalid index", code: 400, userInfo: nil)))
             return
         }
         let message = messages[index]
         let chatUserId = uid == message.toId ? message.fromId : message.toId
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+        DispatchQueue.global().async { [weak self] in
             guard let self = self else { return }
             
             guard let user = self.users.first(where: { $0.uid == chatUserId }) else {
@@ -115,8 +103,8 @@ class UserAPI {
     }
     
     func uploadImageToFirebaseStorage(image: UIImage, completion: @escaping (Result<URL, Error>) -> Void) {
-        guard let uid = self.currentUID else { return }
-        
+        guard let uid = User.fetchCurrentId() else { return }
+
         guard let imageData = image.jpegData(compressionQuality: 0.8) else {
             completion(.failure(NSError(domain: "Failed to convert image to data", code: 400, userInfo: nil)))
             return
@@ -153,7 +141,7 @@ class UserAPI {
     private func updateUserDownloadURL(uid: String, downloadURL: URL, completion: @escaping VoidCompletion) {
         database.child("users").child(uid).observeSingleEvent(of: .value) { snapshot in
             guard var userData = snapshot.value as? [String:Any] else {
-                completion(.failure(NSError(domain: "Invalid user data", code: 400, userInfo: nil)))
+                completion(.failure(NSError(domain: "Invalid user data,", code: 400, userInfo: nil)))
                 return
             }
             
@@ -184,14 +172,14 @@ class UserAPI {
         URLSession.shared.dataTask(with: url) { data, response, error in
             guard let data = data, error == nil else {
                 DispatchQueue.main.async {
-                    completion(.failure(error ?? NSError(domain: "Error downloading image", code: 500, userInfo: nil)))
+                    completion(.failure(error ?? NSError(domain: "Error downloading image,", code: 500, userInfo: nil)))
                 }
                 return
             }
             
             guard let image = UIImage(data: data) else {
                 DispatchQueue.main.async {
-                    completion(.failure(NSError(domain: "Invalid image data", code: 400, userInfo: nil)))
+                    completion(.failure(NSError(domain: "Invalid image data,", code: 400, userInfo: nil)))
                 }
                 return
             }
@@ -206,7 +194,7 @@ class UserAPI {
         let defaultImageRef = storage.child("defaultPhoto").child("defaultPicture.jpeg")
         defaultImageRef.downloadURL { url, error in
             guard let imageURL = url else {
-                completion(.failure(error ?? NSError(domain: "Error retrieving default image URL", code: 500, userInfo: nil)))
+                completion(.failure(error ?? NSError(domain: "Error retrieving default image URL,", code: 500, userInfo: nil)))
                 return
             }
             

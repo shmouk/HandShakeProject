@@ -69,6 +69,11 @@ class InterfaceBuilder {
         textField.layer.borderWidth = 1.0
         textField.layer.cornerRadius = 10
         textField.layer.masksToBounds = true
+        
+        let leftPaddingView = UIView(frame: CGRect(x: 8, y: 0, width: 10, height: 40))
+        textField.leftView = leftPaddingView
+        textField.leftViewMode = .always
+
         return textField
     }
     
@@ -127,10 +132,10 @@ class InterfaceBuilder {
         textView.layer.cornerRadius = 10
         textView.font = UIFont.systemFont(ofSize: 16)
         textView.textAlignment = .left
-        textView.textContainerInset = UIEdgeInsets(top: 8, left: 8, bottom: 24 , right: 8)
-        textView.text = "..."
+        textView.textContainerInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+        textView.text = "Input text"
         textView.isScrollEnabled = false
-        textView.textContainer.lineBreakMode = .byWordWrapping
+//        textView.textContainer.lineBreakMode = .byWordWrapping
         return textView
     }
     
@@ -145,13 +150,7 @@ class InterfaceBuilder {
         datePicker.translatesAutoresizingMaskIntoConstraints = false
         datePicker.datePickerMode = .date
         datePicker.preferredDatePickerStyle = .wheels
-        let currentDate = Date()
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.year,.month, .day], from: currentDate)
-        let minDate = calendar.date(from: components)
-        let maxDate = calendar.date(byAdding: .year, value: 1, to: currentDate)
-        datePicker.minimumDate = minDate
-        datePicker.maximumDate = maxDate
+        datePicker.minimumDate = Date()
     
         return datePicker
     }

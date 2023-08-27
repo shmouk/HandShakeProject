@@ -3,10 +3,9 @@ import FirebaseStorage
 import UIKit
 
 class ChatAPI {
-    private let database: DatabaseReference
-    private let storage: StorageReference
-    
     static let shared = ChatAPI()
+    private let database = SetupDatabase().setDatabase()
+    private let storage = Storage.storage().reference()
     static let messageUpdateNotification = Notification.Name("MessageUpdateNotification")
 
     var lastMessageFromMessages = [Message]()
@@ -15,13 +14,8 @@ class ChatAPI {
             NotificationCenter.default.post(name: ChatAPI.messageUpdateNotification, object: nil)
         }
     }
-    
-    var currentUID: String?
-    
-    private init() {
-        database = SetupDatabase().setDatabase()
-        storage = Storage.storage().reference()
-    }
+        
+    private init() {}
     
     private func fetchUser(userId: String, completion: @escaping UserCompletion) {
         database.child("users").child(userId).observeSingleEvent(of: .value) { snapshot in
@@ -40,7 +34,7 @@ class ChatAPI {
                     }
                 case .failure(let error):
                     DispatchQueue.main.async {
-                        completion(.failure(NSError(domain: "Error user, \(error.localizedDescription)", code: 0, userInfo: nil)))
+                        completion(.failure(NSError(domain: "Error user, \(error.localizedDescription),", code: 401, userInfo: nil)))
                     }
                 }
             }
@@ -48,8 +42,7 @@ class ChatAPI {
     }
     
     func observeMessages(completion: @escaping VoidCompletion) {
-        currentUID = User.fetchCurrentId()
-        guard let uid = currentUID else { return }
+        guard let uid = User.fetchCurrentId() else { return }
         
         let userMessagesRef = database.child("user-messages").child(uid)
         
@@ -108,15 +101,15 @@ class ChatAPI {
                     completion(.success((message)))
                 }
             case .failure(let error):
-                completion(.failure(NSError(domain: "No message found \(error)", code: 0, userInfo: nil)))
+                completion(.failure(NSError(domain: "No message found \(error),", code: 402, userInfo: nil)))
                 
             }
         }
     }
     
     func filterMessagesPerUser(_ user: User, completion: @escaping (Result<[Message], Error>) -> Void) {
-        guard let uid = currentUID else { return }
-        
+        guard let uid = User.fetchCurrentId() else { return }
+
         let partnerUserId = user.uid
         
         DispatchQueue.global().async { [weak self] in
@@ -132,14 +125,14 @@ class ChatAPI {
                 if !sortedMessages.isEmpty {
                     completion(.success(sortedMessages))
                 } else {
-                    completion(.failure(NSError(domain: "No message found", code: 0, userInfo: nil)))
+                    completion(.failure(NSError(domain: "No message found,", code: 402, userInfo: nil)))
                 }
             }
         }
     }
  
     func filterLastMessagePerUser(completion: @escaping (Result<[Message], Error>) -> Void) {
-        guard let uid = currentUID else { return }
+        guard let uid = User.fetchCurrentId() else { return }
         
         DispatchQueue.global().async { [weak self] in
             guard let self = self else { return }
@@ -147,42 +140,42 @@ class ChatAPI {
             var lastMessages: [String: Message] = [:]
             
             for message in self.allMessages {
-                        let partnerUserId = message.fromId == uid ? message.toId : message.fromId
-                        if let existingMessage = lastMessages[partnerUserId] {
-                            if message.timestamp > existingMessage.timestamp {
-                                lastMessages[partnerUserId] = message
-                            }
-                        } else {
-                            lastMessages[partnerUserId] = message
-                        }
+                let partnerUserId = message.fromId == uid ? message.toId : message.fromId
+                if let existingMessage = lastMessages[partnerUserId] {
+                    if message.timestamp > existingMessage.timestamp {
+                        lastMessages[partnerUserId] = message
                     }
-
-            let filteredMessages = Array(lastMessages.values)
+                } else {
+                    lastMessages[partnerUserId] = message
+                }
+            }
+            
+            let sortedMessages = lastMessages.values.sorted { $0.timestamp < $1.timestamp }
             
             DispatchQueue.main.async {
-                if !filteredMessages.isEmpty {
-                    completion(.success(filteredMessages))
+                if !sortedMessages.isEmpty {
+                    completion(.success(sortedMessages))
                 } else {
-                    completion(.failure(NSError(domain: "No message found", code: 0, userInfo: nil)))
+                    completion(.failure(NSError(domain: "No message found,", code: 402, userInfo: nil)))
                 }
             }
         }
     }
     
     func sendMessage(text: String, toId: String, completion: @escaping VoidCompletion) {
-        guard let fromId = currentUID else { return }
+        guard let uid = User.fetchCurrentId() else { return }
 
         let ref = database.child("messages")
         let childRef = ref.childByAutoId()
         let timestamp = Int(Date().timeIntervalSince1970)
-        let data = ["fromId": fromId, "toId": toId, "timestamp": timestamp, "text": text] as [String : Any]
+        let data = ["fromId": uid, "toId": toId, "timestamp": timestamp, "text": text] as [String : Any]
         childRef.updateChildValues(data) { (error, _) in
             if let error = error {
-                completion(.failure(NSError(domain: "Message does not send, \(error)", code: 0, userInfo: nil)))
+                completion(.failure(NSError(domain: "Message does not send, \(error)", code: 402, userInfo: nil)))
             } else {
                 guard let messageId = childRef.key else { return }
                 
-                let userMessageRef = self.database.child("user-messages").child(fromId)
+                let userMessageRef = self.database.child("user-messages").child(uid)
                 userMessageRef.updateChildValues([messageId: 1])
                 
                 let recipientUserMessageRef = self.database.child("user-messages").child(toId)
@@ -197,14 +190,14 @@ class ChatAPI {
         URLSession.shared.dataTask(with: url) { data, response, error in
             guard let data = data, error == nil else {
                 DispatchQueue.main.async {
-                    completion(.failure(error ?? NSError(domain: "Error downloading image", code: 500, userInfo: nil)))
+                    completion(.failure(error ?? NSError(domain: "Error downloading image,", code: 500, userInfo: nil)))
                 }
                 return
             }
             
             guard let image = UIImage(data: data) else {
                 DispatchQueue.main.async {
-                    completion(.failure(NSError(domain: "Invalid image data", code: 400, userInfo: nil)))
+                    completion(.failure(NSError(domain: "Invalid image data,", code: 400, userInfo: nil)))
                 }
                 return
             }

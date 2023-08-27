@@ -1,102 +1,120 @@
-Для реализации данной функциональности вам понадобится расширение UITableView delegate метода `tableView(_:heightForRowAt:)` для вычисления высоты ячейки, а также расширение UITableViewCell метода `layoutSubviews()` для настройки ширины текстового поля.
 
-Вот пример кода на Swift UIKit для реализации требуемого поведения:
-
-```swift
 import UIKit
 
-class CustomTableViewCell: UITableViewCell {
-    let textView: UITextView = {
-        let view = UITextView()
-        view.isScrollEnabled = false
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
+// Общая реализация кода для работы с API
+class APIManager {
+    static let shared = APIManager()
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    private init() {}
+    
+    func fetchData(url: URL, completion: @escaping (Data?, Error?) -> Void) {
+        // Здесь может быть реализация отправки запроса и получения данных
+        // ...
         
-        contentView.addSubview(textView)
-        
-        NSLayoutConstraint.activate([
-            textView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            textView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            textView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            textView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
-        ])
+        // Пример асинхронного выполнения запроса с задержкой в 2 секунды
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            let data = Data() // Вместо пустых данных здесь должны быть полученные данные
+            completion(data, nil)
+        }
     }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        let screenWidth = UIScreen.main.bounds.width
-        textView.frame.size.width = screenWidth
-        
-        let halfScreenWidth = screenWidth / 2
-        if textView.contentSize.width > halfScreenWidth {
-            textView.textContainer.size = textView.contentSize
-            textView.frame.size.height = textView.contentSize.height
-        } else {
-            textView.frame.size.height = textView.sizeThatFits(CGSize(width: halfScreenWidth, height: CGFloat.infinity)).height
+}
+
+// Пример использования первого API
+class FirstAPI {
+    func fetchData(completion: @escaping (Data?, Error?) -> Void) {
+        guard let url = URL(string: "https://api.first.com/data") else {
+            completion(nil, NSError(domain: "Invalid URL", code: 0, userInfo: nil))
+            return
         }
         
-        frame.size.height = textView.frame.size.height
+        APIManager.shared.fetchData(url: url, completion: completion)
     }
 }
 
-class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-
-    let tableView: UITableView = {
-        let tableView = UITableView()
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        return tableView
-    }()
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
+// Пример использования второго API
+class SecondAPI {
+    func fetchData(completion: @escaping (Data?, Error?) -> Void) {
+        guard let url = URL(string: "https://api.second.com/data") else {
+            completion(nil, NSError(domain: "Invalid URL", code: 0, userInfo: nil))
+            return
+        }
         
-        tableView.dataSource = self
-        tableView.delegate = self
-        
-        tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: "CustomCell")
-        
-        view.addSubview(tableView)
-        
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // Верните количество ячеек в таблице
-        return 5
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell", for: indexPath) as! CustomTableViewCell
-        
-        cell.textView.text = "Some long text that may or may not wrap to a new line depending on its width"
-        
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell") as! CustomTableViewCell
-        
-        cell.textView.text = "Some long text that may or may not wrap to a new line depending on its width"
-        cell.setNeedsLayout()
-        cell.layoutIfNeeded()
-        
-        return cell.textView.frame.size.height
+        APIManager.shared.fetchData(url: url, completion: completion)
     }
 }
-```
 
-В этом коде используется кастомная ячейка CustomTableViewCell, которая содержит UITextView для отображения текста. В методе `layoutSubviews()` мы настраиваем ширину и высоту текстового поля с учетом условий, которые вы указали. Также в методе `tableView(_
+// Пример использования API
+let firstAPI = FirstAPI()
+firstAPI.fetchData { (data, error) in
+    if let error = error {
+        print("Ошибка при получении данных из первого API: \(error)")
+    } else {
+        print("Данные из первого API: \(data ?? Data())")
+    }
+}
+
+let secondAPI = SecondAPI()
+secondAPI.fetchData { (data, error) in
+    if let error = error {
+        print("Ошибка при получении данных из второго API: \(error)")
+    } else {
+        print("Данные из второго API: \(data ?? Data())")
+    }
+}
+
+
+class APIManager {
+    static let shared = APIManager()
+    
+    private init() {}
+    
+    func fetchData(url: URL, completion: @escaping (Data?, Error?) -> Void) {
+        // Здесь может быть реализация отправки запроса и получения данных
+        // ...
+        
+        // Пример асинхронного выполнения запроса с задержкой в 2 секунды
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            let data = Data() // Вместо пустых данных здесь должны быть полученные данные
+            completion(data, nil)
+        }
+    }
+    
+    func clearData(completion: @escaping () -> Void) {
+        // Очистка данных из синглтона
+        // ...
+        
+        completion()
+    }
+    
+    func reloadData(completion: @escaping (Data?, Error?) -> Void) {
+        clearData {
+            guard let url = URL(string: "https://api.first.com/data") else {
+                completion(nil, NSError(domain: "Invalid URL", code: 0, userInfo: nil))
+                return
+            }
+            
+            self.fetchData(url: url, completion: completion)
+        }
+    }
+}
+
+
+В приведенном выше коде добавлены два новых метода: clearData(completion:) для очистки данных из синглтона и reloadData(completion:) для повторной загрузки данных.
+
+Метод clearData(completion:) должен содержать логику очистки данных из синглтона, например, сбросить значения свойств или удалить объекты из коллекций.
+
+Метод reloadData(completion:) вызывает clearData(completion:) для очистки данных и затем выполняет загрузку новых данных, используя метод fetchData(url:completion:).
+
+Вы можете вызвать метод reloadData(completion:) для автоматической очистки и загрузки данных в вашем коде, например:
+
+swift
+APIManager.shared.reloadData { (data, error) in
+    if let error = error {
+        print("Ошибка при получении данных: \(error)")
+    } else {
+        print("Данные: \(data ?? Data())")
+    }
+}
+
+
+Обратите внимание, что в примере я использовал метод reloadData(completion:) из класса APIManager, но вы также можете использовать его из экземпляров классов FirstAPI и SecondAPI, если они наследуются от APIManager.

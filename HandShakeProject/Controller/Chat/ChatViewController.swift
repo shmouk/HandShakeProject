@@ -34,17 +34,17 @@ class ChatViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         reloadDataIfNeeded()
-        setUI()
+        setupNavBarManager()
     }
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setUI()
         bindViewModel()
     }
     
     private func setUI() {
-        setupNavBarManager()
         settingTableView()
         setSubviews()
         setupTargets()

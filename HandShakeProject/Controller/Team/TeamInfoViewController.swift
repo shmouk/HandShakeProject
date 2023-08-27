@@ -28,13 +28,13 @@ class TeamInfoViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        setUI()
+        bindViewModel()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setUI()
         loadData()
-        bindViewModel()
     }
     
     private func setUI() {
@@ -53,7 +53,7 @@ class TeamInfoViewController: UIViewController {
     }
     
     private func loadData() {
-        teamViewModel.convertIdToUserName(team.creatorId)
+        teamViewModel.convertIdToUserName(id: team.creatorId)
         teamViewModel.fetchUsersFromUserList(team: team)
     }
     
@@ -61,6 +61,11 @@ class TeamInfoViewController: UIViewController {
         teamViewModel.fetchUsersFromSelectedTeam.bind { [weak self] users in
             guard let self = self else { return }
             self.users = users
+        }
+        
+        teamViewModel.creatorName.bind { [weak self] name in
+            guard let self = self else { return }
+            creatorID.text = "Creator: " + name
         }
     }
     
@@ -70,11 +75,6 @@ class TeamInfoViewController: UIViewController {
     }
     
     private func settingLabel() {
-        teamViewModel.creatorName.bind { [weak self] name in
-            guard let self = self else { return }
-            creatorID.text = "Creator: " + name
-        }
-        
         nameLabel.text = team.teamName
     }
     
@@ -121,7 +121,6 @@ private extension TeamInfoViewController {
     
     @objc
     private func editProfile(_ sender: Any) {
-        
     }
     
     @objc

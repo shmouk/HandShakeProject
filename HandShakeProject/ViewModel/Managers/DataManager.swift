@@ -20,25 +20,3 @@ class UserDefaultsManager {
         defaults.removeObject(forKey: key)
     }
 }
-
-class SingletonDataManager {
-    static func clearSingletonData() {
-        DispatchQueue.global().async {
-            UserAPI.shared.users.removeAll()
-            ChatAPI.shared.allMessages.removeAll()
-            ChatAPI.shared.lastMessageFromMessages.removeAll()
-            TeamAPI.shared.teams.removeAll()
-        }
-    }
-    
-    static func loadSingletonData() {
-        DispatchQueue.global().async {
-            UserAPI.shared.observeUsers { _ in }
-            ChatAPI.shared.observeMessages { _ in }
-            TeamAPI.shared.observeTeams { _ in }
-        }
-    }
-}
-
-
-
