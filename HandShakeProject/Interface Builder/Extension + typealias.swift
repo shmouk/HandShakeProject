@@ -7,10 +7,10 @@
 
 import UIKit
 
-typealias UserCompletion = (Result<(UIImage, String), Error>) -> Void
+typealias UserCompletion = (Result<User, Error>) -> Void
+typealias UserInfoCompletion = (Result<(UIImage, String), Error>) -> Void
 typealias ResultCompletion = (Result<String, Error>) -> Void
 typealias VoidCompletion = (Result<Void, Error>) -> Void
-
 
 extension String {
     func size(constrainedToWidth width: CGFloat) -> CGSize {
@@ -22,11 +22,15 @@ extension String {
     }
 }
 
+
 extension Int {
-    func convertTimestampToDate() -> String {
+    func convertTimestampToDate(timeStyle: DateFormatter.Style = .short) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.timeStyle = .short
-        let date = Date(timeIntervalSince1970: TimeInterval(self) ?? 0)
+        dateFormatter.timeStyle = timeStyle
+        if timeStyle == .medium {
+            dateFormatter.dateFormat = "dd MMM yyyy"
+        }
+        let date = Date(timeIntervalSince1970: TimeInterval(self))
         return dateFormatter.string(from: date)
 
     }
@@ -74,6 +78,20 @@ extension UIStackView {
 }
 
 extension UIColor {
+    static func getColorFromDeadlineState(_ index: Int) -> UIColor {
+        switch index {
+        case 0:
+            return #colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1)
+        case 1:
+            return #colorLiteral(red: 0.5023933686, green: 0.9254901961, blue: 0.4543034453, alpha: 1)
+        case 2:
+            return #colorLiteral(red: 0.9254901961, green: 0.6084639762, blue: 0, alpha: 1)
+        case 3:
+            return #colorLiteral(red: 0.9254901961, green: 0.2064778552, blue: 0.234777142, alpha: 1)
+        default:
+            return . white
+        }
+    }
     static func colorForStroke() -> UIColor {
         return #colorLiteral(red: 0.8117647059, green: 0.8549019608, blue: 0.9254901961, alpha: 1)
     }
@@ -82,6 +100,9 @@ extension UIColor {
     }
     static func colorForView() -> UIColor {
         return #colorLiteral(red: 0.8823529412, green: 0.9019607843, blue: 0.937254902, alpha: 1)
+    }
+    static func colorForSubview() -> UIColor {
+        return #colorLiteral(red: 0.8274509804, green: 0.8431372549, blue: 0.8823529412, alpha: 1)
     }
     static func colorForTitleText() -> UIColor {
         return #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)

@@ -7,36 +7,23 @@
 
 import UIKit
 
-class Events {
-    var teamImage: UIImage?
-    var titleLabel: String
-    var descriptionLabel: String
-    var dateLabel: String?
-    
-    init(teamImage: UIImage? = nil, titleLabel: String = "", descriptionLabel: String = "", dateLabel: String? = nil) {
-        self.teamImage = teamImage
-        self.titleLabel = titleLabel
-        self.descriptionLabel = descriptionLabel
-        self.dateLabel = dateLabel
-    }
-}
 
 class Event {
-    var teamId: String
+    var creatorInfo: User
     var nameEvent: String
-    var descriptionName: String
+    var descriptionText: String
     var deadlineState: Int
-    var date: String?
-    var executor: String?
-    var reader: String
+    var date: Int
+    var executorInfo: User
+    var readerList: [String]
     
-    init(teamId: String = "", nameEvent: String = "", descriptionName: String = "", deadlineState: Int = 0, date: String? = nil, executor: String? = nil, reader: String = "") {
-        self.teamId = teamId
+    init(creatorInfo: User = User(), nameEvent: String = "", descriptionText: String = "", deadlineState: Int = 0, date: Int = 0, executorInfo: User = User(), readerList: [String] = []) {
+        self.creatorInfo = creatorInfo
         self.nameEvent = nameEvent
-        self.descriptionName = descriptionName
+        self.descriptionText = descriptionText
         self.deadlineState = deadlineState
         self.date = date
-        self.executor = executor
-        self.reader = reader
+        self.executorInfo = executorInfo
+        self.readerList = readerList
     }
 }

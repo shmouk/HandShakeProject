@@ -17,7 +17,7 @@ class ChatAPI {
         
     private init() {}
     
-    private func fetchUser(userId: String, completion: @escaping UserCompletion) {
+    private func fetchUser(userId: String, completion: @escaping UserInfoCompletion) {
         database.child("users").child(userId).observeSingleEvent(of: .value) { snapshot in
             guard let userDict = snapshot.value as? [String: Any],
                   let imageUrlString = userDict["downloadURL"] as? String,
@@ -92,7 +92,7 @@ class ChatAPI {
         let withId = fromId == uid ? toId : fromId
         
         self.fetchUser(userId: withId) { [weak self] (result) in
-            guard let self = self else { return }
+            guard self != nil else { return }
             
             switch result {
             case .success(let (image, name)):

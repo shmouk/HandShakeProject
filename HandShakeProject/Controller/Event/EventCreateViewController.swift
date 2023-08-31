@@ -29,7 +29,6 @@ class EventCreateViewController: UIViewController {
     
     lazy var chooseTeamButton = interfaceBuilder.createButton()
     lazy var chooseExecutorButton = interfaceBuilder.createButton()
-    lazy var shooseReaderButton = interfaceBuilder.createButton()
     
     lazy var importanceSegmentControl = interfaceBuilder.createSegmentControl(items: deadlineState)
     lazy var datePicker = interfaceBuilder.createDatePicker()
@@ -72,7 +71,7 @@ class EventCreateViewController: UIViewController {
     
     private func reloadDataIfNeeded() {
         if selectedTeam == nil {
-            eventViewModel.fetchCurrentTeam { [weak self] error in
+            eventViewModel.fetchTeams { [weak self] error in
                 guard let self = self else { return }
                 AlertManager.showAlert(title: "Failure", message: error, viewController: self)
             }
@@ -90,7 +89,7 @@ class EventCreateViewController: UIViewController {
     private func setSubviews() {
         view.addSubviews(namingTextField, pickedTeamLabel, datePicker, chooseTeamButton, chooseExecutorButton, descriptionTextView, teamTitleLabel, nameTitleLabel,
                          deadlineTypeTitleLabel, dateTitleLabel, descriptionTitleLabel, executorTitleLabel, pickedExecutorLabel, readerTitleLabel,
-                         readingListTextView, shooseReaderButton, importanceSegmentControl)
+                         readingListTextView, importanceSegmentControl)
     }
     
     private func setSettings() {
@@ -104,9 +103,10 @@ class EventCreateViewController: UIViewController {
     private func settingTextField() {
         namingTextField.delegate = self
         descriptionTextView.delegate = self
-        descriptionTextView.textContainer.maximumNumberOfLines = 2
+        descriptionTextView.textContainer.maximumNumberOfLines = 4
         descriptionTextView.textContainer.lineBreakMode = .byTruncatingTail
         readingListTextView.isEditable = false
+        descriptionTextView.isEditable = true
         descriptionTextView.returnKeyType = .done
         namingTextField.returnKeyType = .done
         namingTextField.placeholder = "Input name event"
@@ -121,29 +121,27 @@ class EventCreateViewController: UIViewController {
         descriptionTitleLabel.text = "Description:"
         executorTitleLabel.text = "Choose executor:"
         pickedExecutorLabel.text = "Unselected"
-        readerTitleLabel.text = "Choose reader:"
+        readerTitleLabel.text = "Reader:"
     }
     
     private func settingButton() {
-        shooseReaderButton.setImage(UIImage(systemName: "person.badge.plus"), for: .normal)
         chooseTeamButton.setImage(UIImage(systemName: "person.3"), for: .normal)
         chooseExecutorButton.setImage(UIImage(systemName: "person.badge.plus"), for: .normal)
-        [shooseReaderButton, chooseTeamButton, chooseExecutorButton].forEach({ $0.tintColor = .colorForTitleText()})
+        [chooseTeamButton, chooseExecutorButton].forEach({ $0.tintColor = .colorForTitleText()})
     }
     
     private func setLabelAppearance() {
         [pickedTeamLabel, pickedExecutorLabel].forEach({ $0.textAlignment = .center })
-        [pickedTeamLabel, pickedExecutorLabel].forEach({ $0.backgroundColor = .colorForView() })
+        [pickedTeamLabel, pickedExecutorLabel].forEach({ $0.backgroundColor = .white })
     }
     
     private func settingViews() {
-        view.backgroundColor = .white
+        view.backgroundColor = .colorForView()
     }
     
     private func setupTargets() {
         chooseTeamButton.addTarget(self, action: #selector(changeTeamAction(_:)), for: .touchUpInside)
         importanceSegmentControl.addTarget(self, action: #selector(changeDeadlineStateAction(_:)), for: .valueChanged)
-        shooseReaderButton.addTarget(self, action: #selector(addReaderAction(_:)), for: .touchUpInside)
         datePicker.addTarget(self, action: #selector(datePickerAction(_:)), for: .valueChanged)
         chooseExecutorButton.addTarget(self, action: #selector(addExecutorAction(_:)), for: .touchUpInside)
     }
@@ -166,7 +164,7 @@ class EventCreateViewController: UIViewController {
 
     
     private func createEvent() {
-        AlertManager.showConfirmationAlert(title: "CreateAlert", message: "Are you sure you want to create an event and it doesn't need to be changed?", viewController: self) { [weak self] in
+        AlertManager.showConfirmationAlert(title: "Create Alert", message: "Are you sure you want to create an event and it doesn't need to be changed?", viewController: self) { [weak self] in
             guard let self = self else { return }
             eventViewModel.createEvent(nameText: namingTextField.text, descriptionText: descriptionTextView.text, selectedState: selectedStateIndex, selectedDate: selectedDate, selectedExecutorUser: selectedExecutorUser?.uid) { [weak self] result in
                 guard let self = self else { return }
@@ -210,11 +208,6 @@ private extension EventCreateViewController {
     }
     
     @objc
-    private func addReaderAction(_ sender: Any) {
-        AlertManager.showAlert(title: "Warning", message: "Readers are automatically selected", viewController: self)
-    }
-    
-    @objc
     private func changeDeadlineStateAction(_ sender: Any) {
         selectedStateIndex = importanceSegmentControl.selectedSegmentIndex
     }
@@ -242,7 +235,7 @@ extension EventCreateViewController: UITextViewDelegate {
             return false
         }
         let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
-        return newText.count <= 60
+        return newText.count <= 130
     }
 }
 

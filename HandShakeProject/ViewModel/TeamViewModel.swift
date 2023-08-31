@@ -24,9 +24,9 @@ class TeamViewModel {
         teamAPI.filterTeams { [weak self] result in
             guard let self = self else { return }
             switch result {
-            case .success((let ownTeams, let otherTeams)):
+            case .success((let ownTeams, let partnerTeams)):
                 self.ownTeams.value = ownTeams
-                self.otherTeams.value = otherTeams
+                self.otherTeams.value = partnerTeams
                 
             case .failure(_):
                 break

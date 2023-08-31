@@ -98,6 +98,6 @@ extension UserChatViewModel {
     private func updateMessages() {
         loadLastMessagePerUser()
         loadMessagesPerUser()
-        print("new message")
+//        print("new message")
     }
 }

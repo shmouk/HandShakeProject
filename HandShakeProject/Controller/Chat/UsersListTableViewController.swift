@@ -6,7 +6,7 @@ protocol UsersListTableViewControllerDelegate: AnyObject {
 }
 
 class UsersListTableViewController: UIViewController {
-    private let cellId = "cellId"
+    private let cellId = "UsersTableViewCell"
     private let userChatViewModel = UserChatViewModel()
     private let interfaceBuilder = InterfaceBuilder()
     private let users: [User]
@@ -16,7 +16,8 @@ class UsersListTableViewController: UIViewController {
 
     lazy var tableView = interfaceBuilder.createTableView()
     lazy var titleLabel = interfaceBuilder.createTitleLabel()
-    
+    lazy var closeVCButton = interfaceBuilder.createButton()
+
     init(users: [User], isCellBeUsed: Bool) {
         self.isCellBeUsed = isCellBeUsed
         self.users = users
@@ -40,14 +41,19 @@ class UsersListTableViewController: UIViewController {
         setSubviews()
         setupTargets()
         settingTextLabel()
+        settingButton()
+        settingTableView() 
         setupConstraints()
     }
-    
-    private func setSubviews() {
+    func settingTableView() {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(UsersTableViewCell.self, forCellReuseIdentifier: cellId)
-        view.addSubviews(titleLabel, tableView)
+    }
+    
+    private func setSubviews() {
+        
+        view.addSubviews(titleLabel, tableView, closeVCButton)
         view.backgroundColor = .colorForView()
     }
     
@@ -56,7 +62,19 @@ class UsersListTableViewController: UIViewController {
         titleLabel.textAlignment = .center
     }
     
+    private func settingButton() {
+        closeVCButton.setImage(UIImage(systemName: "xmark.circle"), for: .normal)
+    }
+    
     private func setupTargets() {
+        closeVCButton.addTarget(self, action: #selector(closeVCAction), for: .touchUpInside)
+    }
+}
+
+extension UsersListTableViewController {
+    @objc
+    private func closeVCAction(_ sender: Any) {
+        dismiss(animated: true)
     }
 }
 
@@ -65,6 +83,22 @@ extension UsersListTableViewController: UITableViewDelegate, UITableViewDataSour
         64
     }
     
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let totalRows = tableView.numberOfRows(inSection: indexPath.section)
+        var orientation: UIRectCorner = []
+       
+        if indexPath.row == 0 {
+            orientation = [.topLeft, .topRight]
+        }
+        if indexPath.row == totalRows - 1 {
+            orientation = [.bottomLeft, .bottomRight]
+        }
+        if totalRows == 1 {
+            orientation = [.allCorners]
+        }
+        RoundedCellDecorator.roundCorners(orientation: orientation, for: cell, cornerRadius: 10.0)
+    }
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? UsersTableViewCell else { return UITableViewCell() }
         let user = users[indexPath.row]

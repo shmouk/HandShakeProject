@@ -52,6 +52,7 @@ class ChatLogController: UIViewController {
     }
     
     private func setSubviews() {
+        keyboardManager = KeyboardNotificationManager(view: view)
         tabBarController?.tabBar.isHidden = true
         containerView.addSubviews(textField, sendButton)
         view.addSubview(containerView)
@@ -62,7 +63,6 @@ class ChatLogController: UIViewController {
     private func settingsCollectionView() {
         collectionView.dataSource = self
         collectionView.delegate = self
-
         collectionView.register(MessageCollectionViewCell.self, forCellWithReuseIdentifier: cellId)
     }
     

@@ -1,12 +1,28 @@
-//
-//  InterfaceBuilder.swift
-//  HandShakeProject
-//
-//  Created by Марк on 14.07.23.
-//
-
 import UIKit
 import SkeletonView
+
+class RoundImageView: UIImageView {
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        layer.cornerRadius = min(bounds.width, bounds.height) / 2
+    }
+}
+
+class RoundedCellDecorator {
+    static func roundCorners(orientation: UIRectCorner = [.allCorners], for cell: UITableViewCell, cornerRadius: CGFloat) {
+        var maskPath = UIBezierPath()
+        
+        maskPath = UIBezierPath(roundedRect: cell.bounds,
+                                byRoundingCorners: orientation,
+                                cornerRadii: CGSize(width: cornerRadius, height: cornerRadius))
+        
+        let maskLayer = CAShapeLayer()
+        maskLayer.path = maskPath.cgPath
+        
+        cell.layer.mask = maskLayer
+    }
+}
+
 
 class InterfaceBuilder {
     
@@ -77,8 +93,8 @@ class InterfaceBuilder {
         return textField
     }
     
-    func createImageView() -> UIImageView {
-        let imageView = UIImageView()
+    func createImageView() -> RoundImageView {
+        let imageView = RoundImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
@@ -118,6 +134,7 @@ class InterfaceBuilder {
         button.layer.shadowOpacity = 0.2
         button.layer.shadowOffset = CGSize(width: 2, height: 2)
         button.layer.shadowRadius = 10
+        button.tintColor = .colorForTitleText()
         button.setTitleColor(.colorForTitleText(), for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
         button.isSkeletonable = true
@@ -127,7 +144,7 @@ class InterfaceBuilder {
     func createTextView() -> UITextView {
         let textView = UITextView()
         textView.translatesAutoresizingMaskIntoConstraints = false
-        textView.backgroundColor = .colorForView()
+        textView.backgroundColor = .white
         textView.textColor = .black
         textView.layer.cornerRadius = 10
         textView.font = UIFont.systemFont(ofSize: 16)
@@ -135,6 +152,7 @@ class InterfaceBuilder {
         textView.textContainerInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
         textView.text = "Input text"
         textView.isScrollEnabled = false
+        textView.isEditable = false
 //        textView.textContainer.lineBreakMode = .byWordWrapping
         return textView
     }

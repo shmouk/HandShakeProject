@@ -44,12 +44,12 @@ class AddUserViewController: UIViewController {
     private func setSettings() {
         settingTextField()
         settingTextLabel()
-        settingButton() 
+        settingButton()
+        settingTableView()
     }
     
     private func settingButton() {
         searchButton.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
-        searchButton.tintColor = .colorForTitleText()
     }
     
     private func settingTextField() {
@@ -63,10 +63,15 @@ class AddUserViewController: UIViewController {
         statusLabel.numberOfLines = 2
     }
     
-    private func setSubviews() {
+    private func settingTableView() {
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.separatorStyle = .none
         tableView.register(UsersTableViewCell.self, forCellReuseIdentifier: cellId)
+        tableView.isScrollEnabled = false
+    }
+    
+    private func setSubviews() {
         view.addSubviews(userNameLabel, namingTextField, searchButton, statusLabel, tableView)
         view.backgroundColor = .colorForView()
     }
@@ -145,6 +150,10 @@ extension AddUserViewController: UITableViewDelegate, UITableViewDataSource {
         cell.user = user
         cell.selectionStyle = .none
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        RoundedCellDecorator.roundCorners(for: cell, cornerRadius: 10.0)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

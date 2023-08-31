@@ -8,7 +8,7 @@ class Message: NSObject {
     @objc dynamic var text: String
     @objc dynamic var image: UIImage?
     
-    init(fromId: String = "", toId: String = "", name: String = "", timestamp: Int = 0, text: String = "", image: UIImage? = nil) {
+    init(fromId: String = "", toId: String = "", name: String = "", timestamp: Int = 0, text: String = "", image: UIImage? = UIImage()) {
         self.fromId = fromId
         self.toId = toId
         self.name = name

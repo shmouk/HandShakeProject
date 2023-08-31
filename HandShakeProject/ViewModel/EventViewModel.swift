@@ -1,4 +1,4 @@
-
+import UIKit
 import Foundation
 
 class EventViewModel {
@@ -7,10 +7,11 @@ class EventViewModel {
     private var withUser: User?
     
     var currentTeam = Bindable(Team())
-
+    var otherTeams = Bindable([Team()])
     var fetchUsersFromSelectedTeam = Bindable([User()])
     var userNames = Bindable([String()])
-    
+    var eventData = Bindable([((UIImage, String), [Event])]())
+
     func createEvent(nameText: String?, descriptionText: String?, selectedState: Int?, selectedDate: Int?, selectedExecutorUser: String?,  completion: @escaping ResultCompletion) {
         
         guard let nameText = nameText else {
@@ -36,15 +37,20 @@ class EventViewModel {
             completion(.failure(NSError(domain: "Exector not choosen,", code: 400, userInfo: nil)))
             return
         }
-        
-        var eventData  = [String : Any]()
-        
+        var userListDict = [String: Int]()
+        if let userList = currentTeam.value.userList {
+            for user in userList {
+                userListDict[user] = 0
+            }
+        }
+
+        var eventData = [String : Any]()
         eventData["name"] = nameText
         eventData["description"] = descriptionText
-        eventData["deadlineState"] = selectedState
-        eventData["date"] = selectedDate
-        eventData["executor"] = selectedExecutorUser
-        eventData["readerList"] = currentTeam.value.userList
+        eventData["deadlineState"] = stateIndex
+        eventData["date"] = date
+        eventData["executor"] = executorUid
+        eventData["readerList"] = userListDict
         
         eventAPI.writeToDatabase(currentTeam.value.teamId, eventData) { [weak self] result in
             guard self != nil else { return }
@@ -57,22 +63,32 @@ class EventViewModel {
         }
     }
     
-    private func convertIdToUserName(ids: [String]) {
+    func convertIdToUserName(ids: [String]) {
         eventAPI.convertIdToUserName(ids) { [weak self] names in
             guard let self = self else { return }
             self.userNames.value = names
         }
     }
     
-    func fetchCurrentTeam(completion: @escaping (String) -> Void) {
+    func fetchCurrentTeam(_ teams: [Team]) {
+        guard let ownTeam = teams.first, let list = ownTeam.userList  else { return }
+        self.currentTeam.value = ownTeam
+        self.convertIdToUserName(ids: list)
+        self.fetchUsersFromUserList(team: ownTeam)
+    }
+    
+    
+    func fetchEventData() {
+        self.eventData.value = eventAPI.eventsData
+    }
+    
+    func fetchTeams(completion: @escaping (String) -> Void) {
         TeamAPI.shared.filterTeams { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success((let ownTeams, _)):
-                guard let ownTeam = ownTeams.first, let list = ownTeam.userList else { return }
-                self.currentTeam.value = ownTeam
-                self.convertIdToUserName(ids: list)
-                self.fetchUsersFromUserList(team: ownTeam)
+                
+                self.fetchCurrentTeam(ownTeams)
             case .failure(let error):
                 completion(error.localizedDescription)
             }

@@ -7,7 +7,8 @@ class ChatViewController: UIViewController {
     private let cellId = "MessageTableViewCell"
     private let userChatViewModel = UserChatViewModel()
     private let interfaceBuilder = InterfaceBuilder()
-    
+    private let refreshCntrl = UIRefreshControl()
+
     lazy var tableView = interfaceBuilder.createTableView()
     
     private var user: User?
@@ -17,7 +18,6 @@ class ChatViewController: UIViewController {
         }
     }
     
-    private var refreshCntrl = UIRefreshControl()
     
     init() {
         super.init(nibName: nil, bundle: nil)

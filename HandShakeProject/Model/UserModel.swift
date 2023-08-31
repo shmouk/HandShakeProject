@@ -10,7 +10,7 @@ class User: NSObject {
     @objc dynamic var downloadURL: String
 
     
-    init(uid: String = "", email: String = "", name: String = "", image: UIImage? = nil, downloadURL: String = "") {
+    init(uid: String = "", email: String = "", name: String = "", image: UIImage? = UIImage(), downloadURL: String = "") {
         self.uid = uid
         self.email = email
         self.name = name

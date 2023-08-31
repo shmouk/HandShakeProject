@@ -45,7 +45,7 @@ class TeamCeateViewController: UIViewController {
     }
     private func setSubviews() {
         view.addSubviews(teamLabel, namingTextField)
-        view.backgroundColor = .white
+        view.backgroundColor = .colorForView()
     }
     
     private func updateNavItem() {
@@ -68,7 +68,10 @@ private extension TeamCeateViewController {
     
     @objc
     private func createTeamAction(_ sender: Any) {
-        createTeam()
+        AlertManager.showConfirmationAlert(title: "Create Team", message: "Are you sure you want to create an team and it doesn't need to be changed?", viewController: self) {
+            self.createTeam()
+            self.navigationController?.popViewController(animated: true)
+        }
     }
 }
 

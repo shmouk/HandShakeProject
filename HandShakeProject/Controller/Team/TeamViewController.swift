@@ -30,6 +30,7 @@ class TeamViewController: UIViewController {
     private func setUI() {
         setupNavBarManager()
         setSubviews()
+        settingTableView()
         setupConstraints()
     }
     
@@ -39,10 +40,13 @@ class TeamViewController: UIViewController {
         tabBarController?.tabBar.isHidden = false
     }
     
-    private func setSubviews() {
+    func settingTableView() {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(TeamTableViewCell.self, forCellReuseIdentifier: cellId)
+    }
+    
+    private func setSubviews() {
         view.addSubview(tableView)
     }
     
@@ -59,7 +63,7 @@ class TeamViewController: UIViewController {
         }
         teamViewModel.otherTeams.bind { [weak self] teams in
             guard let self = self else { return }
-            self.secondSectionTeams = teams
+            self.secondSectionTeams = teams 
             reloadTable() 
         }
     }
@@ -70,21 +74,32 @@ class TeamViewController: UIViewController {
     }
     
     private func openSelectedTeamVC(_ selectedTeam: Team) {
-        teamViewModel.fetchSelectedTeam(selectedTeam) 
-        self.teamViewModel.selectedTeam.bind { [weak self] team in
-            guard let self = self else { return }
-            let teamInfoViewController = TeamInfoViewController(team: team)
-            navigationController?.pushViewController(teamInfoViewController, animated: true)
-        }
+        let teamInfoViewController = TeamInfoViewController(team: selectedTeam)
+        navigationController?.pushViewController(teamInfoViewController, animated: true)
     }
-    
+
     private func reloadTable() {
         tableView.reloadData()
+    }
+    private func fetchTeam(_ indexPath: IndexPath) -> Team? {
+        var team: Team?
+
+        switch indexPath.section {
+        case 0:
+            team = firstSectionTeams?[indexPath.row]
+        case 1:
+            team = secondSectionTeams?[indexPath.row]
+        default:
+            break
+        }
+        return team
     }
 }
 
 extension TeamViewController: NavigationBarManagerDelegate {
-    func didTapNotificationButton() {}
+    func didTapNotificationButton() {
+
+    }
     
     func didTapAddButton() {
         openCreateTeamVC()
@@ -118,30 +133,12 @@ extension TeamViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? TeamTableViewCell else { return UITableViewCell() }
-        switch indexPath.section {
-        case 0:
-            cell.team = firstSectionTeams?[indexPath.row]
-        case 1:
-            cell.team = secondSectionTeams?[indexPath.row]
-        default:
-            break
-        }
+        cell.team = fetchTeam(indexPath)
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        var team: Team?
-        switch indexPath.section {
-        case 0:
-            let index = indexPath.row
-            team = firstSectionTeams?[index]
-        case 1:
-            let index = indexPath.row
-            team = secondSectionTeams?[index]
-        default:
-            break
-        }
-        guard let team = team else { return }
+        guard let team = fetchTeam(indexPath) else { return }
         openSelectedTeamVC(team)
     }
 }

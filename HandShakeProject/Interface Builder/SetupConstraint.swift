@@ -59,51 +59,64 @@ extension MainTabBarViewController {
         
     }
 }
+// MARK: - EventsViewController Constraint
+
+extension EventsViewController {
+    func setupConstraints() {
+        
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+}
+
 // MARK: - EventCreateViewController Constraint
 
 extension EventCreateViewController {
     func setupConstraints() {
         
-        let heightForView = view.frame.height / 15
+        let heightForView = view.frame.height / 16
         
         NSLayoutConstraint.activate([
-            teamTitleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            teamTitleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 14),
             teamTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             teamTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             teamTitleLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
         ])
 
         NSLayoutConstraint.activate([
-            pickedTeamLabel.topAnchor.constraint(equalTo: teamTitleLabel.bottomAnchor, constant: 8),
+            pickedTeamLabel.topAnchor.constraint(equalTo: teamTitleLabel.bottomAnchor, constant: 6),
             pickedTeamLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             pickedTeamLabel.trailingAnchor.constraint(equalTo: chooseTeamButton.leadingAnchor, constant: -12),
             pickedTeamLabel.heightAnchor.constraint(equalToConstant: heightForView)
         ])
         
         NSLayoutConstraint.activate([
-            chooseTeamButton.topAnchor.constraint(equalTo: teamTitleLabel.bottomAnchor, constant: 8),
+            chooseTeamButton.topAnchor.constraint(equalTo: teamTitleLabel.bottomAnchor, constant: 6),
             chooseTeamButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             chooseTeamButton.heightAnchor.constraint(equalToConstant: heightForView),
             chooseTeamButton.widthAnchor.constraint(equalTo: chooseTeamButton.heightAnchor)
         ])
-   
         
         NSLayoutConstraint.activate([
-            nameTitleLabel.topAnchor.constraint(equalTo: chooseTeamButton.bottomAnchor, constant: 16),
+            nameTitleLabel.topAnchor.constraint(equalTo: chooseTeamButton.bottomAnchor, constant: 14),
             nameTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             nameTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             nameTitleLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
         ])
    
         NSLayoutConstraint.activate([
-            namingTextField.topAnchor.constraint(equalTo: nameTitleLabel.bottomAnchor, constant: 8),
+            namingTextField.topAnchor.constraint(equalTo: nameTitleLabel.bottomAnchor, constant: 6),
             namingTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             namingTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            namingTextField.heightAnchor.constraint(equalToConstant: heightForView * 0.6)
+            namingTextField.heightAnchor.constraint(equalToConstant: heightForView * 0.8)
         ])
         
         NSLayoutConstraint.activate([
-            descriptionTitleLabel.topAnchor.constraint(equalTo: namingTextField.bottomAnchor, constant: 16),
+            descriptionTitleLabel.topAnchor.constraint(equalTo: namingTextField.bottomAnchor, constant: 14),
             descriptionTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             descriptionTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             descriptionTitleLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
@@ -111,28 +124,28 @@ extension EventCreateViewController {
         
         
         NSLayoutConstraint.activate([
-            descriptionTextView.topAnchor.constraint(equalTo: descriptionTitleLabel.bottomAnchor, constant: 8),
+            descriptionTextView.topAnchor.constraint(equalTo: descriptionTitleLabel.bottomAnchor, constant: 6),
             descriptionTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             descriptionTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            descriptionTextView.heightAnchor.constraint(equalToConstant: heightForView)
+            descriptionTextView.heightAnchor.constraint(equalToConstant: heightForView * 1.8)
         ])
         
         NSLayoutConstraint.activate([
-            deadlineTypeTitleLabel.topAnchor.constraint(equalTo: descriptionTextView.bottomAnchor, constant: 16),
+            deadlineTypeTitleLabel.topAnchor.constraint(equalTo: descriptionTextView.bottomAnchor, constant: 14),
             deadlineTypeTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             deadlineTypeTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             deadlineTypeTitleLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
         ])
         
         NSLayoutConstraint.activate([
-            importanceSegmentControl.topAnchor.constraint(equalTo: deadlineTypeTitleLabel.bottomAnchor, constant: 8),
+            importanceSegmentControl.topAnchor.constraint(equalTo: deadlineTypeTitleLabel.bottomAnchor, constant: 6),
             importanceSegmentControl.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             importanceSegmentControl.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             importanceSegmentControl.heightAnchor.constraint(equalToConstant: heightForView * 0.6)
         ])
         
         NSLayoutConstraint.activate([
-            dateTitleLabel.topAnchor.constraint(equalTo: importanceSegmentControl.bottomAnchor, constant: 16),
+            dateTitleLabel.topAnchor.constraint(equalTo: importanceSegmentControl.bottomAnchor, constant: 14),
             dateTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             dateTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             dateTitleLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
@@ -153,39 +166,51 @@ extension EventCreateViewController {
         ])
 
         NSLayoutConstraint.activate([
-            pickedExecutorLabel.topAnchor.constraint(equalTo: executorTitleLabel.bottomAnchor, constant: 8),
+            pickedExecutorLabel.topAnchor.constraint(equalTo: executorTitleLabel.bottomAnchor, constant: 6),
             pickedExecutorLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             pickedExecutorLabel.trailingAnchor.constraint(equalTo: chooseExecutorButton.leadingAnchor, constant: -12),
             pickedExecutorLabel.heightAnchor.constraint(equalToConstant: heightForView)
         ])
         
         NSLayoutConstraint.activate([
-            chooseExecutorButton.topAnchor.constraint(equalTo: executorTitleLabel.bottomAnchor, constant: 8),
+            chooseExecutorButton.topAnchor.constraint(equalTo: executorTitleLabel.bottomAnchor, constant: 6),
             chooseExecutorButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             chooseExecutorButton.heightAnchor.constraint(equalToConstant: heightForView),
             chooseExecutorButton.widthAnchor.constraint(equalTo: pickedExecutorLabel.heightAnchor)
         ])
 
         NSLayoutConstraint.activate([
-            readerTitleLabel.topAnchor.constraint(equalTo: chooseExecutorButton.bottomAnchor, constant: 16),
+            readerTitleLabel.topAnchor.constraint(equalTo: chooseExecutorButton.bottomAnchor, constant: 14),
             readerTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             readerTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             readerTitleLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
         ])
 
         NSLayoutConstraint.activate([
-            readingListTextView.topAnchor.constraint(equalTo: readerTitleLabel.bottomAnchor, constant: 8),
+            readingListTextView.topAnchor.constraint(equalTo: readerTitleLabel.bottomAnchor, constant: 6),
             readingListTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            readingListTextView.trailingAnchor.constraint(equalTo: shooseReaderButton.leadingAnchor, constant: -12),
-            readingListTextView.heightAnchor.constraint(equalToConstant: heightForView)
+            readingListTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            readingListTextView.heightAnchor.constraint(equalToConstant: heightForView * 1.3)
         ])
+    }
+}
+// MARK: - EventHeaderView Constraint
 
+extension EventHeaderView {
+    func setupConstraints() {
+        
         NSLayoutConstraint.activate([
-            shooseReaderButton.topAnchor.constraint(equalTo: readerTitleLabel.bottomAnchor, constant: 8),
-            shooseReaderButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            shooseReaderButton.heightAnchor.constraint(equalToConstant: heightForView),
-            shooseReaderButton.widthAnchor.constraint(equalTo: shooseReaderButton.heightAnchor)
-
+            teamImage.centerYAnchor.constraint(equalTo: centerYAnchor),
+            teamImage.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
+            teamImage.topAnchor.constraint(equalTo: topAnchor, constant: 8),
+            teamImage.heightAnchor.constraint(equalTo: teamImage.widthAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            teamName.centerYAnchor.constraint(equalTo: centerYAnchor),
+            teamName.leadingAnchor.constraint(equalTo: teamImage.trailingAnchor, constant: 12),
+            teamName.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 12),
+            teamName.heightAnchor.constraint(equalTo: teamImage.heightAnchor)
         ])
     }
 }
@@ -194,37 +219,130 @@ extension EventCreateViewController {
 
 extension EventTableViewCell{
     func setupConstraints() {
-        
         NSLayoutConstraint.activate([
-            teamImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            teamImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
-            teamImageView.topAnchor.constraint(equalTo: topAnchor, constant: 10),
-            teamImageView.heightAnchor.constraint(equalTo: teamImageView.widthAnchor)
+            executorImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            executorImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
+            executorImageView.topAnchor.constraint(equalTo: topAnchor, constant: 12),
+            executorImageView.widthAnchor.constraint(equalTo: executorImageView.heightAnchor)
+        ])
+             
+        NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: topAnchor),
+            titleLabel.leadingAnchor.constraint(equalTo: executorImageView.trailingAnchor, constant: 12),
+            titleLabel.trailingAnchor.constraint(equalTo: dateLabel.leadingAnchor, constant: -12),
+            titleLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1/2)
         ])
         
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10),
-            titleLabel.leadingAnchor.constraint(equalTo: teamImageView.trailingAnchor, constant: 10),
-            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: frame.width / 3),
-            titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: frame.height / 2 + 10)
-        ])
-        
-        NSLayoutConstraint.activate([
-            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
-            descriptionLabel.leadingAnchor.constraint(equalTo: teamImageView.trailingAnchor, constant: 10),
-            descriptionLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
-            descriptionLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 10)
+            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
+            descriptionLabel.leadingAnchor.constraint(equalTo: executorImageView.trailingAnchor, constant: 12),
+            descriptionLabel.trailingAnchor.constraint(equalTo: dateLabel.leadingAnchor, constant: -12),
+            descriptionLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1/2)
         ])
         
         NSLayoutConstraint.activate([
             dateLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            dateLabel.leadingAnchor.constraint(equalTo: teamImageView.trailingAnchor, constant: 10),
-            dateLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 20),
-            dateLabel.heightAnchor.constraint(equalTo: descriptionLabel.heightAnchor)
+            dateLabel.leadingAnchor.constraint(equalTo: centerXAnchor, constant: 64),
+            dateLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+            dateLabel.heightAnchor.constraint(equalToConstant: frame.height / 2)
         ])
     }
 }
 
+// MARK: - EventInfoViewController
+
+extension EventInfoViewController{
+    func setupConstraints() {
+        
+        let heightForView = view.frame.height / 14
+        guard let text = nameLabel.text else { return }
+        let textSize = (text as NSString).size(withAttributes: [.font: nameLabel.font])
+
+        NSLayoutConstraint.activate([
+            nameLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 12),
+            nameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            nameLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            nameLabel.heightAnchor.constraint(equalToConstant: heightForView)
+        ])
+        
+        NSLayoutConstraint.activate([
+            stateView.heightAnchor.constraint(equalToConstant: textSize.height + 16),
+            stateView.centerXAnchor.constraint(equalTo: nameLabel.centerXAnchor),
+            stateView.centerYAnchor.constraint(equalTo: nameLabel.centerYAnchor),
+            stateView.widthAnchor.constraint(equalToConstant: textSize.width + 16)
+        ])
+        
+        NSLayoutConstraint.activate([
+            closeVCButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
+            closeVCButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            closeVCButton.heightAnchor.constraint(equalToConstant: heightForView * 0.7),
+            closeVCButton.widthAnchor.constraint(equalTo: closeVCButton.heightAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            dateLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8),
+            dateLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            dateLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            dateLabel.heightAnchor.constraint(equalToConstant: heightForView)
+        ])
+        
+        NSLayoutConstraint.activate([
+            creatorImageView.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 12),
+            creatorImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            creatorImageView.heightAnchor.constraint(equalToConstant: heightForView * 1.5),
+            creatorImageView.widthAnchor.constraint(equalTo: creatorImageView.heightAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            creatorNameLabel.topAnchor.constraint(equalTo: creatorImageView.bottomAnchor, constant: 8),
+            creatorNameLabel.leadingAnchor.constraint(equalTo: creatorImageView.leadingAnchor),
+            creatorNameLabel.trailingAnchor.constraint(equalTo: creatorImageView.trailingAnchor),
+            creatorNameLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
+        ])
+        
+        NSLayoutConstraint.activate([
+            descriptionTextView.topAnchor.constraint(equalTo: creatorImageView.topAnchor),
+            descriptionTextView.leadingAnchor.constraint(equalTo: creatorImageView.trailingAnchor, constant: 8),
+            descriptionTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            descriptionTextView.bottomAnchor.constraint(equalTo: creatorNameLabel.bottomAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            executorTitleLabel.topAnchor.constraint(equalTo: descriptionTextView.bottomAnchor, constant: 16),
+            executorTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            executorTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            executorTitleLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
+        ])
+        
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: executorTitleLabel.bottomAnchor, constant: 8),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            tableView.heightAnchor.constraint(equalToConstant: 64)
+        ])
+        
+        NSLayoutConstraint.activate([
+            readerTitleLabel.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 16),
+            readerTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            readerTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            readerTitleLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
+        ])
+        
+        NSLayoutConstraint.activate([
+            readerTextView.topAnchor.constraint(equalTo: readerTitleLabel.bottomAnchor, constant: 8),
+            readerTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            readerTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            readerTextView.heightAnchor.constraint(equalToConstant: heightForView * 1.6)
+        ])
+        
+        NSLayoutConstraint.activate([
+            readyButton.topAnchor.constraint(equalTo: readerTextView.bottomAnchor, constant: 32),
+            readyButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            readyButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            readyButton.heightAnchor.constraint(equalToConstant: heightForView)
+        ])
+    }
+}
 // MARK: - TeamViewController
 
 extension TeamViewController {
@@ -248,23 +366,23 @@ extension TeamInfoViewController {
         let heightForView = view.frame.height / 14
 
         NSLayoutConstraint.activate([
-            teamImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 128),
-            teamImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 36),
+            teamImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 120),
+            teamImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             teamImageView.heightAnchor.constraint(equalToConstant: heightForView * 1.2),
             teamImageView.widthAnchor.constraint(equalTo: teamImageView.heightAnchor)
         ])
         
         NSLayoutConstraint.activate([
-            nameLabel.topAnchor.constraint(equalTo: teamImageView.topAnchor),
-            nameLabel.leadingAnchor.constraint(equalTo: teamImageView.trailingAnchor, constant: 10),
-            nameLabel.trailingAnchor.constraint(equalTo: editTeamButton.leadingAnchor, constant: -10),
+            nameLabel.bottomAnchor.constraint(equalTo: teamImageView.centerYAnchor),
+            nameLabel.leadingAnchor.constraint(equalTo: teamImageView.trailingAnchor, constant: 20),
+            nameLabel.trailingAnchor.constraint(equalTo: editTeamButton.leadingAnchor, constant: -20),
             nameLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
         ])
         
         NSLayoutConstraint.activate([
             creatorID.topAnchor.constraint(equalTo: nameLabel.bottomAnchor),
-            creatorID.leadingAnchor.constraint(equalTo: teamImageView.trailingAnchor, constant: 10),
-            creatorID.trailingAnchor.constraint(equalTo: editTeamButton.leadingAnchor, constant: -10),
+            creatorID.leadingAnchor.constraint(equalTo: teamImageView.trailingAnchor, constant: 20),
+            creatorID.trailingAnchor.constraint(equalTo: editTeamButton.leadingAnchor, constant: -20),
             creatorID.heightAnchor.constraint(equalToConstant: heightForView / 2)
         ])
         
@@ -276,7 +394,7 @@ extension TeamInfoViewController {
         ])
         
         NSLayoutConstraint.activate([
-            userListButton.topAnchor.constraint(equalTo: teamImageView.bottomAnchor, constant: 10),
+            userListButton.topAnchor.constraint(equalTo: editTeamButton.bottomAnchor, constant: 24),
             userListButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             userListButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             userListButton.heightAnchor.constraint(equalToConstant: heightForView)
@@ -315,7 +433,7 @@ extension AddUserViewController {
         let heightForView = view.frame.height / 14
         
         NSLayoutConstraint.activate([
-            userNameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            userNameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
             userNameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             userNameLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             userNameLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
@@ -324,7 +442,7 @@ extension AddUserViewController {
         NSLayoutConstraint.activate([
             namingTextField.topAnchor.constraint(equalTo: userNameLabel.bottomAnchor, constant: 5),
             namingTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            namingTextField.trailingAnchor.constraint(equalTo: searchButton.leadingAnchor, constant: -10),
+            namingTextField.trailingAnchor.constraint(equalTo: searchButton.leadingAnchor, constant: -12),
             namingTextField.heightAnchor.constraint(equalToConstant: heightForView * 0.8)
         ])
         
@@ -336,17 +454,17 @@ extension AddUserViewController {
         ])
         
         NSLayoutConstraint.activate([
-            statusLabel.topAnchor.constraint(equalTo: namingTextField.bottomAnchor, constant: 10),
+            statusLabel.topAnchor.constraint(equalTo: namingTextField.bottomAnchor, constant: 12),
             statusLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             statusLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             statusLabel.heightAnchor.constraint(equalToConstant: heightForView)
         ])
         
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: 10),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            tableView.topAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: 12),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            tableView.heightAnchor.constraint(equalToConstant: 64)
         ])
     }
 }
@@ -359,8 +477,8 @@ extension TeamTableViewCell {
         
         NSLayoutConstraint.activate([
             teamImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            teamImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
-            teamImageView.topAnchor.constraint(equalTo: topAnchor, constant: 10),
+            teamImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
+            teamImageView.topAnchor.constraint(equalTo: topAnchor, constant: 12),
             teamImageView.widthAnchor.constraint(equalTo: teamImageView.heightAnchor)
         ])
         
@@ -378,44 +496,37 @@ extension TeamTableViewCell {
 extension UsersListTableViewController {
     
     func setupConstraints() {
+        let heightForView = view.frame.height / 14
         
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: view.topAnchor),
+            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 12),
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            titleLabel.heightAnchor.constraint(equalToConstant: view.frame.height / 14)
+            titleLabel.heightAnchor.constraint(equalToConstant: heightForView)
         ])
         
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            closeVCButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
+            closeVCButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            closeVCButton.heightAnchor.constraint(equalToConstant: heightForView * 0.7),
+            closeVCButton.widthAnchor.constraint(equalTo: closeVCButton.heightAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 12),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
 }
 
-
-// MARK: - ChatViewController Constraint
-
-extension ChatViewController {
-    
-    func setupConstraints() {
-        
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-    }
-}
 // MARK: - UsersTableViewCell Constraint
 
 extension UsersTableViewCell {
     
     func setupConstraints() {
-        
+
         NSLayoutConstraint.activate([
             userImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
             userImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
@@ -432,6 +543,21 @@ extension UsersTableViewCell {
     }
 }
 
+// MARK: - ChatViewController Constraint
+
+extension ChatViewController {
+    
+    func setupConstraints() {
+        
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+}
+
 // MARK: - MessageTableViewCell Constraint
 
 extension MessageTableViewCell {
@@ -440,29 +566,29 @@ extension MessageTableViewCell {
         
         NSLayoutConstraint.activate([
             userImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            userImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
-            userImageView.topAnchor.constraint(equalTo: topAnchor, constant: 10),
+            userImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
+            userImageView.topAnchor.constraint(equalTo: topAnchor, constant: 12),
             userImageView.widthAnchor.constraint(equalTo: userImageView.heightAnchor)
         ])
              
         NSLayoutConstraint.activate([
             nameLabel.topAnchor.constraint(equalTo: topAnchor),
-            nameLabel.leadingAnchor.constraint(equalTo: userImageView.trailingAnchor, constant: 10),
-            nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -80),
+            nameLabel.leadingAnchor.constraint(equalTo: userImageView.trailingAnchor, constant: 12),
+            nameLabel.trailingAnchor.constraint(equalTo: timeTextLabel.leadingAnchor, constant: -12),
             nameLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1/2)
         ])
         
         NSLayoutConstraint.activate([
             messageTextLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor),
-            messageTextLabel.leadingAnchor.constraint(equalTo: userImageView.trailingAnchor, constant: 10),
-            messageTextLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -80),
+            messageTextLabel.leadingAnchor.constraint(equalTo: userImageView.trailingAnchor, constant: 12),
+            messageTextLabel.trailingAnchor.constraint(equalTo: timeTextLabel.leadingAnchor, constant: -12),
             messageTextLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1/2)
         ])
          
         NSLayoutConstraint.activate([
             timeTextLabel.topAnchor.constraint(equalTo: topAnchor),
-            timeTextLabel.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor, constant: 10),
-            timeTextLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
+            timeTextLabel.leadingAnchor.constraint(equalTo: trailingAnchor, constant: -64),
+            timeTextLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
             timeTextLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1/2)
         ])
     }
@@ -576,14 +702,14 @@ extension ProfileViewController {
         NSLayoutConstraint.activate([
             nameLabel.bottomAnchor.constraint(equalTo: profileImageView.centerYAnchor),
             nameLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 20),
-            nameLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -100),
+            nameLabel.trailingAnchor.constraint(equalTo: editProfileButton.leadingAnchor, constant: -20),
             nameLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
         ])
         
         NSLayoutConstraint.activate([
             emailLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor),
             emailLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 20),
-            emailLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -100),
+            emailLabel.trailingAnchor.constraint(equalTo: editProfileButton.leadingAnchor, constant: -20),
             emailLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
         ])
         
@@ -595,7 +721,7 @@ extension ProfileViewController {
         ])
   
         NSLayoutConstraint.activate([
-            logoutButton.topAnchor.constraint(equalTo:  profileImageView.bottomAnchor, constant: 24),
+            logoutButton.topAnchor.constraint(equalTo:  editProfileButton.bottomAnchor, constant: 24),
             logoutButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             logoutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             logoutButton.heightAnchor.constraint(equalToConstant: heightForView)

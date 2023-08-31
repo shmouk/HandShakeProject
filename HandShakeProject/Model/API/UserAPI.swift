@@ -16,9 +16,9 @@ class UserAPI {
         print("deinit UserAPI")
     }
     
-    func fetchCurrentUser(completion: @escaping (Result<User, Error>) -> Void) {
-        guard let uid = User.fetchCurrentId() else { return }
-
+    func fetchUser(uid: String? = User.fetchCurrentId(), completion: @escaping (Result<User, Error>) -> Void) {
+        guard let uid = uid else { return }
+        
         let userRef = database.child("users").child(uid)
         
         DispatchQueue.global().async {
@@ -206,7 +206,7 @@ class UserAPI {
         let userRef = database.child("users").child(uid)
         
         downloadDefaultImageString { [weak self] (result) in
-            guard let self = self else { return }
+            guard self != nil else { return }
             
             switch result {
             case .success(let downloadURL):

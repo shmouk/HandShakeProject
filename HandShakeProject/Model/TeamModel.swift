@@ -10,7 +10,7 @@ class Team: NSObject {
     @objc dynamic var userList: [String]?
     @objc dynamic var eventList: [String]?
     
-    init(teamName: String = "", creatorId: String = "", teamId: String = "", image: UIImage? = nil, downloadURL: String = "", userList: [String] = [], eventList: [String] = []) {
+    init(teamName: String = "", creatorId: String = "", teamId: String = "", image: UIImage? = UIImage(), downloadURL: String = "", userList: [String]? = nil, eventList: [String]? = nil) {
         self.teamName = teamName
         self.creatorId = creatorId
         self.teamId = teamId

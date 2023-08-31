@@ -31,6 +31,8 @@
 		AD33F4D52A6836C60028E919 /* UsersTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD33F4D42A6836C60028E919 /* UsersTableViewCell.swift */; };
 		AD33F4DA2A684C880028E919 /* EventCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD33F4D92A684C880028E919 /* EventCreateViewController.swift */; };
 		AD33F4DC2A695D6A0028E919 /* NavigationBar + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD33F4DB2A695D6A0028E919 /* NavigationBar + Extension.swift */; };
+		AD34AC7B2A9F7CC60094EFD3 /* EventHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD34AC7A2A9F7CC50094EFD3 /* EventHeaderView.swift */; };
+		AD34AC7D2AA0B6490094EFD3 /* EventInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD34AC7C2AA0B6490094EFD3 /* EventInfoViewController.swift */; };
 		AD3F55822A92590600896977 /* SkeletonView in Frameworks */ = {isa = PBXBuildFile; productRef = AD3F55812A92590600896977 /* SkeletonView */; };
 		AD47E5B02A62D8CD0060DD3F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AD47E5AF2A62D8CD0060DD3F /* GoogleService-Info.plist */; };
 		AD5C62E22A62DE580069A53F /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = AD5C62E12A62DE580069A53F /* FirebaseAnalytics */; };
@@ -88,6 +90,8 @@
 		AD33F4D42A6836C60028E919 /* UsersTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersTableViewCell.swift; sourceTree = "<group>"; };
 		AD33F4D92A684C880028E919 /* EventCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCreateViewController.swift; sourceTree = "<group>"; };
 		AD33F4DB2A695D6A0028E919 /* NavigationBar + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationBar + Extension.swift"; sourceTree = "<group>"; };
+		AD34AC7A2A9F7CC50094EFD3 /* EventHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventHeaderView.swift; sourceTree = "<group>"; };
+		AD34AC7C2AA0B6490094EFD3 /* EventInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventInfoViewController.swift; sourceTree = "<group>"; };
 		AD47E5AF2A62D8CD0060DD3F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		AD5C62E92A6310E20069A53F /* EventsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsViewController.swift; sourceTree = "<group>"; };
 		AD5C62EB2A6310F00069A53F /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
@@ -221,6 +225,7 @@
 			children = (
 				AD5C62E92A6310E20069A53F /* EventsViewController.swift */,
 				AD33F4D92A684C880028E919 /* EventCreateViewController.swift */,
+				AD34AC7C2AA0B6490094EFD3 /* EventInfoViewController.swift */,
 			);
 			path = Event;
 			sourceTree = "<group>";
@@ -248,6 +253,7 @@
 		AD33F4D82A6849960028E919 /* ViewCell */ = {
 			isa = PBXGroup;
 			children = (
+				AD34AC7A2A9F7CC50094EFD3 /* EventHeaderView.swift */,
 				ADDF7F1F2A6704FA009FE3C2 /* EventTableViewCell.swift */,
 				AD33F4D42A6836C60028E919 /* UsersTableViewCell.swift */,
 				AD840EDE2A86976E00BEAF7C /* TeamTableViewCell.swift */,
@@ -413,12 +419,14 @@
 				AD21997F2A98EC420015A409 /* APIManagers.swift in Sources */,
 				AD13F63F2A61AD28007F5449 /* Bindable.swift in Sources */,
 				AD2199722A9633E10015A409 /* DataManager.swift in Sources */,
+				AD34AC7D2AA0B6490094EFD3 /* EventInfoViewController.swift in Sources */,
 				AD5C62F02A6311060069A53F /* ProfileViewController.swift in Sources */,
 				AD2F8BEE2A6F014300743601 /* UserAPI.swift in Sources */,
 				ADACF2D32A6186DB00550283 /* AuthorizationViewController.swift in Sources */,
 				AD13F6362A61A5D4007F5449 /* UserModel.swift in Sources */,
 				ADBFBB102A71612D00666533 /* ProfileViewModel.swift in Sources */,
 				AD840EDD2A865BC500BEAF7C /* TeamViewModel.swift in Sources */,
+				AD34AC7B2A9F7CC60094EFD3 /* EventHeaderView.swift in Sources */,
 				AD5C62EA2A6310E30069A53F /* EventsViewController.swift in Sources */,
 				AD840ED82A8635BA00BEAF7C /* TeamModel.swift in Sources */,
 				AD1EB9042A7B118500B78AEA /* UsersListTableViewController.swift in Sources */,
