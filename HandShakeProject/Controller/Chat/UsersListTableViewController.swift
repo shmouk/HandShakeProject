@@ -1,30 +1,26 @@
 import Foundation
 import UIKit
 
-
 protocol UsersListTableViewControllerDelegate: AnyObject {
-    func openChatWithChosenUser(_ user: User)
+    func chooseUser(_ user: User)
 }
 
-class UsersListTableViewController: UITableViewController {
-    private let cellId = "cellId"
-    weak var delegate: UsersListTableViewControllerDelegate?
+class UsersListTableViewController: UIViewController {
+    private let cellId = "UsersTableViewCell"
     private let userChatViewModel = UserChatViewModel()
-    private var refreshCntrl = UIRefreshControl()
-    private var users: [User]?
+    private let interfaceBuilder = InterfaceBuilder()
+    private let users: [User]
+    private let isCellBeUsed: Bool
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        setUI()
-        reloadDataIfNeeded()
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        bindViewModel()
-    }
-    
-    init() {
+    weak var delegate: UsersListTableViewControllerDelegate?
+
+    lazy var tableView = interfaceBuilder.createTableView()
+    lazy var titleLabel = interfaceBuilder.createTitleLabel()
+    lazy var closeVCButton = interfaceBuilder.createButton()
+
+    init(users: [User], isCellBeUsed: Bool) {
+        self.isCellBeUsed = isCellBeUsed
+        self.users = users
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -32,63 +28,97 @@ class UsersListTableViewController: UITableViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? UsersTableViewCell else { return UITableViewCell() }
-        let user = users?[indexPath.row]
-        cell.user = user
-        return cell
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setUI()
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return users?.count ?? 0
+    override func viewDidLoad() {
+        super.viewDidLoad()
     }
-    
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 64
-    }
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let user = users?[indexPath.row]
-        dismiss(animated: true) { [weak self] in
-            guard let self = self, let user = user else { return }
-            self.delegate?.openChatWithChosenUser(user)
-        }
-    }
-    
+   
     private func setUI() {
         setSubviews()
         setupTargets()
+        settingTextLabel()
+        settingButton()
+        settingTableView() 
+        setupConstraints()
     }
-    
-    private func bindViewModel() {
-        userChatViewModel.users.bind { [weak self] users in
-            guard let self = self else { return }
-            self.users = users
-            self.tableView.reloadData()
-        }
-    }
-    
-    private func reloadDataIfNeeded() {
-        if users?.isEmpty ?? true {
-            userChatViewModel.loadUsers()
-            bindViewModel()
-        }
+    func settingTableView() {
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(UsersTableViewCell.self, forCellReuseIdentifier: cellId)
     }
     
     private func setSubviews() {
-        tableView.register(UsersTableViewCell.self, forCellReuseIdentifier: cellId)
-        tableView.addSubview(refreshCntrl)
+        
+        view.addSubviews(titleLabel, tableView, closeVCButton)
+        view.backgroundColor = .colorForView()
+    }
+    
+    private func settingTextLabel() {
+        titleLabel.text = "User list"
+        titleLabel.textAlignment = .center
+    }
+    
+    private func settingButton() {
+        closeVCButton.setImage(UIImage(systemName: "xmark.circle"), for: .normal)
     }
     
     private func setupTargets() {
-        refreshCntrl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
+        closeVCButton.addTarget(self, action: #selector(closeVCAction), for: .touchUpInside)
     }
 }
 
 extension UsersListTableViewController {
     @objc
-    private func handleRefresh(_ sender: UIRefreshControl) {
-        refreshCntrl.endRefreshing()
+    private func closeVCAction(_ sender: Any) {
+        dismiss(animated: true)
+    }
+}
+
+extension UsersListTableViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        64
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let totalRows = tableView.numberOfRows(inSection: indexPath.section)
+        var orientation: UIRectCorner = []
+       
+        if indexPath.row == 0 {
+            orientation = [.topLeft, .topRight]
+        }
+        if indexPath.row == totalRows - 1 {
+            orientation = [.bottomLeft, .bottomRight]
+        }
+        if totalRows == 1 {
+            orientation = [.allCorners]
+        }
+        RoundedCellDecorator.roundCorners(orientation: orientation, for: cell, cornerRadius: 10.0)
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? UsersTableViewCell else { return UITableViewCell() }
+        let user = users[indexPath.row]
+        cell.user = user
+        cell.selectionStyle = isCellBeUsed == true ? .default : .none
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return users.count 
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let user = users[indexPath.row]
+        if isCellBeUsed {
+            dismiss(animated: true) { [weak self] in
+                guard let self = self else { return }
+                self.delegate?.chooseUser(user)
+            }
+        }
     }
 }
 

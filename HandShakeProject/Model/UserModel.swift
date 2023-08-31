@@ -2,6 +2,7 @@ import UIKit
 import FirebaseAuth
 
 class User: NSObject {
+    
     @objc dynamic var uid: String
     @objc dynamic var email: String
     @objc dynamic var name: String
@@ -9,7 +10,7 @@ class User: NSObject {
     @objc dynamic var downloadURL: String
 
     
-    init(uid: String = "", email: String = "", name: String = "", image: UIImage? = nil, downloadURL: String = "") {
+    init(uid: String = "", email: String = "", name: String = "", image: UIImage? = UIImage(), downloadURL: String = "") {
         self.uid = uid
         self.email = email
         self.name = name
@@ -20,7 +21,6 @@ class User: NSObject {
     static func fetchCurrentId() -> String? {
         guard let uid = Auth.auth().currentUser?.uid else {
             let error = NSError(domain: "Current user is not authenticated", code: 401, userInfo: nil)
-            print(error)
             return nil
         }
         return uid

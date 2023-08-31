@@ -13,6 +13,10 @@ protocol AuthorizationViewControllerDelegate: AnyObject {
 }
 
 class AuthorizationViewController: UIViewController {
+    private let interfaceBuilder = InterfaceBuilder()
+    private let authViewModel = AuthViewModel()
+    
+    weak var delegate: AuthorizationViewControllerDelegate?
     
     lazy var loginTextField = interfaceBuilder.createTextField()
     lazy var passwordTextField = interfaceBuilder.createTextField()
@@ -20,47 +24,41 @@ class AuthorizationViewController: UIViewController {
     lazy var statusAuthLabel = interfaceBuilder.createTitleLabel()
     lazy var loginButton = interfaceBuilder.createButton()
     lazy var authSegmentControl = interfaceBuilder.createSegmentControl(items: authState)
-    
-    weak var delegate: AuthorizationViewControllerDelegate?
 
-    let interfaceBuilder = InterfaceBuilder()
-    private lazy var authViewModel = AuthViewModel()
-    
     private let authState = ["Sign up", "Log in"]
-    
     private var isSignup = true
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
         bindViewModel()
-        authStateListener()
-    }
-    
-    private func authStateListener() {
-        Auth.auth().addStateDidChangeListener { [weak self](auth, user) in
-            guard let self = self else { return }
-            if user == nil {
-                self.navigationController?.popToRootViewController(animated: false)
-            }
-            else {
-                delegate?.didLogin()
-            }
-        }
     }
 
     private func bindViewModel() {
         authViewModel.statusText.bind({ [weak self](statusText) in
             guard let self = self else { return }
             self.statusAuthLabel.text = statusText
+            self.statusAuthLabel.textColor = .systemRed
         })
         authViewModel.isSigningUp.bind({ [weak self](signup) in
             guard let self = self else { return }
             self.isSignup = signup
-            self.settingButton(title: signup ? authState.first ?? "" : authState.last ?? "")
+            self.settingButton(title: signup ? authState[0] : authState[1])
             self.repeatPasswordTextField.isHidden = !signup
         })
+        
+        authViewModel.authStateListener { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success():
+                delegate?.didLogin()
+                AlertManager.showAlert(title: "Success", message: "Account successfully login", viewController: self)
+
+            case .failure(let error):
+                self.navigationController?.popToRootViewController(animated: false)
+//                AlertManager.showAlert(title: "Failure", message: "Account logout \(error)", viewController: self)
+            }
+        }
     }
     
     private func setUI() {
@@ -117,9 +115,7 @@ private extension AuthorizationViewController {
                 let password = passwordTextField.text,
                 let rPassword = repeatPasswordTextField.text else { return }
         
-        authViewModel.userLoginAction(email: email, password: password, repeatPassword: rPassword, completion: { [weak self] (success) in
-            guard success else { return }
-        })
+        authViewModel.userLoginAction(email: email, password: password, repeatPassword: rPassword)
     }
 
     @objc

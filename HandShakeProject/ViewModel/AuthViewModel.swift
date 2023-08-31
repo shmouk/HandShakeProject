@@ -1,17 +1,18 @@
 import Firebase
 
 class AuthViewModel {
-    
-    var statusText = Bindable("")
+    private let userDefaults = UserDefaultsManager.shared
+    private let apiManager = APIManager()
+    private let userAPI = UserAPI.shared
+
+    var statusText = Bindable(String())
     var isSigningUp = Bindable(true)
-    lazy var firebaseAuth = Auth.auth()
-    let userAPI = UserAPI.shared
     
     func toggleAuthState() {
         isSigningUp.value = !isSigningUp.value
     }
     
-    func userLoginAction(email: String, password: String, repeatPassword: String, completion: @escaping (Bool) -> Void) {
+    func userLoginAction(email: String, password: String, repeatPassword: String) {
         guard !email.isEmpty, !password.isEmpty else {
             statusText.value = "Error: Empty fields"
             return
@@ -23,49 +24,50 @@ class AuthViewModel {
                 return
             }
             
-            firebaseAuth.createUser(withEmail: email, password: password) { [weak self] (result, error) in
+            Auth.auth().createUser(withEmail: email, password: password) { [weak self] (result, error) in
                 guard let self = self else { return }
-                guard error == nil else {
-                    self.statusText.value = "Error: \(error!.localizedDescription)"
+                guard error == nil, let uid = result?.user.uid else {
+                    self.statusText.value = "Error: \(error?.localizedDescription)"
                     return
                 }
                 
-                self.userAPI.writeToDatabase(uid: result?.user.uid ?? "", email: email)
-                self.statusText.value = "Success: User created"
-                completion(true)
+                self.userAPI.writeToDatabase(uid: uid, email: email)
             }
         } else {
-            firebaseAuth.signIn(withEmail: email, password: password) { [weak self] (result, error) in
+            Auth.auth().signIn(withEmail: email, password: password) { [weak self] (result, error) in
                 guard let self = self else { return }
                 
                 guard error == nil else {
-                    self.statusText.value = "Error: \(error!.localizedDescription)"
+                    self.statusText.value = "Error: \(error?.localizedDescription)"
                     return
                 }
-                
-                self.statusText.value = "Success: User logged in"
-                completion(true)
+            }
+        }
+    }
+    
+    func authStateListener(completion: @escaping VoidCompletion) {
+        Auth.auth().addStateDidChangeListener { [weak self](auth, user) in
+            guard let self = self else { return }
+            if user == nil {
+                completion(.failure(NSError(domain: "User logout,", code: 403, userInfo: nil)))
+            }
+            else {
+                apiManager.loadSingletonData {
+                    completion(.success(()))
+                }
             }
         }
     }
     
     func userLogoutAction() {
-        clearSingletonData()
-        do {
-            try firebaseAuth.signOut()
-        } catch let signOutError as NSError {
-            print("Error signing out: %@", signOutError)
+        apiManager.clearSingletonData { [weak self] in
+            guard let self = self else { return }
+            userDefaults.removeData(forKey: "messagesCount")
+            do {
+                try Auth.auth().signOut()
+            } catch let signOutError as NSError {
+                print("Error signing out: %@", signOutError)
+            }
         }
-    }
-    
-    func clearSingletonData() {
-            userAPI.users.removeAll()
-            ChatAPI.shared.allMessages.removeAll()
-            ChatAPI.shared.lastMessageFromMessages.removeAll()
-        
-        print(userAPI.users)
-        print(ChatAPI.shared.allMessages)
-        print(ChatAPI.shared.lastMessageFromMessages)
-        
     }
 }

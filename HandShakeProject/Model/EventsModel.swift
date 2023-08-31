@@ -7,19 +7,23 @@
 
 import UIKit
 
-struct Events {
-    var teamImage: UIImage
-    var titleLabel: String
-    var descriptionLabel: String
-    var dateLabel: String?
-}
 
-struct Event {
-    var team: String
+class Event {
+    var creatorInfo: User
     var nameEvent: String
-    var descriptionName: String
+    var descriptionText: String
     var deadlineState: Int
-    var date: String?
-    var executor: String
-    var reader: String
+    var date: Int
+    var executorInfo: User
+    var readerList: [String]
+    
+    init(creatorInfo: User = User(), nameEvent: String = "", descriptionText: String = "", deadlineState: Int = 0, date: Int = 0, executorInfo: User = User(), readerList: [String] = []) {
+        self.creatorInfo = creatorInfo
+        self.nameEvent = nameEvent
+        self.descriptionText = descriptionText
+        self.deadlineState = deadlineState
+        self.date = date
+        self.executorInfo = executorInfo
+        self.readerList = readerList
+    }
 }

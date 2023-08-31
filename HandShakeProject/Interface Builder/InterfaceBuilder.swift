@@ -1,11 +1,28 @@
-//
-//  InterfaceBuilder.swift
-//  HandShakeProject
-//
-//  Created by Марк on 14.07.23.
-//
-
 import UIKit
+import SkeletonView
+
+class RoundImageView: UIImageView {
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        layer.cornerRadius = min(bounds.width, bounds.height) / 2
+    }
+}
+
+class RoundedCellDecorator {
+    static func roundCorners(orientation: UIRectCorner = [.allCorners], for cell: UITableViewCell, cornerRadius: CGFloat) {
+        var maskPath = UIBezierPath()
+        
+        maskPath = UIBezierPath(roundedRect: cell.bounds,
+                                byRoundingCorners: orientation,
+                                cornerRadii: CGSize(width: cornerRadius, height: cornerRadius))
+        
+        let maskLayer = CAShapeLayer()
+        maskLayer.path = maskPath.cgPath
+        
+        cell.layer.mask = maskLayer
+    }
+}
+
 
 class InterfaceBuilder {
     
@@ -19,12 +36,33 @@ class InterfaceBuilder {
         navBar.largeTitleTextAttributes = [.foregroundColor: UIColor.black]
         return navBar
     }
+    
     func createView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .colorForView()
         view.layer.cornerRadius = 10
        return view
+    }
+    
+    func createCollectionView() -> UICollectionView {
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumLineSpacing = 8
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .colorForView()
+        collectionView.isScrollEnabled = true
+        collectionView.isPrefetchingEnabled = false
+        collectionView.isSkeletonable = true
+        return collectionView
+    }
+    
+    func createTableView() -> UITableView {
+        let tableView = UITableView()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.backgroundColor = .colorForView()
+        tableView.isSkeletonable = true
+        return tableView
     }
     
     func createSegmentControl(items: [Any]?) -> UISegmentedControl {
@@ -47,14 +85,20 @@ class InterfaceBuilder {
         textField.layer.borderWidth = 1.0
         textField.layer.cornerRadius = 10
         textField.layer.masksToBounds = true
+        
+        let leftPaddingView = UIView(frame: CGRect(x: 8, y: 0, width: 10, height: 40))
+        textField.leftView = leftPaddingView
+        textField.leftViewMode = .always
+
         return textField
     }
     
-    func createImageView() -> UIImageView {
-        let imageView = UIImageView()
+    func createImageView() -> RoundImageView {
+        let imageView = RoundImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
+        imageView.isSkeletonable = true
         return imageView
     }
     
@@ -64,6 +108,9 @@ class InterfaceBuilder {
         label.textColor = .colorForTitleText()
         label.font = UIFont.boldSystemFont(ofSize: 18)
         label.textAlignment = .left
+        label.layer.masksToBounds = true
+        label.layer.cornerRadius = 10
+        label.isSkeletonable = true
         return label
     }
     
@@ -73,6 +120,7 @@ class InterfaceBuilder {
         label.textColor = .colorForDescriptionText()
         label.font = UIFont.boldSystemFont(ofSize: 14)
         label.textAlignment = .left
+        label.isSkeletonable = true
         return label
     }
     
@@ -81,21 +129,47 @@ class InterfaceBuilder {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = .colorForButton()
         button.layer.cornerRadius = 10
-        button.layer.masksToBounds = true
-        button.setTitleColor(.black, for: .normal)
+        button.layer.masksToBounds = false
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOpacity = 0.2
+        button.layer.shadowOffset = CGSize(width: 2, height: 2)
+        button.layer.shadowRadius = 10
+        button.tintColor = .colorForTitleText()
+        button.setTitleColor(.colorForTitleText(), for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
+        button.isSkeletonable = true
         return button
     }
     
     func createTextView() -> UITextView {
         let textView = UITextView()
         textView.translatesAutoresizingMaskIntoConstraints = false
-        textView.backgroundColor = .colorForView()
+        textView.backgroundColor = .white
         textView.textColor = .black
         textView.layer.cornerRadius = 10
-        textView.font = UIFont.systemFont(ofSize: 14)
+        textView.font = UIFont.systemFont(ofSize: 16)
         textView.textAlignment = .left
-        textView.text = "..."
+        textView.textContainerInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+        textView.text = "Input text"
+        textView.isScrollEnabled = false
+        textView.isEditable = false
+//        textView.textContainer.lineBreakMode = .byWordWrapping
         return textView
+    }
+    
+    func createActivityIndicator() -> UIActivityIndicatorView {
+        let activityIndicator = UIActivityIndicatorView(style: .medium)
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        return activityIndicator
+    }
+
+    func createDatePicker() -> UIDatePicker {
+        let datePicker =  UIDatePicker()
+        datePicker.translatesAutoresizingMaskIntoConstraints = false
+        datePicker.datePickerMode = .date
+        datePicker.preferredDatePickerStyle = .wheels
+        datePicker.minimumDate = Date()
+    
+        return datePicker
     }
 }

@@ -9,37 +9,73 @@ import UIKit
 
 class EventCreateViewController: UIViewController {
     
+    private let interfaceBuilder = InterfaceBuilder()
+    private let eventViewModel = EventViewModel()
+    private let deadlineState = ["No time", "Low", "Medium", "High"]
+    
     lazy var namingTextField = interfaceBuilder.createTextField()
     lazy var descriptionTextView = interfaceBuilder.createTextView()
     lazy var readingListTextView = interfaceBuilder.createTextView()
     
-    lazy var teamLabel = interfaceBuilder.createTitleLabel()
-    lazy var namingLabel = interfaceBuilder.createTitleLabel()
-    lazy var deadlineTypeLabel = interfaceBuilder.createTitleLabel()
-    lazy var dateLabel = interfaceBuilder.createTitleLabel()
-    lazy var descriptionLabel = interfaceBuilder.createTitleLabel()
-    lazy var executorLabel = interfaceBuilder.createTitleLabel()
-    lazy var familiarizationLabel = interfaceBuilder.createTitleLabel()
+    lazy var teamTitleLabel = interfaceBuilder.createTitleLabel()
+    lazy var pickedTeamLabel = interfaceBuilder.createTitleLabel()
+    lazy var nameTitleLabel = interfaceBuilder.createTitleLabel()
+    lazy var deadlineTypeTitleLabel = interfaceBuilder.createTitleLabel()
+    lazy var dateTitleLabel = interfaceBuilder.createTitleLabel()
+    lazy var descriptionTitleLabel = interfaceBuilder.createTitleLabel()
+    lazy var executorTitleLabel = interfaceBuilder.createTitleLabel()
+    lazy var pickedExecutorLabel = interfaceBuilder.createTitleLabel()
+    lazy var readerTitleLabel = interfaceBuilder.createTitleLabel()
     
     lazy var chooseTeamButton = interfaceBuilder.createButton()
     lazy var chooseExecutorButton = interfaceBuilder.createButton()
     
-    lazy var addToListButton = interfaceBuilder.createButton()
-    lazy var chooseDateButton = interfaceBuilder.createButton()
     lazy var importanceSegmentControl = interfaceBuilder.createSegmentControl(items: deadlineState)
-    
-    let interfaceBuilder = InterfaceBuilder()
-    
-    private let deadlineState = ["No time", "Low", "Medium", "High"]
+    lazy var datePicker = interfaceBuilder.createDatePicker()
         
+    private var selectedTeam: Team?
+    private var selectedDate: Int?
+    private var selectedStateIndex: Int?
+    private var selectedExecutorUser: User?
+    private var selectedReaderUsers: [String]?
+    private var teamUsers: [User] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
         bindViewModel()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        reloadDataIfNeeded()
+    }
+    
     private func bindViewModel() {
+        eventViewModel.currentTeam.bind { [weak self] team in
+            guard let self = self else { return }
+            selectedTeam = team
+            pickedTeamLabel.text = team.teamName
+            selectedReaderUsers = team.userList
+        }
+        eventViewModel.userNames.bind { [weak self] names in
+            guard let self = self else { return }
+            readingListTextView.text = names.joined(separator: ", ")
+        }
         
+        eventViewModel.fetchUsersFromSelectedTeam.bind {[weak self] users in
+            guard let self = self else { return }
+            teamUsers = users
+        }
+    }
+    
+    private func reloadDataIfNeeded() {
+        if selectedTeam == nil {
+            eventViewModel.fetchTeams { [weak self] error in
+                guard let self = self else { return }
+                AlertManager.showAlert(title: "Failure", message: error, viewController: self)
+            }
+        }
     }
     
     private func setUI() {
@@ -51,9 +87,9 @@ class EventCreateViewController: UIViewController {
     }
     
     private func setSubviews() {
-        view.addSubviews(namingTextField, chooseTeamButton, chooseExecutorButton, descriptionTextView, teamLabel, namingLabel,
-                         deadlineTypeLabel, dateLabel, descriptionLabel, executorLabel, familiarizationLabel,
-                         readingListTextView, addToListButton, chooseDateButton, importanceSegmentControl)
+        view.addSubviews(namingTextField, pickedTeamLabel, datePicker, chooseTeamButton, chooseExecutorButton, descriptionTextView, teamTitleLabel, nameTitleLabel,
+                         deadlineTypeTitleLabel, dateTitleLabel, descriptionTitleLabel, executorTitleLabel, pickedExecutorLabel, readerTitleLabel,
+                         readingListTextView, importanceSegmentControl)
     }
     
     private func setSettings() {
@@ -61,69 +97,123 @@ class EventCreateViewController: UIViewController {
         settingTextField()
         settingButton()
         settingTextLabel()
+        setLabelAppearance()
     }
     
     private func settingTextField() {
         namingTextField.delegate = self
         descriptionTextView.delegate = self
+        descriptionTextView.textContainer.maximumNumberOfLines = 4
+        descriptionTextView.textContainer.lineBreakMode = .byTruncatingTail
         readingListTextView.isEditable = false
+        descriptionTextView.isEditable = true
+        descriptionTextView.returnKeyType = .done
+        namingTextField.returnKeyType = .done
         namingTextField.placeholder = "Input name event"
     }
     
     private func settingTextLabel() {
-        teamLabel.text = "Choose team:"
-        namingLabel.text = "Name event:"
-        deadlineTypeLabel.text = "Choose deadline type:"
-        dateLabel.text = "Choose date:"
-        descriptionLabel.text = "Description:"
-        executorLabel.text = "Choose executor:"
-        familiarizationLabel.text = "Choose reader:"
+        teamTitleLabel.text = "Choose team:"
+        pickedTeamLabel.text = "Unselected"
+        nameTitleLabel.text = "Name event:"
+        deadlineTypeTitleLabel.text = "Choose deadline type:"
+        dateTitleLabel.text = "Choose date:"
+        descriptionTitleLabel.text = "Description:"
+        executorTitleLabel.text = "Choose executor:"
+        pickedExecutorLabel.text = "Unselected"
+        readerTitleLabel.text = "Reader:"
     }
     
     private func settingButton() {
-        addToListButton.setImage(.add, for: .normal)
-        chooseTeamButton.setTitle("Choose team", for: .normal)
-        chooseExecutorButton.setTitle("Choose executor", for: .normal)
-        chooseDateButton.setTitle("Choose date", for: .normal)
+        chooseTeamButton.setImage(UIImage(systemName: "person.3"), for: .normal)
+        chooseExecutorButton.setImage(UIImage(systemName: "person.badge.plus"), for: .normal)
+        [chooseTeamButton, chooseExecutorButton].forEach({ $0.tintColor = .colorForTitleText()})
+    }
+    
+    private func setLabelAppearance() {
+        [pickedTeamLabel, pickedExecutorLabel].forEach({ $0.textAlignment = .center })
+        [pickedTeamLabel, pickedExecutorLabel].forEach({ $0.backgroundColor = .white })
     }
     
     private func settingViews() {
-        view.backgroundColor = .white
+        view.backgroundColor = .colorForView()
     }
     
     private func setupTargets() {
-        importanceSegmentControl.addTarget(self, action: #selector(changeDeadlineState(_:)), for: .valueChanged)
-        addToListButton.addTarget(self, action: #selector(addAction(_:)), for: .touchUpInside)
-        chooseDateButton.addTarget(self, action: #selector(changeDateAction(_:)), for: .touchUpInside)
+        chooseTeamButton.addTarget(self, action: #selector(changeTeamAction(_:)), for: .touchUpInside)
+        importanceSegmentControl.addTarget(self, action: #selector(changeDeadlineStateAction(_:)), for: .valueChanged)
+        datePicker.addTarget(self, action: #selector(datePickerAction(_:)), for: .valueChanged)
+        chooseExecutorButton.addTarget(self, action: #selector(addExecutorAction(_:)), for: .touchUpInside)
     }
     
     private func updateNavItem() {
-        
         let navItem = UINavigationItem(title: "Create event")
-        let rightButton = UIBarButtonItem(title: "Create", style: .plain, target: self, action: #selector(createEvent))
+        let rightButton = UIBarButtonItem(title: "Create", style: .plain, target: self, action: #selector(createEventAction))
         navItem.rightBarButtonItem = rightButton
-        self.navigationItem.setRightBarButton(rightButton, animated: false)
-        self.navigationItem.title = navItem.title
+        navigationItem.setRightBarButton(rightButton, animated: false)
+        navigationItem.title = navItem.title
+        tabBarController?.tabBar.isHidden = true
+    }
+    
+    private func showUserListVC() {
+        let usersListTableViewController = UsersListTableViewController(users: teamUsers, isCellBeUsed: true)
+        usersListTableViewController.delegate = self
+        usersListTableViewController.modalPresentationStyle = .automatic
+        present(usersListTableViewController, animated: true)
+    }
+
+    
+    private func createEvent() {
+        AlertManager.showConfirmationAlert(title: "Create Alert", message: "Are you sure you want to create an event and it doesn't need to be changed?", viewController: self) { [weak self] in
+            guard let self = self else { return }
+            eventViewModel.createEvent(nameText: namingTextField.text, descriptionText: descriptionTextView.text, selectedState: selectedStateIndex, selectedDate: selectedDate, selectedExecutorUser: selectedExecutorUser?.uid) { [weak self] result in
+                guard let self = self else { return }
+                
+                switch result {
+                case .success(let text):
+                    dismiss(animated: true)
+                    AlertManager.showAlert(title: "Success", message: text, viewController: self)
+                    
+                case .failure(let error):
+                    AlertManager.showAlert(title: "Failure", message: error.localizedDescription, viewController: self)
+                }
+            }
+        }
+    }
+}
+
+extension EventCreateViewController: UsersListTableViewControllerDelegate {
+    func chooseUser(_ user: User) {
+        selectedExecutorUser = user
+        pickedExecutorLabel.text = user.name
     }
 }
 
 // MARK: - Action
 
 private extension EventCreateViewController {
-    
     @objc
-    private func createEvent(_ sender: Any) {
-        print("create")
-    }
-    @objc
-    private func addAction(_ sender: Any) {
+    private func changeTeamAction(_ sender: Any) {
+        AlertManager.showAlert(title: "Warning", message: "Your team is selected automatically, selecting your other teams is not available", viewController: self)
     }
     
     @objc
-    private func changeDeadlineState(_ sender: Any) {
+    private func createEventAction(_ sender: Any) {
+        createEvent()
     }
+    
     @objc
-    private func changeDateAction(_ sender: Any) {
+    private func addExecutorAction(_ sender: Any) {
+        showUserListVC()
+    }
+    
+    @objc
+    private func changeDeadlineStateAction(_ sender: Any) {
+        selectedStateIndex = importanceSegmentControl.selectedSegmentIndex
+    }
+    
+    @objc func datePickerAction(_ sender: UIDatePicker) {
+        selectedDate = Int(sender.date.timeIntervalSince1970)
     }
 }
 
@@ -140,16 +230,12 @@ extension EventCreateViewController: UITextViewDelegate {
     }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        guard let currentText = textView.text, let range = Range(range, in: currentText) else { return false }
-        let newText = currentText.replacingCharacters(in: range, with: text)
-        if newText.count > 100 {
-            return false
-        }
         if text == "\n" {
             descriptionTextView.resignFirstResponder()
             return false
         }
-        return true
+        let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
+        return newText.count <= 130
     }
 }
 
