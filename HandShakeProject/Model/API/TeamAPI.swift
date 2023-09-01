@@ -6,7 +6,7 @@ class TeamAPI: ObservableAPI {
     static var shared = TeamAPI()
     
     var teams = [Team]()
-    var observerUIntData: [UInt]?
+    var databaseReferanceData: [DatabaseReference]?
     
     private init() {}
     
@@ -58,7 +58,8 @@ class TeamAPI: ObservableAPI {
         
         let dispatchGroup = DispatchGroup()
         
-        let observer = SetupDatabase.setDatabase().child("user-team").child(uid).observe(.childAdded, with: { [weak self] (snapshot) in
+        let userTeamRef = SetupDatabase.setDatabase().child("user-team").child(uid)
+        userTeamRef.observe(.childAdded, with: { [weak self] (snapshot) in
             guard let self = self else { return }
             
             let teamId = snapshot.key
@@ -137,7 +138,7 @@ class TeamAPI: ObservableAPI {
                 dispatchGroup.leave()
             }
         })
-        observerUIntData = [observer]
+        databaseReferanceData = [userTeamRef]
     }
     
     func fetchSelectedTeam(_ selectedTeam: Team, completion: @escaping (Team) -> Void) {

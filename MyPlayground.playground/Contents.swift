@@ -1,55 +1,45 @@
-import Foundation
-
-final class Do {
-    static func make(withHandle: UInt) {
-        print("do.make")
-    }
-}
-
-protocol ObservableAPI: AnyObject {
-    var observerUIntData: [UInt]? { get set }
-    func removeObserver()
-    func removeData<T>(_ data: inout [T]) -> [T]
-}
-
-extension ObservableAPI {
-    func removeObserver() {
-        observerUIntData?.forEach { handle in
-            Do.make(withHandle: handle)
-        }
-        if let observerData = observerUIntData {
-            var tempObserverData = observerData
-            observerUIntData = removeData(&tempObserverData)
-        }
-    }
+func observeMessages(completion: @escaping VoidCompletion) {
+    guard let uid = User.fetchCurrentId() else { return }
     
-    func removeData<T>(_ data: inout [T]) -> [T] {
-        data.removeAll()
-        return data
-    }
-}
-
-class UserAPI: ObservableAPI {
-    var observerUIntData: [UInt]?
+    let userMessagesRef = SetupDatabase.setDatabase().child("user-messages").child(uid)
+    
+    let dispatchGroup = DispatchGroup()
+    var messages = [Message]()
+    DispatchQueue.global(qos: .userInteractive).async { [self] in
+        let observer = userMessagesRef.observe(.childAdded, with: { [weak self] (snapshot) in
+            guard let self = self else { return }
+            dispatchGroup.enter()
+            let messageId = snapshot.key
+            let messagesReference = SetupDatabase.setDatabase().child("messages").child(messageId)
+            dispatchGroup.enter()
+            messagesReference.observeSingleEvent(of: .value) { [weak self] (snapshot) in
+                guard let self = self else { return }
+                
+                fetchMessageFromUser(snapshot, uid) { (result) in
+                    
+                    switch result {
+                    case .success(let message):
+                        DispatchQueue.main.async {
+                            messages.append(message)
+                            print(1, message.text)
+                        }
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
+                    
+                    dispatchGroup.leave()
+                }
+                dispatchGroup.leave()
+                
+            }
+            
+        })
         
-    static let shared = UserAPI()
-    
-    private init() { }
-    
-    var users: [Int] = [1, 2, 3, 4]
-    
-    func removeData() {
-        let data = [123, 234, 4654]
-        observerUIntData?.append(data)
-        print(4, observerUIntData)
-        removeObserver()
-        removeData(&users)
+        observerUIntData = [observer]
+    }
+    dispatchGroup.notify(queue: .main) {
+        print(233223, messages)
+        self.allMessages = messages
+        completion(.success(()))
     }
 }
-
-
-
-let api = UserAPI.shared
-
-api.removeData()
-print(3, api.observerUIntData)

@@ -2,7 +2,6 @@ import Firebase
 
 class AuthViewModel {
     private let userDefaults = UserDefaultsManager.shared
-    private let apiManager = APIManager()
     private let userAPI = UserAPI.shared
 
     var statusText = Bindable(String())
@@ -52,7 +51,7 @@ class AuthViewModel {
                 completion(.failure(NSError(domain: "User logout,", code: 403, userInfo: nil)))
             }
             else {
-                apiManager.loadSingletonData {
+                APIManager.loadSingletonData {
                     completion(.success(()))
                 }
             }
@@ -60,7 +59,7 @@ class AuthViewModel {
     }
     
     func userLogoutAction() {
-        apiManager.clearSingletonData { [weak self] in
+        APIManager.clearSingletonData { [weak self] in
             guard let self = self else { return }
             userDefaults.removeData(forKey: "messagesCount")
             do {

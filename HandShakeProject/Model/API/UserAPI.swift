@@ -9,7 +9,7 @@ class UserAPI: ObservableAPI {
     private init() { }
 
     var users = [User]()
-    var observerUIntData: [UInt]?
+    var databaseReferanceData: [DatabaseReference]?
     
     func removeData() {
         removeObserver()
@@ -54,7 +54,8 @@ class UserAPI: ObservableAPI {
     }
     
     func observeUsers(completion: @escaping VoidCompletion) {
-        let observer = SetupDatabase.setDatabase().child("users").observe(.childAdded, with: { [weak self] snapshot in
+        let usersRef = SetupDatabase.setDatabase().child("users")
+        usersRef.observe(.childAdded, with: { [weak self] snapshot in
             guard let userDict = snapshot.value as? [String: Any],
                   let imageUrlString = userDict["downloadURL"] as? String,
                   let imageUrl = URL(string: imageUrlString),
@@ -79,7 +80,7 @@ class UserAPI: ObservableAPI {
                 }
             }
         })
-        observerUIntData = [observer]
+        databaseReferanceData = [usersRef]
     }
     
     func fetchUserFromChat(_ index: Int, messages: [Message], completion: @escaping (Result<User, Error>) -> Void) {

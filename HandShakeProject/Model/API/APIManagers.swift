@@ -1,8 +1,7 @@
 import UIKit
 
-class APIManager {
-
-    func clearSingletonData(completion: @escaping () -> Void) {
+final class APIManager {
+    static func clearSingletonData(completion: @escaping () -> Void) {
         DispatchQueue.global().async {
             UserAPI.shared.removeData()
             ChatAPI.shared.removeData()
@@ -12,8 +11,7 @@ class APIManager {
         }
     }
     
-    func loadSingletonData(completion: @escaping () -> Void) {
-         
+    static func loadSingletonData(completion: @escaping () -> Void) {
         UserAPI.shared.observeUsers { result in
             switch result {
             case .success():
@@ -26,7 +24,6 @@ class APIManager {
         
         DispatchQueue.main.async {
             ChatAPI.shared.observeMessages { result in
-                
                 switch result {
                 case .success():
                     break

@@ -3,19 +3,18 @@ import Firebase
 import FirebaseStorage
 
 protocol ObservableAPI: AnyObject {
-    var observerUIntData: [UInt]? { get set }
+    var databaseReferanceData: [DatabaseReference]? { get set }
     func removeObserver()
     func removeData<T>(data: inout [T]) -> [T]
 }
 
 extension ObservableAPI {
     func removeObserver() {
-        guard var observerData = observerUIntData else { return }
+        guard let dataReferances = databaseReferanceData else { return }
         
-        observerData.forEach { handle in
-            SetupDatabase.setDatabase().removeObserver(withHandle: handle)
+        dataReferances.forEach { referance in
+            referance.removeAllObservers()
         }
-        observerUIntData = removeData(data: &observerData)
     }
 
     func removeData<T>(data: inout [T]) -> [T] {

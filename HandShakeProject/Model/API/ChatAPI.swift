@@ -4,17 +4,18 @@ import UIKit
 class ChatAPI: ObservableAPI {
     static let shared = ChatAPI()
     static let messageUpdateNotification = Notification.Name("MessageUpdateNotification")
-
+    
     var lastMessageFromMessages = [Message]()
     var allMessages = [Message]() {
         didSet {
             NotificationCenter.default.post(name: ChatAPI.messageUpdateNotification, object: nil)
         }
     }
-    var observerUIntData: [UInt]?
-
+    
+    var databaseReferanceData: [DatabaseReference]?
+    
     private init() {}
-        
+    
     func removeData() {
         removeObserver()
         lastMessageFromMessages = removeData(data: &lastMessageFromMessages)
@@ -22,23 +23,25 @@ class ChatAPI: ObservableAPI {
     }
     
     private func fetchUser(userId: String, completion: @escaping UserInfoCompletion) {
-        SetupDatabase.setDatabase().child("users").child(userId).observeSingleEvent(of: .value) { snapshot in
-            guard let userDict = snapshot.value as? [String: Any],
-                  let imageUrlString = userDict["downloadURL"] as? String,
-                  let name = userDict["name"] as? String,
-                  let imageUrl = URL(string: imageUrlString) else {
-                return
-            }
-            
-            self.downloadImage(from: imageUrl) { result in
-                switch result {
-                case .success(let image):
-                    DispatchQueue.main.async {
-                        completion(.success((image, name)))
-                    }
-                case .failure(let error):
-                    DispatchQueue.main.async {
-                        completion(.failure(NSError(domain: "Error user, \(error.localizedDescription),", code: 401, userInfo: nil)))
+        DispatchQueue.global(qos: .userInteractive).async {
+            SetupDatabase.setDatabase().child("users").child(userId).observeSingleEvent(of: .value) { snapshot in
+                guard let userDict = snapshot.value as? [String: Any],
+                      let imageUrlString = userDict["downloadURL"] as? String,
+                      let name = userDict["name"] as? String,
+                      let imageUrl = URL(string: imageUrlString) else {
+                    return
+                }
+                
+                self.downloadImage(from: imageUrl) { result in
+                    switch result {
+                    case .success(let image):
+                        DispatchQueue.main.async {
+                            completion(.success((image, name)))
+                        }
+                    case .failure(let error):
+                        DispatchQueue.main.async {
+                            completion(.failure(NSError(domain: "Error user, \(error.localizedDescription),", code: 401, userInfo: nil)))
+                        }
                     }
                 }
             }
@@ -49,37 +52,33 @@ class ChatAPI: ObservableAPI {
         guard let uid = User.fetchCurrentId() else { return }
         
         let userMessagesRef = SetupDatabase.setDatabase().child("user-messages").child(uid)
-        
-        let dispatchGroup = DispatchGroup()
-        
-        let observer = userMessagesRef.observe(.childAdded, with: { [weak self] (snapshot) in
+        DispatchQueue.global(qos: .userInteractive).async { [weak self] in
             guard let self = self else { return }
-            
-            dispatchGroup.enter()
-            
-            let messageId = snapshot.key
-            let messagesReference = SetupDatabase.setDatabase().child("messages").child(messageId)
-            
-            messagesReference.observeSingleEvent(of: .value) { [weak self] (snapshot) in
+            let group = DispatchGroup()
+
+            userMessagesRef.observe(.childAdded) { [weak self] (snapshot) in
+
                 guard let self = self else { return }
-        
-                dispatchGroup.enter()
-                fetchMessageFromUser(snapshot, uid) { [weak self] (result) in
-                    guard let self = self else { return }
-                    
-                    switch result {
-                    case .success(let message):
-                        self.allMessages.append(message)
-                        dispatchGroup.leave()
-                    case .failure(_):
-                        dispatchGroup.leave()
+                let messageId = snapshot.key
+                let messagesReference = SetupDatabase.setDatabase().child("messages").child(messageId)
+                group.enter()
+                
+                messagesReference.observeSingleEvent(of: .value) { (snapshot) in
+                    self.fetchMessageFromUser(snapshot, uid) { (result) in
+                        switch result {
+                        case .success(let message):
+                            DispatchQueue.main.async {
+                                self.allMessages.append(message)
+                                completion(.success(()))
+                            }
+                        case .failure(let error):
+                            completion(.failure(error))
+                        }
+                        group.leave()
                     }
                 }
             }
-        })
-        observerUIntData = [observer]
-        dispatchGroup.notify(queue: .main) {
-            completion(.success(()))
+            self.databaseReferanceData = [userMessagesRef]
         }
     }
     
@@ -111,7 +110,7 @@ class ChatAPI: ObservableAPI {
     
     func filterMessagesPerUser(_ user: User, completion: @escaping (Result<[Message], Error>) -> Void) {
         guard let uid = User.fetchCurrentId() else { return }
-
+        
         let partnerUserId = user.uid
         
         DispatchQueue.global().async { [weak self] in
@@ -132,7 +131,7 @@ class ChatAPI: ObservableAPI {
             }
         }
     }
- 
+    
     func filterLastMessagePerUser(completion: @escaping (Result<[Message], Error>) -> Void) {
         guard let uid = User.fetchCurrentId() else { return }
         
@@ -166,24 +165,26 @@ class ChatAPI: ObservableAPI {
     
     func sendMessage(text: String, toId: String, completion: @escaping VoidCompletion) {
         guard let uid = User.fetchCurrentId() else { return }
-
+        
         let ref = SetupDatabase.setDatabase().child("messages")
         let childRef = ref.childByAutoId()
         let timestamp = Int(Date().timeIntervalSince1970)
         let data = ["fromId": uid, "toId": toId, "timestamp": timestamp, "text": text] as [String : Any]
-        childRef.updateChildValues(data) { (error, _) in
-            if let error = error {
-                completion(.failure(NSError(domain: "Message does not send, \(error)", code: 402, userInfo: nil)))
-            } else {
-                guard let messageId = childRef.key else { return }
-                
-                let userMessageRef = SetupDatabase.setDatabase().child("user-messages").child(uid)
-                userMessageRef.updateChildValues([messageId: 1])
-                
-                let recipientUserMessageRef = SetupDatabase.setDatabase().child("user-messages").child(toId)
-                recipientUserMessageRef.updateChildValues([messageId: 1])
-                
-                completion(.success(()))
+        DispatchQueue.global(qos: .utility).async {
+            childRef.updateChildValues(data) { (error, _) in
+                if let error = error {
+                    completion(.failure(NSError(domain: "Message does not send, \(error)", code: 402, userInfo: nil)))
+                } else {
+                    guard let messageId = childRef.key else { return }
+                    
+                    let userMessageRef = SetupDatabase.setDatabase().child("user-messages").child(uid)
+                    userMessageRef.updateChildValues([messageId: 1])
+                    
+                    let recipientUserMessageRef = SetupDatabase.setDatabase().child("user-messages").child(toId)
+                    recipientUserMessageRef.updateChildValues([messageId: 1])
+                    
+                    completion(.success(()))
+                }
             }
         }
     }

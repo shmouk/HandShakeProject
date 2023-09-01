@@ -5,8 +5,8 @@ class EventAPI: ObservableAPI {
     static var shared = EventAPI()
     var eventsData = [((UIImage, String), [Event])]()
     
-    var observerUIntData: [UInt]?
-
+    var databaseReferanceData: [DatabaseReference]?
+    
     private init() {}
     
     func removeData() {
@@ -121,7 +121,7 @@ class EventAPI: ObservableAPI {
     }
     
     func fetchEvents(for team: Team, eventIds: [String], completion: @escaping (Result<((UIImage, String), [Event]), Error>) -> Void) {
-        DispatchQueue.global().async {
+        DispatchQueue.global(qos: .userInteractive).async {
             var events = [Event]()
             let group = DispatchGroup()
             
