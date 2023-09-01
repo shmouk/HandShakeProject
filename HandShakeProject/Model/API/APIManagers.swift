@@ -1,18 +1,13 @@
 import UIKit
 
-
 class APIManager {
-    //    static let shared = APIManager()
-    //
-    //    private init() {}
-    //
+
     func clearSingletonData(completion: @escaping () -> Void) {
         DispatchQueue.global().async {
-            UserAPI.shared.users.removeAll()
-            ChatAPI.shared.allMessages.removeAll()
-            ChatAPI.shared.lastMessageFromMessages.removeAll()
-            TeamAPI.shared.teams.removeAll()
-            EventAPI.shared.eventsData.removeAll()
+            UserAPI.shared.removeData()
+            ChatAPI.shared.removeData()
+            TeamAPI.shared.removeData()
+            EventAPI.shared.removeData()
             completion()
         }
     }

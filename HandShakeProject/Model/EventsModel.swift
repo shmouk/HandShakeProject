@@ -9,13 +9,13 @@ import UIKit
 
 
 class Event {
-    var creatorInfo: User
-    var nameEvent: String
-    var descriptionText: String
-    var deadlineState: Int
-    var date: Int
-    var executorInfo: User
-    var readerList: [String]
+    @objc dynamic var creatorInfo: User
+    @objc dynamic var nameEvent: String
+    @objc dynamic var descriptionText: String
+    @objc dynamic var deadlineState: Int
+    @objc dynamic var date: Int
+    @objc dynamic var executorInfo: User
+    @objc dynamic var readerList: [String]
     
     init(creatorInfo: User = User(), nameEvent: String = "", descriptionText: String = "", deadlineState: Int = 0, date: Int = 0, executorInfo: User = User(), readerList: [String] = []) {
         self.creatorInfo = creatorInfo

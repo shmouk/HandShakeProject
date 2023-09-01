@@ -1,11 +1,8 @@
 import Firebase
-import FirebaseStorage
 import UIKit
 
-class ChatAPI {
+class ChatAPI: ObservableAPI {
     static let shared = ChatAPI()
-    private let database = SetupDatabase().setDatabase()
-    private let storage = Storage.storage().reference()
     static let messageUpdateNotification = Notification.Name("MessageUpdateNotification")
 
     var lastMessageFromMessages = [Message]()
@@ -14,11 +11,18 @@ class ChatAPI {
             NotificationCenter.default.post(name: ChatAPI.messageUpdateNotification, object: nil)
         }
     }
-        
+    var observerUIntData: [UInt]?
+
     private init() {}
+        
+    func removeData() {
+        removeObserver()
+        lastMessageFromMessages = removeData(data: &lastMessageFromMessages)
+        allMessages = removeData(data: &allMessages)
+    }
     
     private func fetchUser(userId: String, completion: @escaping UserInfoCompletion) {
-        database.child("users").child(userId).observeSingleEvent(of: .value) { snapshot in
+        SetupDatabase.setDatabase().child("users").child(userId).observeSingleEvent(of: .value) { snapshot in
             guard let userDict = snapshot.value as? [String: Any],
                   let imageUrlString = userDict["downloadURL"] as? String,
                   let name = userDict["name"] as? String,
@@ -44,27 +48,23 @@ class ChatAPI {
     func observeMessages(completion: @escaping VoidCompletion) {
         guard let uid = User.fetchCurrentId() else { return }
         
-        let userMessagesRef = database.child("user-messages").child(uid)
+        let userMessagesRef = SetupDatabase.setDatabase().child("user-messages").child(uid)
         
         let dispatchGroup = DispatchGroup()
         
-        userMessagesRef.observe(.childAdded) { [weak self] (snapshot) in
+        let observer = userMessagesRef.observe(.childAdded, with: { [weak self] (snapshot) in
             guard let self = self else { return }
             
             dispatchGroup.enter()
             
             let messageId = snapshot.key
-            let messagesReference = self.database.child("messages").child(messageId)
+            let messagesReference = SetupDatabase.setDatabase().child("messages").child(messageId)
             
             messagesReference.observeSingleEvent(of: .value) { [weak self] (snapshot) in
                 guard let self = self else { return }
-                
-                guard let dict = snapshot.value as? [String: Any] else {
-                    dispatchGroup.leave()
-                    return
-                }
+        
                 dispatchGroup.enter()
-                fetchMessageFromUser(dict, uid) { [weak self] (result) in
+                fetchMessageFromUser(snapshot, uid) { [weak self] (result) in
                     guard let self = self else { return }
                     
                     switch result {
@@ -76,14 +76,16 @@ class ChatAPI {
                     }
                 }
             }
-        }
+        })
+        observerUIntData = [observer]
         dispatchGroup.notify(queue: .main) {
             completion(.success(()))
         }
     }
     
-    private func fetchMessageFromUser(_ dict: [String: Any], _ uid: String, completion: @escaping (Result<Message, Error>) -> Void) {
-        guard let fromId = dict["fromId"] as? String,
+    private func fetchMessageFromUser(_ snapshot: DataSnapshot, _ uid: String, completion: @escaping (Result<Message, Error>) -> Void) {
+        guard let  dict = snapshot.value as? [String: Any],
+              let fromId = dict["fromId"] as? String,
               let toId = dict["toId"] as? String,
               let timestamp = dict["timestamp"] as? Int,
               let text = dict["text"] as? String else {
@@ -165,7 +167,7 @@ class ChatAPI {
     func sendMessage(text: String, toId: String, completion: @escaping VoidCompletion) {
         guard let uid = User.fetchCurrentId() else { return }
 
-        let ref = database.child("messages")
+        let ref = SetupDatabase.setDatabase().child("messages")
         let childRef = ref.childByAutoId()
         let timestamp = Int(Date().timeIntervalSince1970)
         let data = ["fromId": uid, "toId": toId, "timestamp": timestamp, "text": text] as [String : Any]
@@ -175,10 +177,10 @@ class ChatAPI {
             } else {
                 guard let messageId = childRef.key else { return }
                 
-                let userMessageRef = self.database.child("user-messages").child(uid)
+                let userMessageRef = SetupDatabase.setDatabase().child("user-messages").child(uid)
                 userMessageRef.updateChildValues([messageId: 1])
                 
-                let recipientUserMessageRef = self.database.child("user-messages").child(toId)
+                let recipientUserMessageRef = SetupDatabase.setDatabase().child("user-messages").child(toId)
                 recipientUserMessageRef.updateChildValues([messageId: 1])
                 
                 completion(.success(()))

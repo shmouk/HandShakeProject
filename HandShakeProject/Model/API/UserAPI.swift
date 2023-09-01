@@ -2,24 +2,24 @@ import UIKit
 import Firebase
 import FirebaseStorage
 
-class UserAPI {
+class UserAPI: ObservableAPI {
     static let shared = UserAPI()
-    private let database = SetupDatabase().setDatabase()
-    private let storage = Storage.storage().reference()
     private let userDefaults = UserDefaultsManager.shared
 
     private init() { }
 
     var users = [User]()
-
-    deinit {
-        print("deinit UserAPI")
+    var observerUIntData: [UInt]?
+    
+    func removeData() {
+        removeObserver()
+        users = removeData(data: &users)
     }
     
     func fetchUser(uid: String? = User.fetchCurrentId(), completion: @escaping (Result<User, Error>) -> Void) {
         guard let uid = uid else { return }
         
-        let userRef = database.child("users").child(uid)
+        let userRef = SetupDatabase.setDatabase().child("users").child(uid)
         
         DispatchQueue.global().async {
             userRef.observeSingleEvent(of: .value) { [weak self] snapshot in
@@ -54,7 +54,7 @@ class UserAPI {
     }
     
     func observeUsers(completion: @escaping VoidCompletion) {
-        database.child("users").observe(.childAdded) { [weak self] snapshot in
+        let observer = SetupDatabase.setDatabase().child("users").observe(.childAdded, with: { [weak self] snapshot in
             guard let userDict = snapshot.value as? [String: Any],
                   let imageUrlString = userDict["downloadURL"] as? String,
                   let imageUrl = URL(string: imageUrlString),
@@ -78,7 +78,8 @@ class UserAPI {
                     }
                 }
             }
-        }
+        })
+        observerUIntData = [observer]
     }
     
     func fetchUserFromChat(_ index: Int, messages: [Message], completion: @escaping (Result<User, Error>) -> Void) {
@@ -110,7 +111,7 @@ class UserAPI {
             return
         }
         
-        let storageRef = storage.child("usersPhoto").child(uid)
+        let storageRef = Storage.storage().reference().child("usersPhoto").child(uid)
         let metadata = StorageMetadata()
         metadata.contentType = "image/jpeg"
         
@@ -139,7 +140,7 @@ class UserAPI {
     }
     
     private func updateUserDownloadURL(uid: String, downloadURL: URL, completion: @escaping VoidCompletion) {
-        database.child("users").child(uid).observeSingleEvent(of: .value) { snapshot in
+        SetupDatabase.setDatabase().child("users").child(uid).observeSingleEvent(of: .value) { snapshot in
             guard var userData = snapshot.value as? [String:Any] else {
                 completion(.failure(NSError(domain: "Invalid user data,", code: 400, userInfo: nil)))
                 return
@@ -159,7 +160,7 @@ class UserAPI {
     }
     
     private func saveUserData(uid: String, userData: [String:Any], completion: @escaping VoidCompletion) {
-        database.child("users").child(uid).updateChildValues(userData) { error, ref in
+        SetupDatabase.setDatabase().child("users").child(uid).updateChildValues(userData) { error, ref in
             if let error = error {
                 completion(.failure(error))
             } else {
@@ -191,7 +192,7 @@ class UserAPI {
     }
     
     func downloadDefaultImageString(completion: @escaping ResultCompletion) {
-        let defaultImageRef = storage.child("defaultPhoto").child("defaultPicture.jpeg")
+        let defaultImageRef = Storage.storage().reference().child("defaultPhoto").child("defaultPicture.jpeg")
         defaultImageRef.downloadURL { url, error in
             guard let imageURL = url else {
                 completion(.failure(error ?? NSError(domain: "Error retrieving default image URL,", code: 500, userInfo: nil)))
@@ -203,7 +204,7 @@ class UserAPI {
     }
     
     func writeToDatabase(uid: String, email: String) {
-        let userRef = database.child("users").child(uid)
+        let userRef = SetupDatabase.setDatabase().child("users").child(uid)
         
         downloadDefaultImageString { [weak self] (result) in
             guard self != nil else { return }

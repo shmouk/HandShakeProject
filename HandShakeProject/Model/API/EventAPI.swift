@@ -1,18 +1,23 @@
 import Firebase
-import FirebaseStorage
 import UIKit
 
-class EventAPI {
+class EventAPI: ObservableAPI {
     static var shared = EventAPI()
-    private let database = SetupDatabase().setDatabase()
-    private let storage = Storage.storage().reference()
     var eventsData = [((UIImage, String), [Event])]()
     
+    var observerUIntData: [UInt]?
+
     private init() {}
     
+    func removeData() {
+        removeObserver()
+        eventsData = removeData(data: &eventsData)
+    }
+    
     func writeToDatabase(_ teamId: String, _ eventData: [String : Any], completion: @escaping ResultCompletion) {
-        let ref = database.child("events")
+        let ref = SetupDatabase.setDatabase().child("events")
         let childRef = ref.childByAutoId()
+        
         guard let eventId = childRef.key else { return }
         childRef.setValue(eventData) { (error, _) in
             if let error = error {
@@ -35,7 +40,7 @@ class EventAPI {
     }
     
     func updateTeamEvents(_ teamId: String, _ eventID: String, completion: @escaping VoidCompletion) {
-        let ref = database.child("teams").child(teamId).child("eventListId")
+        let ref = SetupDatabase.setDatabase().child("teams").child(teamId).child("eventListId")
         let eventData: [String: Int] = [
             eventID: Int(Date().timeIntervalSince1970)
         ]
@@ -123,8 +128,9 @@ class EventAPI {
             for eventId in eventIds {
                 group.enter()
                 
-                let ref = self.database.child("events").child(eventId)
+                let ref = SetupDatabase.setDatabase().child("events").child(eventId)
                 
+//                self.observerUIntData = ref.observe(.childAdded, with: { [weak self] snapshot in
                 ref.observeSingleEvent(of: .value) { [weak self] snapshot in
                     defer { group.leave() }
                     
@@ -197,6 +203,7 @@ class EventAPI {
                         group.leave()
                     }
                 }
+//                )
             }
             
             group.notify(queue: .main) {

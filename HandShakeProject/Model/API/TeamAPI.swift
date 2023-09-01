@@ -2,17 +2,21 @@ import Firebase
 import FirebaseStorage
 import UIKit
 
-class TeamAPI {
+class TeamAPI: ObservableAPI {
     static var shared = TeamAPI()
-    private let database = SetupDatabase().setDatabase()
-    private let storage = Storage.storage().reference()
     
     var teams = [Team]()
+    var observerUIntData: [UInt]?
     
     private init() {}
     
+    func removeData() {
+        removeObserver()
+        teams = removeData(data: &teams)
+    }
+    
     func writeToDatabase(_ teamName: String, completion: @escaping VoidCompletion) {
-        let ref = database.child("teams")
+        let ref = SetupDatabase.setDatabase().child("teams")
         let childRef = ref.childByAutoId()
         
         downloadDefaultImageString { [weak self] (result) in
@@ -37,7 +41,7 @@ class TeamAPI {
                     }
                 }
                 
-                let userTeamRef = self.database.child("user-team").child(uid)
+                let userTeamRef = SetupDatabase.setDatabase().child("user-team").child(uid)
                 userTeamRef.updateChildValues([teamId: 1])
                 
             case .failure(let error):
@@ -45,7 +49,7 @@ class TeamAPI {
             }
         }
     }
-
+    
     func observeTeams(completion: @escaping VoidCompletion) {
         guard let uid = User.fetchCurrentId() else {
             completion(.failure(NSError(domain: "No teams found", code: 401, userInfo: nil)))
@@ -54,12 +58,12 @@ class TeamAPI {
         
         let dispatchGroup = DispatchGroup()
         
-        database.child("user-team").child(uid).observe(.childAdded) { [weak self] (snapshot) in
+        let observer = SetupDatabase.setDatabase().child("user-team").child(uid).observe(.childAdded, with: { [weak self] (snapshot) in
             guard let self = self else { return }
             
             let teamId = snapshot.key
             
-            let teamReference = self.database.child("teams").child(teamId)
+            let teamReference = SetupDatabase.setDatabase().child("teams").child(teamId)
             
             dispatchGroup.enter()
             teamReference.observeSingleEvent(of: .value) { [weak self] (snapshot) in
@@ -126,13 +130,14 @@ class TeamAPI {
                 dispatchGroup.notify(queue: .main) {
                     let team = Team(teamName: teamName, creatorId: userCreatorID ?? "", teamId: teamId, image: teamImage, downloadURL: downloadURLString, userList: userIDs, eventList: eventListIds)
                     
-                    self.teams.append(team)                    
+                    self.teams.append(team)
                     completion(.success(()))
                     
                 }
                 dispatchGroup.leave()
             }
-        }
+        })
+        observerUIntData = [observer]
     }
     
     func fetchSelectedTeam(_ selectedTeam: Team, completion: @escaping (Team) -> Void) {
@@ -188,12 +193,12 @@ class TeamAPI {
         
         let userId = user.uid
         
-        let teamReference = database.child("teams").child(team.teamId).child("userList")
+        let teamReference = SetupDatabase.setDatabase().child("teams").child(team.teamId).child("userList")
         let teamData: [String: Int] = [
             userId: 0
         ]
         
-        let userTeamRef = database.child("user-team").child(userId)
+        let userTeamRef = SetupDatabase.setDatabase().child("user-team").child(userId)
         userTeamRef.updateChildValues([team.teamId: 0])
         
         teamReference.updateChildValues(teamData) { (error, _) in
@@ -262,7 +267,7 @@ class TeamAPI {
     }
     
     private func downloadDefaultImageString(completion: @escaping ResultCompletion) {
-        let defaultImageRef = storage.child("defaultPhoto").child("teamDefaultPicture.jpeg")
+        let defaultImageRef = Storage.storage().reference().child("defaultPhoto").child("teamDefaultPicture.jpeg")
         defaultImageRef.downloadURL { url, error in
             guard let imageURL = url else {
                 completion(.failure(error ?? NSError(domain: "Error retrieving default image URL", code: 500, userInfo: nil)))

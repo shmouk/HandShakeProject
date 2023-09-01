@@ -56,7 +56,6 @@ class AuthorizationViewController: UIViewController {
 
             case .failure(let error):
                 self.navigationController?.popToRootViewController(animated: false)
-//                AlertManager.showAlert(title: "Failure", message: "Account logout \(error)", viewController: self)
             }
         }
     }
@@ -89,6 +88,8 @@ class AuthorizationViewController: UIViewController {
         loginTextField.placeholder = "Input login (email)"
         passwordTextField.placeholder = "Input password"
         repeatPasswordTextField.placeholder = "Repeat password"
+        
+        statusAuthLabel.numberOfLines = 2
     }
     
     private func settingButton(title: String) {
@@ -96,7 +97,7 @@ class AuthorizationViewController: UIViewController {
     }
     
     private func settingViews() {
-        self.navigationController?.isNavigationBarHidden = true
+        navigationController?.isNavigationBarHidden = true
         view.backgroundColor = .white
     }
     

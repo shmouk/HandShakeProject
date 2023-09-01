@@ -27,7 +27,7 @@ class AuthViewModel {
             Auth.auth().createUser(withEmail: email, password: password) { [weak self] (result, error) in
                 guard let self = self else { return }
                 guard error == nil, let uid = result?.user.uid else {
-                    self.statusText.value = "Error: \(error?.localizedDescription)"
+                    self.statusText.value = "Error: \(String(describing: error?.localizedDescription))"
                     return
                 }
                 
@@ -38,7 +38,7 @@ class AuthViewModel {
                 guard let self = self else { return }
                 
                 guard error == nil else {
-                    self.statusText.value = "Error: \(error?.localizedDescription)"
+                    self.statusText.value = "Error: \(String(describing: error?.localizedDescription))"
                     return
                 }
             }
