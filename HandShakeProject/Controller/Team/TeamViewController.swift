@@ -81,6 +81,7 @@ class TeamViewController: UIViewController {
     private func reloadTable() {
         tableView.reloadData()
     }
+    
     private func fetchTeam(_ indexPath: IndexPath) -> Team? {
         var team: Team?
 
@@ -102,6 +103,9 @@ extension TeamViewController: NavigationBarManagerDelegate {
     }
     
     func didTapAddButton() {
+        if teamViewModel.isTeamExist(teams: firstSectionTeams) {
+            AlertManager.showAlert(title: "Failure", message: "You account can create only one team", viewController: self)
+        }
         openCreateTeamVC()
     }
 }

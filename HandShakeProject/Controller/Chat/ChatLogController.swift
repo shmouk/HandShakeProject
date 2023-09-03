@@ -4,7 +4,7 @@ import UIKit
 
 class ChatLogController: UIViewController {
     private let interfaceBuilder = InterfaceBuilder()
-    private let userChatViewModel = UserChatViewModel()
+    private let chatViewModel = ChatViewModel()
     
     private let cellId = "MessageCollectionViewCell"
     
@@ -81,8 +81,8 @@ class ChatLogController: UIViewController {
     }
     
     private func loadData() {
-        userChatViewModel.setChattingUser(user)
-        userChatViewModel.loadMessagesPerUser()
+        chatViewModel.observeChattingUser(user: user)
+        chatViewModel.loadMessagesPerUser()
     }
     
     private func reloadDataIfNeeded() {
@@ -92,7 +92,7 @@ class ChatLogController: UIViewController {
     }
     
     private func bindViewModel() {
-        userChatViewModel.filterMessages.bind { [weak self] messages in
+        chatViewModel.filterMessages.bind { [weak self] messages in
             guard let self = self else { return }
             self.messages = messages
             self.reloadTable()
@@ -101,7 +101,7 @@ class ChatLogController: UIViewController {
 
     private func sendText() {
         guard let text = textField.text else { return }
-        userChatViewModel.sendMessage(text: text, toId: user.uid )
+        chatViewModel.sendMessage(text: text, toId: user.uid )
     }
     
     private func setupTargets() {

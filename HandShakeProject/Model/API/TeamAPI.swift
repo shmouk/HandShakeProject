@@ -2,10 +2,16 @@ import Firebase
 import FirebaseStorage
 import UIKit
 
-class TeamAPI: ObservableAPI {
+class TeamAPI: APIClient {
     static var shared = TeamAPI()
+    lazy var userAPI = UserAPI.shared
     
-    var teams = [Team]()
+    var teams = [Team]()  {
+        didSet {
+            notificationCenterManager.postCustomNotification(named: .TeamNotification)
+        }
+    }
+    
     var databaseReferanceData: [DatabaseReference]?
     
     private init() {}
@@ -19,7 +25,7 @@ class TeamAPI: ObservableAPI {
         let ref = SetupDatabase.setDatabase().child("teams")
         let childRef = ref.childByAutoId()
         
-        downloadDefaultImageString { [weak self] (result) in
+        downloadDefaultImageString(childFolderName: "defaultPhoto", childImageName: "teamDefaultPicture.jpeg") { [weak self] (result) in
             guard let self = self else { return }
             switch result {
             case .success(let downloadURL):
@@ -45,16 +51,13 @@ class TeamAPI: ObservableAPI {
                 userTeamRef.updateChildValues([teamId: 1])
                 
             case .failure(let error):
-                completion(.failure(NSError(domain: "Team not created \(error.localizedDescription)", code: 401, userInfo: nil)))
+                completion(.failure(NSError(domain: "Team not created \(error.localizedDescription)", code: 500, userInfo: nil)))
             }
         }
     }
     
     func observeTeams(completion: @escaping VoidCompletion) {
-        guard let uid = User.fetchCurrentId() else {
-            completion(.failure(NSError(domain: "No teams found", code: 401, userInfo: nil)))
-            return
-        }
+        guard let uid = User.fetchCurrentId() else { return }
         
         let dispatchGroup = DispatchGroup()
         
@@ -73,9 +76,9 @@ class TeamAPI: ObservableAPI {
                       let teamName = dict["teamName"] as? String,
                       let downloadURLString = dict["downloadURL"] as? String,
                       let imageUrl = URL(string: downloadURLString) else {
-                    dispatchGroup.leave() // Leave the dispatch group to avoid hanging
+                    dispatchGroup.leave()
                     
-                    completion(.failure(NSError(domain: "Error retrieving team data", code: 401, userInfo: nil)))
+                    completion(.failure(NSError(domain: "Error retrieving team data", code: 404, userInfo: nil)))
                     return
                 }
                 
@@ -85,7 +88,7 @@ class TeamAPI: ObservableAPI {
                 var teamImage: UIImage?
                 
                 dispatchGroup.enter()
-                DispatchQueue.main.async { // Dispatch the image download operation to the main queue
+                DispatchQueue.main.async {
                     self.downloadImage(from: imageUrl) { [weak self] result in
                         guard let self = self else { return }
                         
@@ -93,7 +96,7 @@ class TeamAPI: ObservableAPI {
                         case .success(let image):
                             teamImage = image
                         case .failure(let error):
-                            completion(.failure(NSError(domain: "Error fetching team image, \(error.localizedDescription)", code: 500, userInfo: nil)))
+                            completion(.failure(error))
                         }
                         dispatchGroup.leave()
                     }
@@ -102,9 +105,8 @@ class TeamAPI: ObservableAPI {
                 dispatchGroup.enter()
                 teamReference.child("eventListId").observeSingleEvent(of: .value) { [weak self] (snapshot) in
                     guard let self = self, let eventId = snapshot.value as? [String: Int] else {
-                        dispatchGroup.leave() // Leave the dispatch group to avoid hanging
-                        
-                        completion(.failure(NSError(domain: "Error retrieving event list", code: 401, userInfo: nil)))
+                        dispatchGroup.leave()
+                        completion(.failure(NSError(domain: "Error retrieving event list", code: 404, userInfo: nil)))
                         return
                     }
                     eventListIds = Array(eventId.keys)
@@ -114,9 +116,9 @@ class TeamAPI: ObservableAPI {
                 dispatchGroup.enter()
                 teamReference.child("userList").observeSingleEvent(of: .value) { [weak self] (snapshot) in
                     guard let self = self, let userDict = snapshot.value as? [String: Int] else {
-                        dispatchGroup.leave() // Leave the dispatch group to avoid hanging
+                        dispatchGroup.leave()
                         
-                        completion(.failure(NSError(domain: "Error retrieving user list", code: 401, userInfo: nil)))
+                        completion(.failure(NSError(domain: "Error retrieving user list", code: 404, userInfo: nil)))
                         return
                     }
                     for (uid, value) in userDict {
@@ -142,7 +144,8 @@ class TeamAPI: ObservableAPI {
     }
     
     func fetchSelectedTeam(_ selectedTeam: Team, completion: @escaping (Team) -> Void) {
-        DispatchQueue.main.async { [self] in
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
             for team in teams {
                 if team == selectedTeam {
                     completion(team)
@@ -151,31 +154,17 @@ class TeamAPI: ObservableAPI {
         }
     }
     
-    func convertIdToUserName(id: String, completion: @escaping (String) -> Void) {
-        let users = UserAPI.shared.users
-        DispatchQueue.global().async { [weak self] in
-            guard self != nil else { return }
-            let userName = users.first { $0.uid == id }?.name ?? ""
-            
-            DispatchQueue.main.async {
-                completion(userName)
-            }
-        }
-    }
-    
     func searchUserFromDatabase(_ email: String, completion: @escaping (Result<User, Error>) -> Void) {
-        let users = UserAPI.shared.users
-        
         DispatchQueue.global().async { [weak self] in
-            guard self != nil else { return }
+            guard let self = self else { return }
             
-            if let user = users.first(where: { $0.email == email }) {
+            if let user = self.userAPI.users.first(where: { $0.email == email }) {
                 DispatchQueue.main.async {
                     completion(.success(user))
                 }
             } else {
                 DispatchQueue.main.async {
-                    completion(.failure(NSError(domain: "No user found", code: 500, userInfo: nil)))
+                    completion(.failure(NSError(domain: "No user found", code: 404, userInfo: nil)))
                 }
             }
         }
@@ -188,7 +177,7 @@ class TeamAPI: ObservableAPI {
         }
         
         if team.userList?.contains(user.uid) ?? false {
-            completion(.failure(NSError(domain: "Current user is on the user list", code: 400, userInfo: nil)))
+            completion(.failure(NSError(domain: "Current user is on the user list", code: 500, userInfo: nil)))
             return
         }
         
@@ -213,10 +202,9 @@ class TeamAPI: ObservableAPI {
     
     func fetchUserFromTeam(_ team: Team, completion: @escaping ([User]) -> Void) {
         guard let teamList = team.userList else { return }
-        let users = UserAPI.shared.users
         DispatchQueue.global().async { [weak self] in
-            guard self != nil else { return }
-            let resUsers = users.filter { teamList.contains($0.uid) }
+            guard let self = self else { return }
+            let resUsers = self.userAPI.users.filter { teamList.contains($0.uid) }
             
             DispatchQueue.main.async {
                 completion(resUsers)
@@ -241,41 +229,7 @@ class TeamAPI: ObservableAPI {
         if !ownTeams.isEmpty || !partnerTeams.isEmpty {
             completion(.success((ownTeams, partnerTeams)))
         } else {
-            completion(.failure(NSError(domain: "No filter teams found", code: 401, userInfo: nil)))
-        }
-    }
-    
-    private func downloadImage(from url: URL, completion: @escaping (Result<UIImage, Error>) -> Void) {
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            guard let data = data, error == nil else {
-                DispatchQueue.main.async {
-                    completion(.failure(error ?? NSError(domain: "Error downloading image", code: 500, userInfo: nil)))
-                }
-                return
-            }
-            
-            guard let image = UIImage(data: data) else {
-                DispatchQueue.main.async {
-                    completion(.failure(NSError(domain: "Invalid image data", code: 400, userInfo: nil)))
-                }
-                return
-            }
-            
-            DispatchQueue.main.async {
-                completion(.success(image))
-            }
-        }.resume()
-    }
-    
-    private func downloadDefaultImageString(completion: @escaping ResultCompletion) {
-        let defaultImageRef = Storage.storage().reference().child("defaultPhoto").child("teamDefaultPicture.jpeg")
-        defaultImageRef.downloadURL { url, error in
-            guard let imageURL = url else {
-                completion(.failure(error ?? NSError(domain: "Error retrieving default image URL", code: 500, userInfo: nil)))
-                return
-            }
-            
-            completion(.success(imageURL.absoluteString))
+            completion(.failure(NSError(domain: "No filter teams found", code: 404, userInfo: nil)))
         }
     }
 }

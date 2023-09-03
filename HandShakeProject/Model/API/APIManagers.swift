@@ -12,47 +12,31 @@ final class APIManager {
     }
     
     static func loadSingletonData(completion: @escaping () -> Void) {
-        UserAPI.shared.observeUsers { result in
+
+        let observeCompletion: VoidCompletion = { result in
             switch result {
             case .success():
-                break
+                print("success")
+                
             case .failure(let error):
                 print(error.localizedDescription)
-                
             }
         }
         
+        UserAPI.shared.observeUsers (completion: observeCompletion)
+        
         DispatchQueue.main.async {
-            ChatAPI.shared.observeMessages { result in
-                switch result {
-                case .success():
-                    break
-                case .failure(let error):
-                    print(error.localizedDescription)
-                }
-            }
+            ChatAPI.shared.observeMessages(completion: observeCompletion)
         }
         
         DispatchQueue.main.async {
-            TeamAPI.shared.observeTeams { result in
-                switch result {
-                case .success():
-                    DispatchQueue.main.async {
-                        EventAPI.shared.observeEventsFromTeam { result in
-                            switch result {
-                            case .success():
-                                completion()
-                                break
-                            case .failure(let error):
-                                print(error.localizedDescription)
-                            }
-                        }
-                    }
-                case .failure(let error):
-                    print(error.localizedDescription)
-                    
-                }
-            }
+            TeamAPI.shared.observeTeams(completion: observeCompletion)
         }
+        
+        DispatchQueue.main.async {
+            EventAPI.shared.observeEventsFromTeam(completion: observeCompletion)
+        }
+        
+        completion()
     }
 }

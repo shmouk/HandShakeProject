@@ -1,34 +1,24 @@
 import FirebaseAuth
 import Foundation
 
-class UserChatViewModel {
+class ChatViewModel {
     private let chatAPI = ChatAPI.shared
-    private let userAPI = UserAPI.shared
     private let userDefaults = UserDefaultsManager.shared
-    private var withUser: User?
-    
+    private var currentChattingUser: User?
     var lastMessageArray = Bindable([Message()])
     var filterMessages = Bindable([Message()])
-    
     var fetchUser = Bindable(User())
-    var users = Bindable([User()])
-        
+    
     init() {
-        NotificationCenter.default.addObserver(self, selector: #selector(updateMessages), name: ChatAPI.messageUpdateNotification, object: nil)
+        chatAPI.notificationCenterManager.addObserver(self, selector: #selector(updateMessages), forNotification: .MessageNotification)
     }
     
     deinit {
-        NotificationCenter.default.removeObserver(self)
+        chatAPI.notificationCenterManager.removeObserver(self, forNotification: .MessageNotification)
     }
     
-    func setChattingUser(_ user: User) {
-        self.withUser = user
-    }
-    
-    func loadUsers() {
-        DispatchQueue.main.async { [self] in
-            users.value = userAPI.users
-        }
+    func observeChattingUser(user: User) {
+        currentChattingUser = user
     }
     
     func loadLastMessagePerUser() {
@@ -47,36 +37,30 @@ class UserChatViewModel {
     }
     
     func loadMessagesPerUser() {
-        guard let withUser = self.withUser else {
-            return
-        }
+        guard let withUser = self.currentChattingUser else { return }
         chatAPI.filterMessagesPerUser(withUser) { [weak self] result in
             guard let self = self else { return }
             
             switch result {
             case .success(let messages):
                 self.filterMessages.value = messages
-            case .failure(_):
-                break
+            case .failure(let error):
+                print(error.localizedDescription)
             }
         }
     }
     
-    func fetchUserFromMessage(_ index: Int, completion: @escaping VoidCompletion) {
+    func fetchUserFromMessage(_ index: Int, completion: @escaping (User) -> Void) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             let messages = self.lastMessageArray.value
-            self.userAPI.fetchUserFromChat(index, messages: messages) { [weak self] result in
-                guard let self = self else { return }
-                
+            self.chatAPI.fetchUserFromChat(index, messages: messages) { result in
                 switch result {
                 case .success(let user):
-                    self.fetchUser.value = user
-                    completion(.success(()))
+                    completion(user)
                     
                 case .failure(let error):
-                    completion(.failure(error))
-                    break
+                    print(error.localizedDescription)
                 }
             }
         }
@@ -93,11 +77,10 @@ class UserChatViewModel {
     }
 }
 
-extension UserChatViewModel {
+extension ChatViewModel {
     @objc
     private func updateMessages() {
         loadLastMessagePerUser()
         loadMessagesPerUser()
-//        print("new message")
     }
 }

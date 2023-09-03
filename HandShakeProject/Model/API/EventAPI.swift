@@ -1,10 +1,12 @@
 import Firebase
 import UIKit
 
-class EventAPI: ObservableAPI {
+class EventAPI: APIClient {
     static var shared = EventAPI()
-    var eventsData = [((UIImage, String), [Event])]()
+    lazy var userApi = UserAPI.shared
+    lazy var teamAPI = TeamAPI.shared
     
+    var eventsData = [((UIImage, String), [Event])]()
     var databaseReferanceData: [DatabaseReference]?
     
     private init() {}
@@ -58,15 +60,18 @@ class EventAPI: ObservableAPI {
         guard let uid = User.fetchCurrentId() else { return }
         
         let dispatchGroup = DispatchGroup()
-        let teams = TeamAPI.shared.teams
+        let teams = teamAPI.teams
         
         var eventsData = [((UIImage, String), [Event])]()
         
         for team in teams {
             dispatchGroup.enter()
             
-            fetchEventList(team) { eventIds in
-                self.fetchEvents(for: team, eventIds: eventIds) { result in
+            fetchEventList(team) { [weak self] eventIds in
+                guard let self = self else { return }
+                defer { dispatchGroup.leave() }
+                
+                fetchEvents(for: team, eventIds: eventIds) { result in
                     switch result {
                     case .success(let data):
                         DispatchQueue.main.async {
@@ -91,7 +96,7 @@ class EventAPI: ObservableAPI {
                 self.eventsData = eventsData
                 completion(.success(()))
             } else {
-                completion(.failure(NSError(domain: "No events found", code: 401, userInfo: nil)))
+                completion(.failure(NSError(domain: "No events found", code: 404, userInfo: nil)))
             }
         }
     }
@@ -104,8 +109,9 @@ class EventAPI: ObservableAPI {
     }
     
     func fetchUserInfo(uid: String, completion: @escaping UserCompletion) {
-        DispatchQueue.global().async {
-            UserAPI.shared.fetchUser(uid: uid) { result in
+        DispatchQueue.global().async { [weak self] in
+            guard let self = self else { return }
+            self.userApi.fetchUser(uid: uid) { result in
                 switch result {
                 case .success(let user):
                     DispatchQueue.main.async {
@@ -123,16 +129,16 @@ class EventAPI: ObservableAPI {
     func fetchEvents(for team: Team, eventIds: [String], completion: @escaping (Result<((UIImage, String), [Event]), Error>) -> Void) {
         DispatchQueue.global(qos: .userInteractive).async {
             var events = [Event]()
-            let group = DispatchGroup()
+            let dispatchGroup = DispatchGroup()
             
             for eventId in eventIds {
-                group.enter()
+                dispatchGroup.enter()
                 
                 let ref = SetupDatabase.setDatabase().child("events").child(eventId)
                 
-//                self.observerUIntData = ref.observe(.childAdded, with: { [weak self] snapshot in
+                //                self.observerUIntData = ref.observe(.childAdded, with: { [weak self] snapshot in
                 ref.observeSingleEvent(of: .value) { [weak self] snapshot in
-                    defer { group.leave() }
+                    defer { dispatchGroup.leave() }
                     
                     guard let self = self,
                           let eventDict = snapshot.value as? [String: Any],
@@ -147,47 +153,47 @@ class EventAPI: ObservableAPI {
                     var creatorData: User?
                     var readerList: [String] = []
                     
-                    group.enter()
+                    dispatchGroup.enter()
                     self.fetchUserInfo(uid: selectedExecutorUser) { result in
                         
                         switch result {
                         case .success(let user):
                             executorData = user
-                            group.leave()
+                            dispatchGroup.leave()
                             print("1.1 fetchUserInfo")
                         case .failure(let error):
                             completion(.failure(error))
-                            group.leave()
+                            dispatchGroup.leave()
                         }
                     }
                     
-                    group.enter()
+                    dispatchGroup.enter()
                     self.fetchUserInfo(uid: team.creatorId) { result in
                         
                         switch result {
                         case .success(let user):
                             creatorData = user
-                            group.leave()
+                            dispatchGroup.leave()
                             print("1.2 fetchUserInfo")
                         case .failure(let error):
                             completion(.failure(error))
-                            group.leave()
+                            dispatchGroup.leave()
                         }
                     }
                     
-                    group.enter()
+                    dispatchGroup.enter()
                     self.fetchReaderList(for: ref) { resultList in
-                        defer { group.leave() }
+                        defer { dispatchGroup.leave() }
                         print("2. fetchReaderList")
                         readerList = resultList
                     }
                     
                     
-                    group.notify(queue: .global(qos: .userInteractive)) {
-                        group.enter()
+                    dispatchGroup.notify(queue: .global(qos: .userInteractive)) {
+                        dispatchGroup.enter()
                         guard let executorData = executorData, let creatorData = creatorData else {
-                            completion(.failure(NSError(domain: "Failure load executor and creator data", code: 401, userInfo: nil)))
-                            group.leave()
+                            completion(.failure(NSError(domain: "Failure load executor and creator data", code: 505, userInfo: nil)))
+                            dispatchGroup.leave()
                             return
                         }
                         let event = Event(creatorInfo: creatorData,
@@ -200,16 +206,16 @@ class EventAPI: ObservableAPI {
                         
                         events.append(event)
                         print("3. events.append")
-                        group.leave()
+                        dispatchGroup.leave()
                     }
                 }
-//                )
+                //                )
             }
             
-            group.notify(queue: .main) {
+            dispatchGroup.notify(queue: .main) {
                 print("4. events.count", events.count)
                 guard let image = team.image else {
-                    completion(.failure(NSError(domain: "Failure image data", code: 401, userInfo: nil)))
+                    completion(.failure(NSError(domain: "Failure image data", code: 404, userInfo: nil)))
                     return
                 }
                 let dataTuple = ((image, team.teamName), events.sorted(by: { $0.date < $1.date }))
@@ -228,27 +234,6 @@ class EventAPI: ObservableAPI {
             
             let readerList = Array(userDict.keys)
             completion(readerList)
-        }
-    }
-    
-    
-    
-    func convertIdToUserName(_ ids: [String], completion: @escaping ([String]) -> Void) {
-        let users = UserAPI.shared.users
-        DispatchQueue.global().async { [weak self] in
-            guard self != nil else { return }
-            
-            var userNames: [String] = []
-            
-            for id in ids {
-                if let userName = users.first(where: { $0.uid == id })?.name {
-                    userNames.append(userName)
-                }
-            }
-            
-            DispatchQueue.main.async {
-                completion(userNames)
-            }
         }
     }
 }

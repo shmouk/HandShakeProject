@@ -183,7 +183,7 @@ class EventCreateViewController: UIViewController {
 }
 
 extension EventCreateViewController: UsersListTableViewControllerDelegate {
-    func chooseUser(_ user: User) {
+    func openChatWithChosenUser(_ user: User) {
         selectedExecutorUser = user
         pickedExecutorLabel.text = user.name
     }

@@ -5,6 +5,7 @@ class EventViewModel {
     private let eventAPI = EventAPI.shared
     private let userDefaults = UserDefaultsManager.shared
     private var withUser: User?
+    lazy var userAPI = UserAPI.shared
     
     var currentTeam = Bindable(Team())
     var otherTeams = Bindable([Team()])
@@ -62,24 +63,33 @@ class EventViewModel {
             }
         }
     }
-    
-    func convertIdToUserName(ids: [String]) {
-        eventAPI.convertIdToUserName(ids) { [weak self] names in
+
+    func convertIdToNames(ids: [String]) {
+        let users = userAPI.users
+        DispatchQueue.global().async { [weak self] in
             guard let self = self else { return }
-            self.userNames.value = names
+            
+            let names = ids.compactMap { id in
+                users.first { $0.uid == id }?.name
+            }
+            
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.userNames.value = names
+            }
         }
     }
     
     func fetchCurrentTeam(_ teams: [Team]) {
         guard let ownTeam = teams.first, let list = ownTeam.userList  else { return }
-        self.currentTeam.value = ownTeam
-        self.convertIdToUserName(ids: list)
-        self.fetchUsersFromUserList(team: ownTeam)
+        currentTeam.value = ownTeam
+        convertIdToNames(ids: list)
+        fetchUsersFromUserList(team: ownTeam)
     }
     
     
     func fetchEventData() {
-        self.eventData.value = eventAPI.eventsData
+        eventData.value = eventAPI.eventsData
     }
     
     func fetchTeams(completion: @escaping (String) -> Void) {

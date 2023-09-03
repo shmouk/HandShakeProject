@@ -5,7 +5,8 @@ import SkeletonView
 class ChatViewController: UIViewController {
     private let navigationBarManager = NavigationBarManager()
     private let cellId = "MessageTableViewCell"
-    private let userChatViewModel = UserChatViewModel()
+    private let chatViewModel = ChatViewModel()
+    private let userViewModel = UserViewModel()
     private let interfaceBuilder = InterfaceBuilder()
     private let refreshCntrl = UIRefreshControl()
 
@@ -52,8 +53,9 @@ class ChatViewController: UIViewController {
     }
     
     private func reloadDataIfNeeded() {
+
         if messages?.isEmpty ?? true {
-            userChatViewModel.loadLastMessagePerUser()
+            chatViewModel.loadLastMessagePerUser()
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
@@ -62,11 +64,11 @@ class ChatViewController: UIViewController {
     }
     
     private func bindViewModel() {
-        userChatViewModel.lastMessageArray.bind { [weak self] messages in
+        chatViewModel.lastMessageArray.bind { [weak self] messages in
             guard let self = self else { return }
             self.messages = messages
         }
-        userChatViewModel.fetchUser.bind { [weak self] user in
+        chatViewModel.fetchUser.bind { [weak self] user in
             guard let self = self else { return }
             self.user = user
         }
@@ -79,8 +81,8 @@ class ChatViewController: UIViewController {
     }
     
     private func openUsersListVC() {
-        userChatViewModel.loadUsers()
-        userChatViewModel.users.bind { [weak self] users in
+        userViewModel.observeUsers()
+        userViewModel.users.bind { [weak self] users in
             guard let self = self else { return }
             let usersListTableViewController = UsersListTableViewController(users: users, isCellBeUsed: true)
             usersListTableViewController.delegate = self
@@ -90,16 +92,9 @@ class ChatViewController: UIViewController {
     }
     
     private func openSelectedChat(_ index: Int) {
-        userChatViewModel.fetchUserFromMessage(index) { [weak self] result in
-            guard let self = self, let user = self.user else { return }
-            
-            switch result {
-            case .success():
-                self.chooseUser(user)
-                
-            case .failure(_):
-                break
-            }
+        chatViewModel.fetchUserFromMessage(index) { [weak self] user in
+            guard let self = self else { return }
+            self.openChatWithChosenUser(user)
         }
     }
     
@@ -130,7 +125,7 @@ class ChatViewController: UIViewController {
 extension ChatViewController {
     @objc
     private func handleRefresh(_ sender: UIRefreshControl) {
-        userChatViewModel.loadLastMessagePerUser()
+        chatViewModel.loadLastMessagePerUser()
         refreshCntrl.endRefreshing()
     }
 }
@@ -144,7 +139,7 @@ extension ChatViewController: NavigationBarManagerDelegate {
 }
 
 extension ChatViewController: UsersListTableViewControllerDelegate {
-    func chooseUser(_ user: User) {
+    func openChatWithChosenUser(_ user: User) {
         let chatLogController = ChatLogController(user: user)
         navigationController?.pushViewController(chatLogController, animated: true)
     }
@@ -182,7 +177,7 @@ extension ChatViewController: SkeletonTableViewDataSource {
     }
     
     func collectionSkeletonView(_ skeletonView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        userChatViewModel.loadMessagesIntoUserDefaults()
+        chatViewModel.loadMessagesIntoUserDefaults()
     }
     
     func collectionSkeletonView(_ skeletonView: UITableView, cellIdentifierForRowAt indexPath: IndexPath) -> ReusableCellIdentifier {

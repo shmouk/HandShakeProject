@@ -2,12 +2,12 @@ import Foundation
 import UIKit
 
 protocol UsersListTableViewControllerDelegate: AnyObject {
-    func chooseUser(_ user: User)
+    func openChatWithChosenUser(_ user: User)
 }
 
 class UsersListTableViewController: UIViewController {
     private let cellId = "UsersTableViewCell"
-    private let userChatViewModel = UserChatViewModel()
+    private let userViewModel = UserViewModel()
     private let interfaceBuilder = InterfaceBuilder()
     private let users: [User]
     private let isCellBeUsed: Bool
@@ -116,7 +116,7 @@ extension UsersListTableViewController: UITableViewDelegate, UITableViewDataSour
         if isCellBeUsed {
             dismiss(animated: true) { [weak self] in
                 guard let self = self else { return }
-                self.delegate?.chooseUser(user)
+                self.delegate?.openChatWithChosenUser(user)
             }
         }
     }

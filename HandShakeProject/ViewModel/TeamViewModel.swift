@@ -2,7 +2,8 @@ import Foundation
 
 class TeamViewModel {
     let teamAPI = TeamAPI.shared
-    
+    lazy var userAPI = UserAPI.shared
+
     var fetchUser = Bindable(User())
     var ownTeams = Bindable([Team()])
     var otherTeams = Bindable([Team()])
@@ -12,12 +13,25 @@ class TeamViewModel {
     var satusText = Bindable(String())
     
     init() {
+        teamAPI.notificationCenterManager.addObserver(self, selector: #selector(updateTeams), forNotification: .TeamNotification)
+    }
+    
+    deinit {
+        teamAPI.notificationCenterManager.removeObserver(self, forNotification: .TeamNotification)
     }
     
     func createTeam(_ text: String) {
         teamAPI.writeToDatabase(text) { _ in
             
         }
+    }
+    
+    func isTeamExist(teams: [Team]?) -> Bool {
+        let uid = User.fetchCurrentId()
+        guard let team = teams?.first(where: { $0.creatorId == uid }) else {
+            return false
+        }
+        return true
     }
     
     func filterTeam() {
@@ -48,8 +62,8 @@ class TeamViewModel {
         }
     }
     
-    func convertIdToUserName(id: String) {
-        teamAPI.convertIdToUserName(id: id) { [weak self] name in
+    func convertIdToName(id: String) {
+        teamAPI.convertIdToUserName(users: userAPI.users, id: id) { [weak self] name in
             guard let self = self else { return }
             self.creatorName.value = name
         }
@@ -82,5 +96,12 @@ class TeamViewModel {
                 break
             }
         }
+    }
+}
+
+extension TeamViewModel {
+    @objc
+    private func updateTeams() {
+        filterTeam()
     }
 }

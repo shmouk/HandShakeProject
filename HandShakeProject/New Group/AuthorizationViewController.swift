@@ -30,6 +30,7 @@ class AuthorizationViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+//        authViewModel.userLogoutAction()
         setUI()
         bindViewModel()
     }
@@ -55,6 +56,7 @@ class AuthorizationViewController: UIViewController {
                 AlertManager.showAlert(title: "Success", message: "Account successfully login", viewController: self)
 
             case .failure(let error):
+                print(error.localizedDescription)
                 self.navigationController?.popToRootViewController(animated: false)
             }
         }

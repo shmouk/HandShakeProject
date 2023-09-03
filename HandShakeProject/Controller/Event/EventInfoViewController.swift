@@ -72,7 +72,7 @@ class EventInfoViewController: UIViewController {
     }
     
     private func loadData() {
-        eventViewModel.convertIdToUserName(ids: event.readerList)
+        eventViewModel.convertIdToNames(ids: event.readerList)
     }
     
     private func bindViewModel() {

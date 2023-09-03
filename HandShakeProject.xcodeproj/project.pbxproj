@@ -23,10 +23,12 @@
 		AD2199742A96ABA90015A409 /* EventAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2199732A96ABA90015A409 /* EventAPI.swift */; };
 		AD2199762A96AE150015A409 /* EventViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2199752A96AE150015A409 /* EventViewModel.swift */; };
 		AD2199782A97527A0015A409 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2199772A97527A0015A409 /* AlertManager.swift */; };
-		AD21997D2A98E9300015A409 /* ObservableAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD21997C2A98E92F0015A409 /* ObservableAPI.swift */; };
+		AD21997D2A98E9300015A409 /* APIProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD21997C2A98E92F0015A409 /* APIProtocol.swift */; };
 		AD21997F2A98EC420015A409 /* APIManagers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD21997E2A98EC420015A409 /* APIManagers.swift */; };
 		AD2F8BEE2A6F014300743601 /* UserAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2F8BED2A6F014300743601 /* UserAPI.swift */; };
 		AD2F8BF02A6F0C0500743601 /* SetupDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2F8BEF2A6F0C0400743601 /* SetupDatabase.swift */; };
+		AD3050852AA4F71B0019F594 /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3050842AA4F71B0019F594 /* UserViewModel.swift */; };
+		AD3050872AA526190019F594 /* NotificationCenterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3050862AA526190019F594 /* NotificationCenterManager.swift */; };
 		AD33F4D32A682C320028E919 /* EventsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD33F4D22A682C320028E919 /* EventsModel.swift */; };
 		AD33F4D52A6836C60028E919 /* UsersTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD33F4D42A6836C60028E919 /* UsersTableViewCell.swift */; };
 		AD33F4DA2A684C880028E919 /* EventCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD33F4D92A684C880028E919 /* EventCreateViewController.swift */; };
@@ -59,7 +61,7 @@
 		ADBFBB102A71612D00666533 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBFBB0F2A71612D00666533 /* ProfileViewModel.swift */; };
 		ADBFBB142A72894C00666533 /* ChatLogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBFBB132A72894C00666533 /* ChatLogController.swift */; };
 		ADBFBB162A72917500666533 /* ChatAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBFBB152A72917500666533 /* ChatAPI.swift */; };
-		ADBFBB182A754C6F00666533 /* UserChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBFBB172A754C6F00666533 /* UserChatViewModel.swift */; };
+		ADBFBB182A754C6F00666533 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBFBB172A754C6F00666533 /* ChatViewModel.swift */; };
 		ADDA9CA12A6579FD0008C481 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDA9CA02A6579FD0008C481 /* SceneDelegate.swift */; };
 		ADDBC56D2A6589BD004CD8E6 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDBC56C2A6589BD004CD8E6 /* Coordinator.swift */; };
 		ADDF7F202A6704FA009FE3C2 /* EventTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDF7F1F2A6704FA009FE3C2 /* EventTableViewCell.swift */; };
@@ -82,10 +84,12 @@
 		AD2199732A96ABA90015A409 /* EventAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventAPI.swift; sourceTree = "<group>"; };
 		AD2199752A96AE150015A409 /* EventViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewModel.swift; sourceTree = "<group>"; };
 		AD2199772A97527A0015A409 /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
-		AD21997C2A98E92F0015A409 /* ObservableAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableAPI.swift; sourceTree = "<group>"; };
+		AD21997C2A98E92F0015A409 /* APIProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIProtocol.swift; sourceTree = "<group>"; };
 		AD21997E2A98EC420015A409 /* APIManagers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManagers.swift; sourceTree = "<group>"; };
 		AD2F8BED2A6F014300743601 /* UserAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAPI.swift; sourceTree = "<group>"; };
 		AD2F8BEF2A6F0C0400743601 /* SetupDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupDatabase.swift; sourceTree = "<group>"; };
+		AD3050842AA4F71B0019F594 /* UserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewModel.swift; sourceTree = "<group>"; };
+		AD3050862AA526190019F594 /* NotificationCenterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCenterManager.swift; sourceTree = "<group>"; };
 		AD33F4D22A682C320028E919 /* EventsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsModel.swift; sourceTree = "<group>"; };
 		AD33F4D42A6836C60028E919 /* UsersTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersTableViewCell.swift; sourceTree = "<group>"; };
 		AD33F4D92A684C880028E919 /* EventCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCreateViewController.swift; sourceTree = "<group>"; };
@@ -115,7 +119,7 @@
 		ADBFBB0F2A71612D00666533 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		ADBFBB132A72894C00666533 /* ChatLogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogController.swift; sourceTree = "<group>"; };
 		ADBFBB152A72917500666533 /* ChatAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatAPI.swift; sourceTree = "<group>"; };
-		ADBFBB172A754C6F00666533 /* UserChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserChatViewModel.swift; sourceTree = "<group>"; };
+		ADBFBB172A754C6F00666533 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		ADDA9CA02A6579FD0008C481 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		ADDBC56C2A6589BD004CD8E6 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		ADDF7F1F2A6704FA009FE3C2 /* EventTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTableViewCell.swift; sourceTree = "<group>"; };
@@ -167,7 +171,8 @@
 			children = (
 				AD2199792A9752830015A409 /* Managers */,
 				AD13F6372A61A6B0007F5449 /* AuthViewModel.swift */,
-				ADBFBB172A754C6F00666533 /* UserChatViewModel.swift */,
+				ADBFBB172A754C6F00666533 /* ChatViewModel.swift */,
+				AD3050842AA4F71B0019F594 /* UserViewModel.swift */,
 				AD2199752A96AE150015A409 /* EventViewModel.swift */,
 				AD840EDC2A865BC500BEAF7C /* TeamViewModel.swift */,
 				ADBFBB0F2A71612D00666533 /* ProfileViewModel.swift */,
@@ -199,7 +204,7 @@
 		AD1EB9072A7BE8F800B78AEA /* API */ = {
 			isa = PBXGroup;
 			children = (
-				AD21997C2A98E92F0015A409 /* ObservableAPI.swift */,
+				AD21997C2A98E92F0015A409 /* APIProtocol.swift */,
 				AD21997E2A98EC420015A409 /* APIManagers.swift */,
 				AD2F8BED2A6F014300743601 /* UserAPI.swift */,
 				ADBFBB152A72917500666533 /* ChatAPI.swift */,
@@ -246,6 +251,7 @@
 				ADA1BA1F2A8E75160008E353 /* KeyboardNotificationManager.swift */,
 				AD2199712A9633E10015A409 /* DataManager.swift */,
 				AD2199772A97527A0015A409 /* AlertManager.swift */,
+				AD3050862AA526190019F594 /* NotificationCenterManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -399,6 +405,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				ADDBC56D2A6589BD004CD8E6 /* Coordinator.swift in Sources */,
+				AD3050872AA526190019F594 /* NotificationCenterManager.swift in Sources */,
 				ADA1BA202A8E75160008E353 /* KeyboardNotificationManager.swift in Sources */,
 				AD840EDF2A86976E00BEAF7C /* TeamTableViewCell.swift in Sources */,
 				AD1EB9062A7BE89700B78AEA /* MessageModel.swift in Sources */,
@@ -411,7 +418,7 @@
 				ADDF7F202A6704FA009FE3C2 /* EventTableViewCell.swift in Sources */,
 				AD1C61732A8A461000E095C9 /* TeamInfoViewController.swift in Sources */,
 				AD2199782A97527A0015A409 /* AlertManager.swift in Sources */,
-				AD21997D2A98E9300015A409 /* ObservableAPI.swift in Sources */,
+				AD21997D2A98E9300015A409 /* APIProtocol.swift in Sources */,
 				AD13F6422A61B337007F5449 /* SetupConstraint.swift in Sources */,
 				AD5C62EE2A6310FA0069A53F /* TeamViewController.swift in Sources */,
 				ADDA9CA12A6579FD0008C481 /* SceneDelegate.swift in Sources */,
@@ -439,8 +446,9 @@
 				AD2199762A96AE150015A409 /* EventViewModel.swift in Sources */,
 				AD5C62EC2A6310F00069A53F /* ChatViewController.swift in Sources */,
 				AD840ED62A86357A00BEAF7C /* TeamAPI.swift in Sources */,
-				ADBFBB182A754C6F00666533 /* UserChatViewModel.swift in Sources */,
+				ADBFBB182A754C6F00666533 /* ChatViewModel.swift in Sources */,
 				ADBFBB162A72917500666533 /* ChatAPI.swift in Sources */,
+				AD3050852AA4F71B0019F594 /* UserViewModel.swift in Sources */,
 				ADBFBB0B2A7009D900666533 /* PickerProfileImageView.swift in Sources */,
 				AD13F6442A61E4F5007F5449 /* MainTabBarViewController.swift in Sources */,
 				AD1EB90D2A7BFEF700B78AEA /* MessageTableViewCell.swift in Sources */,

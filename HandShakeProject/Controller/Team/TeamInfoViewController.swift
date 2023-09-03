@@ -53,7 +53,7 @@ class TeamInfoViewController: UIViewController {
     }
     
     private func loadData() {
-        teamViewModel.convertIdToUserName(id: team.creatorId)
+        teamViewModel.convertIdToName(id: team.creatorId)
         teamViewModel.fetchUsersFromUserList(team: team)
     }
     

@@ -1,17 +1,16 @@
 import Firebase
 import UIKit
 
-class ChatAPI: ObservableAPI {
+class ChatAPI: APIClient {
     static let shared = ChatAPI()
-    static let messageUpdateNotification = Notification.Name("MessageUpdateNotification")
-    
+    lazy var userAPI = UserAPI.shared
     var lastMessageFromMessages = [Message]()
     var allMessages = [Message]() {
         didSet {
-            NotificationCenter.default.post(name: ChatAPI.messageUpdateNotification, object: nil)
+            notificationCenterManager.postCustomNotification(named: .MessageNotification)
         }
     }
-    
+
     var databaseReferanceData: [DatabaseReference]?
     
     private init() {}
@@ -22,46 +21,20 @@ class ChatAPI: ObservableAPI {
         allMessages = removeData(data: &allMessages)
     }
     
-    private func fetchUser(userId: String, completion: @escaping UserInfoCompletion) {
-        DispatchQueue.global(qos: .userInteractive).async {
-            SetupDatabase.setDatabase().child("users").child(userId).observeSingleEvent(of: .value) { snapshot in
-                guard let userDict = snapshot.value as? [String: Any],
-                      let imageUrlString = userDict["downloadURL"] as? String,
-                      let name = userDict["name"] as? String,
-                      let imageUrl = URL(string: imageUrlString) else {
-                    return
-                }
-                
-                self.downloadImage(from: imageUrl) { result in
-                    switch result {
-                    case .success(let image):
-                        DispatchQueue.main.async {
-                            completion(.success((image, name)))
-                        }
-                    case .failure(let error):
-                        DispatchQueue.main.async {
-                            completion(.failure(NSError(domain: "Error user, \(error.localizedDescription),", code: 401, userInfo: nil)))
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
     func observeMessages(completion: @escaping VoidCompletion) {
         guard let uid = User.fetchCurrentId() else { return }
         
         let userMessagesRef = SetupDatabase.setDatabase().child("user-messages").child(uid)
         DispatchQueue.global(qos: .userInteractive).async { [weak self] in
             guard let self = self else { return }
-            let group = DispatchGroup()
+            let dispatchGroup = DispatchGroup()
 
             userMessagesRef.observe(.childAdded) { [weak self] (snapshot) in
 
                 guard let self = self else { return }
                 let messageId = snapshot.key
                 let messagesReference = SetupDatabase.setDatabase().child("messages").child(messageId)
-                group.enter()
+                dispatchGroup.enter()
                 
                 messagesReference.observeSingleEvent(of: .value) { (snapshot) in
                     self.fetchMessageFromUser(snapshot, uid) { (result) in
@@ -74,11 +47,32 @@ class ChatAPI: ObservableAPI {
                         case .failure(let error):
                             completion(.failure(error))
                         }
-                        group.leave()
+                        dispatchGroup.leave()
                     }
                 }
             }
             self.databaseReferanceData = [userMessagesRef]
+        }
+    }
+    
+    func fetchUserFromChat(_ index: Int, messages: [Message], completion: @escaping UserCompletion) {
+        guard let uid = User.fetchCurrentId() else { return }
+        guard messages.indices.contains(index) else {
+            completion(.failure(NSError(domain: "Invalid index", code: 400, userInfo: nil)))
+            return
+        }
+        let message = messages[index]
+        let chatUserId = uid == message.toId ? message.fromId : message.toId
+        DispatchQueue.global().async { [weak self] in
+            guard let self = self else { return }
+            
+            guard let user = self.userAPI.users.first(where: { $0.uid == chatUserId }) else {
+                completion(.failure(NSError(domain: "User not found", code: 404, userInfo: nil)))
+                return
+            }
+            DispatchQueue.main.async {
+                completion(.success(user))
+            }
         }
     }
     
@@ -92,17 +86,17 @@ class ChatAPI: ObservableAPI {
         }
         let withId = fromId == uid ? toId : fromId
         
-        self.fetchUser(userId: withId) { [weak self] (result) in
+        self.userAPI.fetchUser(uid: withId) { [weak self] (result) in
             guard self != nil else { return }
             
             switch result {
-            case .success(let (image, name)):
-                let message = Message(fromId: fromId, toId: toId, name: name, timestamp: timestamp, text: text, image: image)
+            case .success(let user):
+                let message = Message(fromId: fromId, toId: toId, name: user.name, timestamp: timestamp, text: text, image: user.image)
                 DispatchQueue.main.async {
                     completion(.success((message)))
                 }
             case .failure(let error):
-                completion(.failure(NSError(domain: "No message found \(error),", code: 402, userInfo: nil)))
+                completion(.failure(NSError(domain: "No message found \(error),", code: 404, userInfo: nil)))
                 
             }
         }
@@ -126,7 +120,7 @@ class ChatAPI: ObservableAPI {
                 if !sortedMessages.isEmpty {
                     completion(.success(sortedMessages))
                 } else {
-                    completion(.failure(NSError(domain: "No message found,", code: 402, userInfo: nil)))
+                    completion(.failure(NSError(domain: "No message found,", code: 404, userInfo: nil)))
                 }
             }
         }
@@ -157,7 +151,7 @@ class ChatAPI: ObservableAPI {
                 if !sortedMessages.isEmpty {
                     completion(.success(sortedMessages))
                 } else {
-                    completion(.failure(NSError(domain: "No message found,", code: 402, userInfo: nil)))
+                    completion(.failure(NSError(domain: "No message found,", code: 404, userInfo: nil)))
                 }
             }
         }
@@ -173,7 +167,7 @@ class ChatAPI: ObservableAPI {
         DispatchQueue.global(qos: .utility).async {
             childRef.updateChildValues(data) { (error, _) in
                 if let error = error {
-                    completion(.failure(NSError(domain: "Message does not send, \(error)", code: 402, userInfo: nil)))
+                    completion(.failure(NSError(domain: "Message does not send, \(error)", code: 500, userInfo: nil)))
                 } else {
                     guard let messageId = childRef.key else { return }
                     
@@ -187,28 +181,6 @@ class ChatAPI: ObservableAPI {
                 }
             }
         }
-    }
-    
-    private func downloadImage(from url: URL, completion: @escaping (Result<UIImage, Error>) -> Void) {
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            guard let data = data, error == nil else {
-                DispatchQueue.main.async {
-                    completion(.failure(error ?? NSError(domain: "Error downloading image,", code: 500, userInfo: nil)))
-                }
-                return
-            }
-            
-            guard let image = UIImage(data: data) else {
-                DispatchQueue.main.async {
-                    completion(.failure(NSError(domain: "Invalid image data,", code: 400, userInfo: nil)))
-                }
-                return
-            }
-            
-            DispatchQueue.main.async {
-                completion(.success(image))
-            }
-        }.resume()
     }
 }
 
