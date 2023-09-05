@@ -100,7 +100,7 @@ class ChatLogController: UIViewController {
     }
 
     private func sendText() {
-        guard let text = textField.text else { return }
+        guard let text = textField.text, text != "" else { return }
         chatViewModel.sendMessage(text: text, toId: user.uid )
     }
     

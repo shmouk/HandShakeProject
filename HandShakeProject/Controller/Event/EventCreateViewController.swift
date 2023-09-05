@@ -237,5 +237,12 @@ extension EventCreateViewController: UITextViewDelegate {
         let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
         return newText.count <= 130
     }
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let text = namingTextField.text else { return true }
+        
+        let newLength = text.count + string.count - range.length
+        
+        return newLength <= 12
+    }
 }
 

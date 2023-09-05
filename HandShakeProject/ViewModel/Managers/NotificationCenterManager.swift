@@ -22,6 +22,6 @@ extension Notification.Name {
     static let UserNotification = Notification.Name("UserNotification")
     static let MessageNotification = Notification.Name("MessageNotification")
     static let TeamNotification = Notification.Name("TeamNotification")
-    static let EventNotification = Notification.Name("TeamNotification")
+    static let EventNotification = Notification.Name("EventNotification")
 }
 

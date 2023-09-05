@@ -219,31 +219,39 @@ extension EventHeaderView {
 
 extension EventTableViewCell{
     func setupConstraints() {
+    
         NSLayoutConstraint.activate([
             executorImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
             executorImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
             executorImageView.topAnchor.constraint(equalTo: topAnchor, constant: 12),
             executorImageView.widthAnchor.constraint(equalTo: executorImageView.heightAnchor)
         ])
-             
+        
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: topAnchor),
             titleLabel.leadingAnchor.constraint(equalTo: executorImageView.trailingAnchor, constant: 12),
-            titleLabel.trailingAnchor.constraint(equalTo: dateLabel.leadingAnchor, constant: -12),
+            titleLabel.trailingAnchor.constraint(equalTo: dateLabel.leadingAnchor),
             titleLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1/2)
+        ])
+
+        NSLayoutConstraint.activate([
+            stateView.heightAnchor.constraint(equalToConstant: sizeForView.height + 6),
+            stateView.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor, constant: -4),
+            stateView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+            stateView.widthAnchor.constraint(equalToConstant: sizeForView.width + 12)
         ])
         
         NSLayoutConstraint.activate([
             descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
             descriptionLabel.leadingAnchor.constraint(equalTo: executorImageView.trailingAnchor, constant: 12),
-            descriptionLabel.trailingAnchor.constraint(equalTo: dateLabel.leadingAnchor, constant: -12),
+            descriptionLabel.trailingAnchor.constraint(equalTo: dateLabel.leadingAnchor),
             descriptionLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1/2)
         ])
         
         NSLayoutConstraint.activate([
             dateLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            dateLabel.leadingAnchor.constraint(equalTo: centerXAnchor, constant: 64),
-            dateLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+            dateLabel.leadingAnchor.constraint(equalTo: centerXAnchor, constant: 48),
+            dateLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             dateLabel.heightAnchor.constraint(equalToConstant: frame.height / 2)
         ])
     }
@@ -318,7 +326,7 @@ extension EventInfoViewController{
             tableView.topAnchor.constraint(equalTo: executorTitleLabel.bottomAnchor, constant: 8),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            tableView.heightAnchor.constraint(equalToConstant: 64)
+            tableView.heightAnchor.constraint(equalToConstant: 80)
         ])
         
         NSLayoutConstraint.activate([
@@ -464,7 +472,7 @@ extension AddUserViewController {
             tableView.topAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: 12),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            tableView.heightAnchor.constraint(equalToConstant: 64)
+            tableView.heightAnchor.constraint(equalToConstant: 80)
         ])
     }
 }
@@ -485,7 +493,7 @@ extension TeamTableViewCell {
         NSLayoutConstraint.activate([
             teamNameLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             teamNameLabel.leadingAnchor.constraint(equalTo: teamImageView.trailingAnchor, constant: 20),
-            teamNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -frame.width / 2),
+            teamNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
             teamNameLabel.heightAnchor.constraint(equalTo: teamImageView.heightAnchor)
         ])
     }

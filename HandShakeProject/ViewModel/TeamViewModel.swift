@@ -70,16 +70,13 @@ class TeamViewModel {
     }
     
     func fetchUsersFromUserList(team: Team) {
-        teamAPI.fetchUserFromTeam(team) { [weak self] users in
+        DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.fetchUsersFromSelectedTeam.value = users
-        }
-    }
-    
-    func fetchSelectedTeam(_ selectedTeam: Team) {
-        teamAPI.fetchSelectedTeam(selectedTeam) { [weak self] team in
-            guard let self = self else { return }
-            self.selectedTeam.value = team
+            
+            teamAPI.fetchUserFromTeam(team) { [weak self] users in
+                guard let self = self else { return }
+                self.fetchUsersFromSelectedTeam.value = users
+            }
         }
     }
     

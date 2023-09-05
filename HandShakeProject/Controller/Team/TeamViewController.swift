@@ -3,7 +3,7 @@ import UIKit
 class TeamViewController: UIViewController {
     private let navigationBarManager = NavigationBarManager()
     private let teamViewModel = TeamViewModel()
-    private let cellId = "cellId"
+    private let cellId = "TeamTableViewCell"
     private let interfaceBuilder = InterfaceBuilder()
     
     lazy var tableView = interfaceBuilder.createTableView()
@@ -55,6 +55,7 @@ class TeamViewController: UIViewController {
             teamViewModel.filterTeam()
         }
     }
+    
     private func bindViewModel() {
         teamViewModel.ownTeams.bind { [weak self] teams in
             guard let self = self else { return }
@@ -132,12 +133,15 @@ extension TeamViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        64
+        80
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? TeamTableViewCell else { return UITableViewCell() }
-        cell.team = fetchTeam(indexPath)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? TeamTableViewCell,
+              let team = fetchTeam(indexPath) else
+        { return UITableViewCell() }
+        cell.configure(with: team)
+        cell.accessoryType = .disclosureIndicator
         return cell
     }
     

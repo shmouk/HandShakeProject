@@ -11,7 +11,7 @@ class ChatAPI: APIClient {
         }
     }
 
-    var databaseReferanceData: [DatabaseReference]?
+    var databaseReferenceData: [DatabaseReference]?
     
     private init() {}
     
@@ -28,30 +28,100 @@ class ChatAPI: APIClient {
         DispatchQueue.global(qos: .userInteractive).async { [weak self] in
             guard let self = self else { return }
             let dispatchGroup = DispatchGroup()
+            var messages = [Message]()
+            
+            userMessagesRef.observeSingleEvent(of: .value) { (snapshot) in
+                guard let messagesSnapshot = snapshot.children.allObjects as? [DataSnapshot] else {
+                    completion(.success(()))
+                    return
+                }
+                dispatchGroup.enter()
+                DispatchQueue.global(qos: .userInteractive).async { [weak self] in
+                    guard let self = self else  {
+                        dispatchGroup.leave()
+                        return
+                    }
+                    
+                    for messageSnapshot in messagesSnapshot {
+                        let messageId = messageSnapshot.key
+                        dispatchGroup.enter()
+                        DispatchQueue.main.async { [weak self] in
+                            guard let self = self else {
+                                dispatchGroup.leave()
+                                return
+                            }
+                            self.observeMessageInRef(messageId: messageId) { result in
+                                switch result {
+                                case .success(let message):
+                                    messages.append(message)
+                                    dispatchGroup.leave()
+                                    
+                                case .failure(let error):
+                                    completion(.failure(error))
+                                    dispatchGroup.leave()
+                                    
+                                }
+                            }
+                        }
+                    }
+                    dispatchGroup.leave()
+                }
+                dispatchGroup.notify(queue: .main) { [weak self] in
+                    guard let self = self else {
+                        completion(.success(()))
+                        return
+                    }
+                    startObserveNewData(ref: userMessagesRef)
+                    self.allMessages = messages
+                    completion(.success(()))
+                }
+            }
+        }
+    }
+    
+    func observeMessageInRef(messageId: String, completion: @escaping MessageCompletion) {
+        let messagesReference = SetupDatabase.setDatabase().child("messages").child(messageId)
+        
+        messagesReference.observeSingleEvent(of: .value) { [weak self] (snapshot) in
+            guard let self = self else { return }
+            self.fetchMessageFromUser(snapshot) { (result) in
+                switch result {
+                case .success(let message):
+                        completion(.success(message))
+                    
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
 
-            userMessagesRef.observe(.childAdded) { [weak self] (snapshot) in
+    }
+    
+    func startObserveNewData(ref: DatabaseReference) {
+        databaseReferenceData = [ref]
+        
+        DispatchQueue.global(qos: .userInteractive).async { [weak self] in
+            guard let self = self else { return }
+
+            ref.observe(.childAdded) { [weak self] (snapshot) in
 
                 guard let self = self else { return }
                 let messageId = snapshot.key
-                let messagesReference = SetupDatabase.setDatabase().child("messages").child(messageId)
-                dispatchGroup.enter()
-                
-                messagesReference.observeSingleEvent(of: .value) { (snapshot) in
-                    self.fetchMessageFromUser(snapshot, uid) { (result) in
-                        switch result {
-                        case .success(let message):
-                            DispatchQueue.main.async {
-                                self.allMessages.append(message)
-                                completion(.success(()))
-                            }
-                        case .failure(let error):
-                            completion(.failure(error))
+                self.observeMessageInRef(messageId: messageId) { result in
+                    switch result {
+                    case .success(let message):
+                        let alreadyAdded = self.allMessages.contains { $0.messageId == messageId }
+
+                        if !alreadyAdded {
+                            self.allMessages.append(message)
                         }
-                        dispatchGroup.leave()
+                
+                    case .failure(let error):
+                        print(error.localizedDescription)
                     }
                 }
             }
-            self.databaseReferanceData = [userMessagesRef]
+
         }
     }
     
@@ -76,33 +146,35 @@ class ChatAPI: APIClient {
         }
     }
     
-    private func fetchMessageFromUser(_ snapshot: DataSnapshot, _ uid: String, completion: @escaping (Result<Message, Error>) -> Void) {
+    private func fetchMessageFromUser(_ snapshot: DataSnapshot, completion: @escaping MessageCompletion) {
         guard let  dict = snapshot.value as? [String: Any],
               let fromId = dict["fromId"] as? String,
               let toId = dict["toId"] as? String,
               let timestamp = dict["timestamp"] as? Int,
-              let text = dict["text"] as? String else {
+              let text = dict["text"] as? String,
+              let uid = User.fetchCurrentId() else {
             return
         }
         let withId = fromId == uid ? toId : fromId
+        let messageId = snapshot.key
         
-        self.userAPI.fetchUser(uid: withId) { [weak self] (result) in
+        userAPI.fetchUser(uid: withId) { [weak self] (result) in
             guard self != nil else { return }
             
             switch result {
             case .success(let user):
-                let message = Message(fromId: fromId, toId: toId, name: user.name, timestamp: timestamp, text: text, image: user.image)
+                let message = Message(messageId: messageId, fromId: fromId, toId: toId, name: user.name, timestamp: timestamp, text: text, image: user.image)
                 DispatchQueue.main.async {
                     completion(.success((message)))
                 }
             case .failure(let error):
-                completion(.failure(NSError(domain: "No message found \(error),", code: 404, userInfo: nil)))
+                completion(.failure(error))
                 
             }
         }
     }
     
-    func filterMessagesPerUser(_ user: User, completion: @escaping (Result<[Message], Error>) -> Void) {
+    func filterMessagesPerUser(_ user: User, completion: @escaping MessagesCompletion) {
         guard let uid = User.fetchCurrentId() else { return }
         
         let partnerUserId = user.uid

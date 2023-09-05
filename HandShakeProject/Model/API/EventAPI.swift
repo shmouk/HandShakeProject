@@ -2,16 +2,29 @@ import Firebase
 import UIKit
 
 class EventAPI: APIClient {
+    func startObserveNewData(ref: DatabaseReference) {
+        return
+    }
+    
     static var shared = EventAPI()
     lazy var userApi = UserAPI.shared
     lazy var teamAPI = TeamAPI.shared
     
-    var eventsData = [((UIImage, String), [Event])]()
-    var databaseReferanceData: [DatabaseReference]?
+    var eventsData = [((UIImage, String), [Event])]()  {
+        didSet {
+            notificationCenterManager.postCustomNotification(named: .EventNotification)
+        }
+    }
+    var teams: [Team]?
     
-    private init() {}
+    var databaseReferenceData: [DatabaseReference]?
+    
+    private init() {
+        notificationCenterManager.addObserver(self, selector: #selector(teamListDidChange(_:)), forNotification: .TeamNotification)
+    }
     
     func removeData() {
+        notificationCenterManager.removeObserver(self, forNotification: .TeamNotification)
         removeObserver()
         eventsData = removeData(data: &eventsData)
     }
@@ -21,14 +34,14 @@ class EventAPI: APIClient {
         let childRef = ref.childByAutoId()
         
         guard let eventId = childRef.key else { return }
-        childRef.setValue(eventData) { (error, _) in
+        childRef.setValue(eventData) { [weak self] (error, _) in
+            guard let self = self else { return }
+            
             if let error = error {
                 completion(.failure(error))
             } else {
-                self.updateTeamEvents(teamId, eventId) { [weak self] result in
-                    guard let self = self else { return }
+                self.updateTeamEvents(teamId, eventId) { result in
                     switch result {
-                        
                     case .success():
                         let text = "Success added to database"
                         completion(.success(text))
@@ -58,7 +71,6 @@ class EventAPI: APIClient {
     
     func observeEventsFromTeam(completion: @escaping VoidCompletion) {
         guard let uid = User.fetchCurrentId() else { return }
-        
         let dispatchGroup = DispatchGroup()
         let teams = teamAPI.teams
         
@@ -69,7 +81,6 @@ class EventAPI: APIClient {
             
             fetchEventList(team) { [weak self] eventIds in
                 guard let self = self else { return }
-                defer { dispatchGroup.leave() }
                 
                 fetchEvents(for: team, eventIds: eventIds) { result in
                     switch result {
@@ -92,7 +103,6 @@ class EventAPI: APIClient {
         
         dispatchGroup.notify(queue: .main) {
             if !eventsData.isEmpty {
-                
                 self.eventsData = eventsData
                 completion(.success(()))
             } else {
@@ -102,7 +112,7 @@ class EventAPI: APIClient {
     }
     
     func fetchEventList(_ team: Team, completion: @escaping ([String]) -> Void) {
-        DispatchQueue.global().async {
+        DispatchQueue.main.async {
             guard let eventList = team.eventList else { return }
             completion(eventList)
         }
@@ -160,7 +170,7 @@ class EventAPI: APIClient {
                         case .success(let user):
                             executorData = user
                             dispatchGroup.leave()
-                            print("1.1 fetchUserInfo")
+                            print("1 fetchUserInfo")
                         case .failure(let error):
                             completion(.failure(error))
                             dispatchGroup.leave()
@@ -174,7 +184,7 @@ class EventAPI: APIClient {
                         case .success(let user):
                             creatorData = user
                             dispatchGroup.leave()
-                            print("1.2 fetchUserInfo")
+                            print("2 fetchUserInfo")
                         case .failure(let error):
                             completion(.failure(error))
                             dispatchGroup.leave()
@@ -184,7 +194,7 @@ class EventAPI: APIClient {
                     dispatchGroup.enter()
                     self.fetchReaderList(for: ref) { resultList in
                         defer { dispatchGroup.leave() }
-                        print("2. fetchReaderList")
+                        print("3 fetchReaderList")
                         readerList = resultList
                     }
                     
@@ -205,7 +215,7 @@ class EventAPI: APIClient {
                                           readerList: readerList)
                         
                         events.append(event)
-                        print("3. events.append")
+                        print("4 events.append")
                         dispatchGroup.leave()
                     }
                 }
@@ -213,7 +223,7 @@ class EventAPI: APIClient {
             }
             
             dispatchGroup.notify(queue: .main) {
-                print("4. events.count", events.count)
+                print("5 events.count", events.count)
                 guard let image = team.image else {
                     completion(.failure(NSError(domain: "Failure image data", code: 404, userInfo: nil)))
                     return
@@ -237,4 +247,11 @@ class EventAPI: APIClient {
         }
     }
 }
-
+extension EventAPI {
+    @objc func teamListDidChange(_ notification: Notification) {
+        if let teams = notification.object as? [Team] {
+            // Обработка изменения teamList
+            print("Список команд изменился. Всего команд: \(teams.count)")
+        }
+    }
+}

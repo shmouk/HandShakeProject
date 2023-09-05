@@ -24,10 +24,6 @@ class EventInfoViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
     
-    deinit {
-        print("4")
-    }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -149,7 +145,7 @@ extension EventInfoViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        64
+        80
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {

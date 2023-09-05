@@ -9,6 +9,8 @@ import UIKit
 
 typealias UserCompletion = (Result<User, Error>) -> Void
 typealias UserInfoCompletion = (Result<(UIImage, String), Error>) -> Void
+typealias MessagesCompletion = (Result<[Message], Error>) -> Void
+typealias MessageCompletion = (Result<Message, Error>) -> Void
 typealias ResultCompletion = (Result<String, Error>) -> Void
 typealias VoidCompletion = (Result<Void, Error>) -> Void
 
@@ -20,8 +22,20 @@ extension String {
         let rect = self.boundingRect(with: maxSize, options: options, attributes: attributes, context: nil)
         return CGSize(width: ceil(rect.width), height: ceil(rect.height))
     }
+    
+    func calculateLabelSize(for text: String?, font: UIFont = .systemFont(ofSize: 16), maxSize: CGSize) -> CGSize {
+        guard let text = text else { return CGSize() }
+        let options: NSStringDrawingOptions = [.usesLineFragmentOrigin, .usesFontLeading]
+        let attributes: [NSAttributedString.Key: Any] = [.font: font]
+        let maxSize = CGSize(width: maxSize.width, height: CGFloat.greatestFiniteMagnitude)
+        let boundingRect = text.boundingRect(with: maxSize,
+                                             options: options,
+                                             attributes: attributes,
+                                             context: nil)
+        
+        return CGSize(width: ceil(boundingRect.width), height: ceil(boundingRect.height))
+    }
 }
-
 
 extension Int {
     func convertTimestampToDate(timeStyle: DateFormatter.Style = .short) -> String {

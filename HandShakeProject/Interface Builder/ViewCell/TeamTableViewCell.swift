@@ -13,13 +13,6 @@ class TeamTableViewCell: UITableViewCell {
     lazy var teamNameLabel = interfaceBuilder.createTitleLabel()
     lazy var teamImageView = interfaceBuilder.createImageView()
     
-    var team: Team? {
-        didSet {
-            teamImageView.image = team?.image
-            teamNameLabel.text = team?.teamName
-        }
-    }
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setSubviews()
@@ -28,6 +21,11 @@ class TeamTableViewCell: UITableViewCell {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+    }
+    
+    func configure(with team: Team) {
+        teamImageView.image = team.image
+        teamNameLabel.text = team.teamName
     }
     
     private func setSubviews() {

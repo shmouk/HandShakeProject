@@ -12,9 +12,16 @@ class EventViewModel {
     var fetchUsersFromSelectedTeam = Bindable([User()])
     var userNames = Bindable([String()])
     var eventData = Bindable([((UIImage, String), [Event])]())
-
+    
+    init() {
+        eventAPI.notificationCenterManager.addObserver(self, selector: #selector(updateEvent), forNotification: .EventNotification)
+    }
+    
+    deinit {
+        eventAPI.notificationCenterManager.removeObserver(self, forNotification: .EventNotification)
+    }
+    
     func createEvent(nameText: String?, descriptionText: String?, selectedState: Int?, selectedDate: Int?, selectedExecutorUser: String?,  completion: @escaping ResultCompletion) {
-        
         guard let nameText = nameText else {
             completion(.failure(NSError(domain: "Empty name event,", code: 400, userInfo: nil)))
             return
@@ -66,20 +73,30 @@ class EventViewModel {
 
     func convertIdToNames(ids: [String]) {
         let users = userAPI.users
+        
         DispatchQueue.global().async { [weak self] in
             guard let self = self else { return }
             
-            let names = ids.compactMap { id in
-                users.first { $0.uid == id }?.name
+            let dispatchGroup = DispatchGroup()
+            var names: [String] = []
+            
+            for id in ids {
+                dispatchGroup.enter()
+                
+                eventAPI.convertIdToUserName(users: users, id: id) { name in
+                    names.append(name)
+                    defer {
+                        dispatchGroup.leave()
+                    }
+                }
             }
             
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
+            dispatchGroup.notify(queue: .main) {
                 self.userNames.value = names
             }
         }
     }
-    
+ 
     func fetchCurrentTeam(_ teams: [Team]) {
         guard let ownTeam = teams.first, let list = ownTeam.userList  else { return }
         currentTeam.value = ownTeam
@@ -113,5 +130,11 @@ class EventViewModel {
     }
 }
 
+extension EventViewModel {
+    @objc
+    private func updateEvent() {
+        fetchEventData()
+    }
+}
 
 

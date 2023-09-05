@@ -107,6 +107,7 @@ class InterfaceBuilder {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .colorForTitleText()
         label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.numberOfLines = 0
         label.textAlignment = .left
         label.layer.masksToBounds = true
         label.layer.cornerRadius = 10

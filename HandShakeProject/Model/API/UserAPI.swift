@@ -7,13 +7,18 @@ class UserAPI: APIClient {
     
     private init() { }
     
-    var users = [User]()
-    var databaseReferanceData: [DatabaseReference]?
+    var users = [User]() {
+        didSet {
+            notificationCenterManager.postCustomNotification(named: .UserNotification)
+        }
+    }
+    var databaseReferenceData: [DatabaseReference]?
     
     func removeData() {
         removeObserver()
         users = removeData(data: &users)
     }
+    
     func fetchUser(uid: String? = User.fetchCurrentId(), completion: @escaping UserCompletion) {
         DispatchQueue.global(qos: .userInteractive).async { [weak self] in
             guard let self = self,
@@ -32,98 +37,154 @@ class UserAPI: APIClient {
         
         let usersRef = SetupDatabase.setDatabase().child("users")
         let dispatchGroup = DispatchGroup()
+        var userList = [User]()
         
-        usersRef.observe(.childAdded, with: { [weak self] snapshot in
-            guard let self = self,
-                  let userDict = snapshot.value as? [String: Any],
-                  let imageUrlString = userDict["downloadURL"] as? String,
-                  let imageUrl = URL(string: imageUrlString)
-            else {
+        usersRef.observeSingleEvent(of: .value) { (snapshot) in
+            guard let usersSnapshot = snapshot.children.allObjects as? [DataSnapshot] else {
+                completion(.success(()))
                 return
             }
             
-            var userImage: UIImage?
+            for userSnapshot in usersSnapshot {
+                if let userDict = userSnapshot.value as? [String: Any],
+                   let imageUrlString = userDict["downloadURL"] as? String,
+                   let imageUrl = URL(string: imageUrlString) {
+                    
+                    let uid = userSnapshot.key
+                    
+                    dispatchGroup.enter()
+                    DispatchQueue.global(qos: .userInteractive).async { [weak self] in
+                        guard let self = self else {
+                            dispatchGroup.leave()
+                            return
+                        }
+                        
+                        self.downloadImage(from: imageUrl) { result in
+                            switch result {
+                            case .success(let image):
+                                let userImage = image
+                                
+                                let user = User(uid: uid, image: userImage)
+                                user.setValuesForKeys(userDict)
+                                
+                                DispatchQueue.main.async {
+                                    userList.append(user)
+                                    userList.sort(by: { $0.uid == currentUid && $1.uid != currentUid })
+                                    dispatchGroup.leave()
+                                }
+                                
+                            case .failure(let error):
+                                DispatchQueue.main.async {
+                                    completion(.failure(error))
+                                    dispatchGroup.leave()
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            dispatchGroup.notify(queue: .main) { [weak self] in
+                guard let self = self else {
+                    completion(.success(()))
+                    return
+                }
+                startObserveNewData(ref: usersRef)
+                self.users = userList
+                completion(.success(()))
+            }
+        }
+    }
+
+
+    func startObserveNewData(ref: DatabaseReference) {
+        databaseReferenceData = [ref]
+        
+        ref.observe(.childAdded, with: { (snapshot) in
+            guard let userDict = snapshot.value as? [String: Any],
+                  let imageUrlString = userDict["downloadURL"] as? String,
+                  let imageUrl = URL(string: imageUrlString) else {
+                return }
+            
             let uid = snapshot.key
             
-            dispatchGroup.enter()
             DispatchQueue.global(qos: .userInteractive).async { [weak self] in
                 guard let self = self else { return }
                 self.downloadImage(from: imageUrl) { result in
                     switch result {
                     case .success(let image):
-                        userImage = image
                         
-                        let user = User(uid: uid, image: userImage)
+                        let user = User(uid: uid, image: image)
                         user.setValuesForKeys(userDict)
                         
-                        dispatchGroup.enter()
                         DispatchQueue.main.async { [weak self] in
                             guard let self = self else { return }
-                            self.users.append(user)
-                            self.users.sort(by: { $0.uid == currentUid && $1.uid != currentUid })
-                            dispatchGroup.leave()
+                            let alreadyAdded = self.users.contains { $0.uid == snapshot.key }
+
+                            if !alreadyAdded {
+                                self.users.append(user)
+                            }
                         }
                         
                     case .failure(let error):
-                        completion(.failure(error))
+                        print(error.localizedDescription)
                     }
-                    
-                    dispatchGroup.leave()
                 }
             }
         })
-        
-        dispatchGroup.notify(queue: DispatchQueue.main) {
-            completion(.success(()))
-        }
-        databaseReferanceData = [usersRef]
     }
     
-    
-    
-    //    func observeUsers1(completion: @escaping VoidCompletion) {
-    //        let usersRef = SetupDatabase.setDatabase().child("users")
-    //        let dispatchGroup = DispatchGroup()  // Создаем DispatchGroup
-    //
-    //        usersRef.observe(.childAdded, with: { [weak self] snapshot in
-    //            guard let userDict = snapshot.value as? [String: Any],
-    //                  let imageUrlString = userDict["downloadURL"] as? String,
-    //                  let imageUrl = URL(string: imageUrlString),
-    //                  let self = self else {
-    //                return
-    //            }
-    //
-    //            dispatchGroup.enter()  // Уведомляем DispatchGroup о входе в блок кода
-    //
-    //            self.downloadImage(from: imageUrl) { result in
-    //                let uid = snapshot.key
-    //
-    //                switch result {
-    //                case .success(let image):
-    //                    DispatchQueue.main.async {
-    //                        let user = User(uid: uid, image: image)
-    //                        user.setValuesForKeys(userDict)
-    //                        self.users.append(user)
-    //                        print(1)
-    //                        dispatchGroup.leave()  // Уведомляем DispatchGroup о выходе из блока кода
-    //                    }
-    //                case .failure(let error):
-    //                    DispatchQueue.main.async {
-    //                        completion(.failure(error))
-    //                        dispatchGroup.leave()  // Уведомляем DispatchGroup о выходе из блока кода
-    //                    }
-    //                }
-    //            }
-    //        })
-    //
-    //        dispatchGroup.notify(queue: .main) {
-    //            // Все данные в usersRef.observe полностью загружены
-    //            print(2)
-    //            completion(.success(()))
-    //        }
-    //
-    //        databaseReferanceData = [usersRef]
-    //    }
+//    func observeUsers123(completion: @escaping VoidCompletion) {
+//        guard let currentUid = User.fetchCurrentId() else { return  }
+//
+//        let usersRef = SetupDatabase.setDatabase().child("users")
+//        let dispatchGroup = DispatchGroup()
+
+//        usersRef.observe(.childAdded, with: { [weak self] snapshot in
+//            guard let self = self,
+//                  let userDict = snapshot.value as? [String: Any],
+//                  let imageUrlString = userDict["downloadURL"] as? String,
+//                  let imageUrl = URL(string: imageUrlString)
+//            else {
+//                return
+//            }
+//
+//            var userImage: UIImage?
+//            let uid = snapshot.key
+//
+//            dispatchGroup.enter()
+//            DispatchQueue.global(qos: .userInteractive).async { [weak self] in
+//                guard let self = self else { return }
+//                self.downloadImage(from: imageUrl) { result in
+//                    switch result {
+//                    case .success(let image):
+//                        userImage = image
+//
+//                        let user = User(uid: uid, image: userImage)
+//                        user.setValuesForKeys(userDict)
+//
+//                        dispatchGroup.enter()
+//                        DispatchQueue.main.async { [weak self] in
+//                            guard let self = self else { return }
+//                            self.users.append(user)
+//                            self.users.sort(by: { $0.uid == currentUid && $1.uid != currentUid })
+//                            dispatchGroup.leave()
+//                        }
+//
+//                    case .failure(let error):
+//                        completion(.failure(error))
+//                    }
+//
+//                    dispatchGroup.leave()
+//                }
+//            }
+//        })
+//
+//        dispatchGroup.notify(queue: DispatchQueue.main) {
+//            completion(.success(()))
+//        }
+//        databaseReferenceData = [usersRef]
+//    }
     
     func uploadImageToFirebaseStorage(image: UIImage, completion: @escaping (Result<URL, Error>) -> Void) {
         guard let uid = User.fetchCurrentId() else { return }

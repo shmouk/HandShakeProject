@@ -6,9 +6,10 @@ import UIKit
 
 
 protocol APIClient: AnyObject {
-    var databaseReferanceData: [DatabaseReference]? { get set }
+    var databaseReferenceData: [DatabaseReference]? { get set }
     var notificationCenterManager: NotificationCenterManager { get }
     func removeObserver()
+    func startObserveNewData(ref: DatabaseReference) 
     func removeData<T>(data: inout [T]) -> [T]
     func downloadImage(from url: URL, completion: @escaping (Result<UIImage, Error>) -> Void)
     func downloadDefaultImageString(childFolderName: String, childImageName: String, completion: @escaping ResultCompletion)
@@ -20,10 +21,10 @@ extension APIClient {
         }
 
     func removeObserver() {
-        guard let dataReferances = databaseReferanceData else { return }
+        guard let dataReferences = databaseReferenceData else { return }
         
-        dataReferances.forEach { referance in
-            referance.removeAllObservers()
+        dataReferences.forEach { reference in
+            reference.removeAllObservers()
         }
     }
     

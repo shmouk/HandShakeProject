@@ -52,6 +52,7 @@
 		AD840EDF2A86976E00BEAF7C /* TeamTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD840EDE2A86976E00BEAF7C /* TeamTableViewCell.swift */; };
 		AD86E0102A811DD6000306B2 /* MessageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD86E00F2A811DD6000306B2 /* MessageCollectionViewCell.swift */; };
 		ADA1BA202A8E75160008E353 /* KeyboardNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA1BA1F2A8E75160008E353 /* KeyboardNotificationManager.swift */; };
+		ADA66AE72AA67FAD001609C9 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA66AE62AA67FAC001609C9 /* LoadingView.swift */; };
 		ADACF2CF2A6186DB00550283 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADACF2CE2A6186DB00550283 /* AppDelegate.swift */; };
 		ADACF2D32A6186DB00550283 /* AuthorizationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADACF2D22A6186DB00550283 /* AuthorizationViewController.swift */; };
 		ADACF2D82A6186DF00550283 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ADACF2D72A6186DF00550283 /* Assets.xcassets */; };
@@ -109,6 +110,7 @@
 		AD840EDE2A86976E00BEAF7C /* TeamTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamTableViewCell.swift; sourceTree = "<group>"; };
 		AD86E00F2A811DD6000306B2 /* MessageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCollectionViewCell.swift; sourceTree = "<group>"; };
 		ADA1BA1F2A8E75160008E353 /* KeyboardNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardNotificationManager.swift; sourceTree = "<group>"; };
+		ADA66AE62AA67FAC001609C9 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		ADACF2CB2A6186DB00550283 /* HandShakeProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HandShakeProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADACF2CE2A6186DB00550283 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		ADACF2D22A6186DB00550283 /* AuthorizationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AuthorizationViewController.swift; path = "../New Group/AuthorizationViewController.swift"; sourceTree = "<group>"; };
@@ -186,6 +188,7 @@
 			children = (
 				AD33F4D82A6849960028E919 /* ViewCell */,
 				AD13F63A2A61A85F007F5449 /* InterfaceBuilder.swift */,
+				ADA66AE62AA67FAC001609C9 /* LoadingView.swift */,
 				AD13F6412A61B337007F5449 /* SetupConstraint.swift */,
 				AD13F63C2A61AABB007F5449 /* Extension + typealias.swift */,
 				AD33F4DB2A695D6A0028E919 /* NavigationBar + Extension.swift */,
@@ -442,6 +445,7 @@
 				AD840EDB2A86561600BEAF7C /* TeamCeateViewController.swift in Sources */,
 				AD33F4D52A6836C60028E919 /* UsersTableViewCell.swift in Sources */,
 				AD13F63D2A61AABB007F5449 /* Extension + typealias.swift in Sources */,
+				ADA66AE72AA67FAD001609C9 /* LoadingView.swift in Sources */,
 				ADACF2CF2A6186DB00550283 /* AppDelegate.swift in Sources */,
 				AD2199762A96AE150015A409 /* EventViewModel.swift in Sources */,
 				AD5C62EC2A6310F00069A53F /* ChatViewController.swift in Sources */,

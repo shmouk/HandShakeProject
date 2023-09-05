@@ -17,8 +17,10 @@ class EventsViewController: UIViewController {
             reloadTable()
         }
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        setUI()
         reloadDataIfNeeded()
         setupNavBarManager()
     }
@@ -29,7 +31,6 @@ class EventsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUI()
         bindViewModel()
     }
     
@@ -43,10 +44,6 @@ class EventsViewController: UIViewController {
     private func reloadDataIfNeeded() {
         if eventData?.isEmpty ?? true {
             eventViewModel.fetchEventData()
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            self.reloadTable()
         }
     }
     
@@ -72,8 +69,7 @@ class EventsViewController: UIViewController {
     }
     
     private func reloadTable() {
-        tableView.stopSkeletonAnimation()
-        tableView.hideSkeleton()
+
         tableView.reloadData()
     }
     
@@ -82,7 +78,6 @@ class EventsViewController: UIViewController {
         tableView.dataSource = self
         tableView.register(EventTableViewCell.self, forCellReuseIdentifier: cellId)
         tableView.register(EventHeaderView.self, forHeaderFooterViewReuseIdentifier: headerId)
-        tableView.showSkeleton(usingColor: .skeletonDefault, transition: .crossDissolve(0.5))
     }
     
     private func setSubviews() {
@@ -106,10 +101,10 @@ extension EventsViewController: NavigationBarManagerDelegate {
 }
 
 
-extension EventsViewController: UITableViewDelegate {
+extension EventsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 64
+        return 80
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -119,7 +114,7 @@ extension EventsViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 82
+        return 94
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -127,10 +122,12 @@ extension EventsViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? EventTableViewCell else { return UITableViewCell() }
-        let events = eventData?[indexPath.section].1
-        cell.event = events?[indexPath.row]
-
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? EventTableViewCell,
+              let events = eventData?[indexPath.section].1 else
+        { return UITableViewCell() }
+        let event = events[indexPath.row]
+        cell.configure(with: event)
+        cell.accessoryType = .disclosureIndicator
         return cell
     }
     
@@ -139,7 +136,6 @@ extension EventsViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(indexPath)
         openEventVC(indexPath)
     }
     
@@ -148,28 +144,6 @@ extension EventsViewController: UITableViewDelegate {
         cell.contentView.backgroundColor = .white
     }
 }
-
-extension EventsViewController: SkeletonTableViewDataSource {
-    func numSections(in collectionSkeletonView: UITableView) -> Int {
-        1
-    }
-    
-    func collectionSkeletonView(_ skeletonView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        2
-    }
-    
-    func collectionSkeletonView(_ skeletonView: UITableView, cellIdentifierForRowAt indexPath: IndexPath) -> ReusableCellIdentifier {
-        cellId
-    }
-    
-    private func collectionSkeletonView(_ skeletonView: UITableView, skeletonCellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? MessageTableViewCell else {
-            return UITableViewCell()
-        }
-        return cell
-    }
-}
-
 
 
 

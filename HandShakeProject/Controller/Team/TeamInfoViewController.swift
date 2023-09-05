@@ -18,16 +18,13 @@ class TeamInfoViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
     
-    deinit {
-        print("4")
-    }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        reloadDataIfNeeded()
         bindViewModel()
     }
     
@@ -54,6 +51,9 @@ class TeamInfoViewController: UIViewController {
     
     private func loadData() {
         teamViewModel.convertIdToName(id: team.creatorId)
+    }
+    
+    private func reloadDataIfNeeded() {
         teamViewModel.fetchUsersFromUserList(team: team)
     }
     
@@ -61,6 +61,7 @@ class TeamInfoViewController: UIViewController {
         teamViewModel.fetchUsersFromSelectedTeam.bind { [weak self] users in
             guard let self = self else { return }
             self.users = users
+            print(users)
         }
         
         teamViewModel.creatorName.bind { [weak self] name in
