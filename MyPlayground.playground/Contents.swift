@@ -148,77 +148,77 @@ let two = Two()
 two.observe()
 
 //
-//Хорошо, я могу помочь вам с написанием функции showLoadingView для отображения представления загрузки поверх текущего UIViewController без использования Storyboard на языке Swift с использованием UIKit.
-//
-//Прежде всего, нам потребуется создать кастомное представление (view) для отображения индикатора загрузки. Мы можем использовать UIActivityIndicatorView для этой цели:
-//
-//import UIKit
-//
-//class LoadingView: UIView {
-//    private let activityIndicatorView: UIActivityIndicatorView = {
-//        let indicatorView = UIActivityIndicatorView(style: .large)
-//        indicatorView.translatesAutoresizingMaskIntoConstraints = false
-//        indicatorView.startAnimating()
-//        return indicatorView
-//    }()
-//
-//    override init(frame: CGRect) {
-//        super.init(frame: frame)
-//
-//        // Настройка внешнего вида представления загрузки (если нужно)
-//        backgroundColor = .white
-//
-//        // Добавление индикатора загрузки к представлению
-//        addSubview(activityIndicatorView)
-//
-//        // Настройка constraints для индикатора загрузки
-//        NSLayoutConstraint.activate([
-//            activityIndicatorView.centerXAnchor.constraint(equalTo: centerXAnchor),
-//            activityIndicatorView.centerYAnchor.constraint(equalTo: centerYAnchor)
-//        ])
-//    }
-//
-//    required init?(coder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-//}
-//
-//
-//В этом примере мы создаем кастомное представление LoadingView, которое содержит UIActivityIndicatorView. Мы также настраиваем constraints для центрирования индикатора загрузки в представлении. Представление автоматически запускает анимацию индикатора загрузки при создании.
-//
-//Теперь, чтобы использовать это представление во время загрузки данных, мы можем создать расширение для UIViewController, которое будет добавлять метод showLoadingView:
-//
-//extension UIViewController {
-//    private static var loadingViewKey: UInt8 = 0
-//
-//    func showLoadingView() {
-//        // Проверяем, не показывается ли уже представление загрузки
-//        guard let _ = objc_getAssociatedObject(self, &UIViewController.loadingViewKey) as? LoadingView else {
-//            let loadingView = LoadingView(frame: view.bounds)
-//            view.addSubview(loadingView)
-//
-//            // Сохраняем экземпляр представления загрузки в ассоциированный объект
-//            objc_setAssociatedObject(self, &UIViewController.loadingViewKey, loadingView, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-//
-//            return
-//        }
-//    }
-//
-//    func hideLoadingView() {
-//        // Удаляем представление загрузки
-//        if let loadingView = objc_getAssociatedObject(self, &UIViewController.loadingViewKey) as? LoadingView {
-//            loadingView.removeFromSuperview()
-//
-//            // Удаляем ссылку на представление загрузки
-//            objc_setAssociatedObject(self, &UIViewController.loadingViewKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-//        }
-//    }
-//}
-//
-//
-//В этом расширении для UIViewController мы определяем метод showLoadingView, который добавляет LoadingView поверх текущего представления. Мы сохраняем экземпляр LoadingView в ассоциированном объекте с использованием objc_setAssociatedObject. Мы также определяем метод hideLoadingView, который удаляет представление загрузки.
-//
-//
+Хорошо, я могу помочь вам с написанием функции showLoadingView для отображения представления загрузки поверх текущего UIViewController без использования Storyboard на языке Swift с использованием UIKit.
+
+Прежде всего, нам потребуется создать кастомное представление (view) для отображения индикатора загрузки. Мы можем использовать UIActivityIndicatorView для этой цели:
+
+import UIKit
+
+class LoadingView: UIView {
+    private let activityIndicatorView: UIActivityIndicatorView = {
+        let indicatorView = UIActivityIndicatorView(style: .large)
+        indicatorView.translatesAutoresizingMaskIntoConstraints = false
+        indicatorView.startAnimating()
+        return indicatorView
+    }()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+
+        // Настройка внешнего вида представления загрузки (если нужно)
+        backgroundColor = .white
+
+        // Добавление индикатора загрузки к представлению
+        addSubview(activityIndicatorView)
+
+        // Настройка constraints для индикатора загрузки
+        NSLayoutConstraint.activate([
+            activityIndicatorView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            activityIndicatorView.centerYAnchor.constraint(equalTo: centerYAnchor)
+        ])
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+
+В этом примере мы создаем кастомное представление LoadingView, которое содержит UIActivityIndicatorView. Мы также настраиваем constraints для центрирования индикатора загрузки в представлении. Представление автоматически запускает анимацию индикатора загрузки при создании.
+
+Теперь, чтобы использовать это представление во время загрузки данных, мы можем создать расширение для UIViewController, которое будет добавлять метод showLoadingView:
+
+extension UIViewController {
+    private static var loadingViewKey: UInt8 = 0
+
+    func showLoadingView() {
+        // Проверяем, не показывается ли уже представление загрузки
+        guard let _ = objc_getAssociatedObject(self, &UIViewController.loadingViewKey) as? LoadingView else {
+            let loadingView = LoadingView(frame: view.bounds)
+            view.addSubview(loadingView)
+
+            // Сохраняем экземпляр представления загрузки в ассоциированный объект
+            objc_setAssociatedObject(self, &UIViewController.loadingViewKey, loadingView, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+
+            return
+        }
+    }
+
+    func hideLoadingView() {
+        // Удаляем представление загрузки
+        if let loadingView = objc_getAssociatedObject(self, &UIViewController.loadingViewKey) as? LoadingView {
+            loadingView.removeFromSuperview()
+
+            // Удаляем ссылку на представление загрузки
+            objc_setAssociatedObject(self, &UIViewController.loadingViewKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+}
+
+
+В этом расширении для UIViewController мы определяем метод showLoadingView, который добавляет LoadingView поверх текущего представления. Мы сохраняем экземпляр LoadingView в ассоциированном объекте с использованием objc_setAssociatedObject. Мы также определяем метод hideLoadingView, который удаляет представление загрузки.
+
+
 //
 //
 //

@@ -1,10 +1,3 @@
-//
-//  EventCreateViewController.swift
-//  HandShakeProject
-//
-//  Created by Марк on 19.07.23.
-//
-
 import UIKit
 
 class EventCreateViewController: UIViewController {
@@ -44,6 +37,10 @@ class EventCreateViewController: UIViewController {
         super.viewDidLoad()
         setUI()
         bindViewModel()
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        KeyboardNotificationManager.hideKeyboard()
     }
     
     override func viewWillAppear(_ animated: Bool) {

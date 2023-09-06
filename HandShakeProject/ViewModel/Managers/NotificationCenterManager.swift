@@ -19,9 +19,11 @@ class NotificationCenterManager {
 }
 
 extension Notification.Name {
-    static let UserNotification = Notification.Name("UserNotification")
-    static let MessageNotification = Notification.Name("MessageNotification")
-    static let TeamNotification = Notification.Name("TeamNotification")
-    static let EventNotification = Notification.Name("EventNotification")
+    static let loadDataNotification = Notification.Name("loadDataNotification")
+    static let addProgressNotification = Notification.Name("addProgressNotification")
+    static let userNotification = Notification.Name("userNotification")
+    static let messageNotification = Notification.Name("messageNotification")
+    static let teamNotification = Notification.Name("teamNotification")
+    static let eventNotification = Notification.Name("eventNotification")
 }
 

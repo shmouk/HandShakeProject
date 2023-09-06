@@ -55,13 +55,37 @@ extension AuthorizationViewController {
 // MARK: - MainTabBarViewController Constraint
 
 extension MainTabBarViewController {
+    
     func setupConstraints() {
         
     }
 }
+
+// MARK: - LoadingView Constraint
+
+extension LoadingView {
+    
+    func setupConstraints() {
+        
+        NSLayoutConstraint.activate([
+            logoImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            logoImageView.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -64),
+            logoImageView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 2/3),
+            logoImageView.heightAnchor.constraint(equalTo: logoImageView.widthAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            progressView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            progressView.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 32),
+            progressView.widthAnchor.constraint(equalTo: logoImageView.widthAnchor)
+        ])
+    }
+}
+
 // MARK: - EventsViewController Constraint
 
 extension EventsViewController {
+    
     func setupConstraints() {
         
         NSLayoutConstraint.activate([
@@ -76,6 +100,7 @@ extension EventsViewController {
 // MARK: - EventCreateViewController Constraint
 
 extension EventCreateViewController {
+    
     func setupConstraints() {
         
         let heightForView = view.frame.height / 16
@@ -121,7 +146,6 @@ extension EventCreateViewController {
             descriptionTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             descriptionTitleLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
         ])
-        
         
         NSLayoutConstraint.activate([
             descriptionTextView.topAnchor.constraint(equalTo: descriptionTitleLabel.bottomAnchor, constant: 6),
@@ -197,6 +221,7 @@ extension EventCreateViewController {
 // MARK: - EventHeaderView Constraint
 
 extension EventHeaderView {
+    
     func setupConstraints() {
         
         NSLayoutConstraint.activate([
@@ -217,7 +242,8 @@ extension EventHeaderView {
 
 // MARK: - EventTableViewCell Constraint
 
-extension EventTableViewCell{
+extension EventTableViewCell {
+    
     func setupConstraints() {
     
         NSLayoutConstraint.activate([
@@ -260,6 +286,7 @@ extension EventTableViewCell{
 // MARK: - EventInfoViewController
 
 extension EventInfoViewController{
+    
     func setupConstraints() {
         
         let heightForView = view.frame.height / 14
@@ -354,6 +381,7 @@ extension EventInfoViewController{
 // MARK: - TeamViewController
 
 extension TeamViewController {
+    
     func setupConstraints() {
         
         NSLayoutConstraint.activate([
@@ -413,6 +441,7 @@ extension TeamInfoViewController {
 // MARK: - TeamCeateViewController Constraint
 
 extension TeamCeateViewController {
+    
     func setupConstraints() {
         
         let heightForView = view.frame.height / 14
@@ -436,6 +465,7 @@ extension TeamCeateViewController {
 // MARK: - AddUserViewController Constraint
 
 extension AddUserViewController {
+    
     func setupConstraints() {
         
         let heightForView = view.frame.height / 14
@@ -504,6 +534,7 @@ extension TeamTableViewCell {
 extension UsersListTableViewController {
     
     func setupConstraints() {
+        
         let heightForView = view.frame.height / 14
         
         NSLayoutConstraint.activate([
@@ -608,6 +639,7 @@ extension MessageTableViewCell {
 extension ChatLogController {
     
     func setupConstraints() {
+        
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -641,7 +673,9 @@ extension ChatLogController {
 // MARK: - MessageCollectionViewCell Constraint
 
 extension MessageCollectionViewCell {
+    
     func setupConstraints() {
+        
         guard let isMessageForUser = isMessageForUser else { return }
         
         contentView.translatesAutoresizingMaskIntoConstraints = false

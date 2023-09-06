@@ -12,7 +12,7 @@ class EventAPI: APIClient {
     
     var eventsData = [((UIImage, String), [Event])]()  {
         didSet {
-            notificationCenterManager.postCustomNotification(named: .EventNotification)
+            notificationCenterManager.postCustomNotification(named: .eventNotification)
         }
     }
     var teams: [Team]?
@@ -20,11 +20,11 @@ class EventAPI: APIClient {
     var databaseReferenceData: [DatabaseReference]?
     
     private init() {
-        notificationCenterManager.addObserver(self, selector: #selector(teamListDidChange(_:)), forNotification: .TeamNotification)
+        notificationCenterManager.addObserver(self, selector: #selector(teamListDidChange(_:)), forNotification: .teamNotification)
     }
     
     func removeData() {
-        notificationCenterManager.removeObserver(self, forNotification: .TeamNotification)
+        notificationCenterManager.removeObserver(self, forNotification: .teamNotification)
         removeObserver()
         eventsData = removeData(data: &eventsData)
     }

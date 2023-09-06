@@ -6,7 +6,7 @@ class MainTabBarViewController: UITabBarController {
         super.viewDidLoad()
         setUI()
     }
-    
+
     deinit {
         print("0")
     }

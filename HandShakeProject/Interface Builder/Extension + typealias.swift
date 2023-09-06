@@ -1,10 +1,3 @@
-//
-//  UIView + Extension.swift
-//  HandShakeProject
-//
-//  Created by Марк on 14.07.23.
-//
-
 import UIKit
 
 typealias UserCompletion = (Result<User, Error>) -> Void
@@ -125,4 +118,33 @@ extension UIColor {
         return #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
     }
 }
-// button  9CB9D1 tint CFDAEC view e1e6ef
+
+extension UIViewController {
+
+    private static var loadingViewKey: UInt8 = 0
+    
+    func showLoadingView() {
+        // Проверяем, не показывается ли уже представление загрузки
+        
+        guard let _ = objc_getAssociatedObject(self, &UIViewController.loadingViewKey) as? LoadingView else {
+            let loadingView = LoadingView(frame: view.bounds)
+            view.addSubview(loadingView)
+            
+            // Сохраняем экземпляр представления загрузки в ассоциированный объект
+            objc_setAssociatedObject(self, &UIViewController.loadingViewKey, loadingView, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            
+            return
+        }
+    }
+    
+    func hideLoadingView() {
+        // Удаляем представление загрузки
+        if let loadingView = objc_getAssociatedObject(self, &UIViewController.loadingViewKey) as? LoadingView {
+            loadingView.removeFromSuperview()
+            
+            // Удаляем ссылку на представление загрузки
+            objc_setAssociatedObject(self, &UIViewController.loadingViewKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+}
+

@@ -1,10 +1,3 @@
-//
-//  Observer.swift
-//  HandShakeProject
-//
-//  Created by Марк on 17.08.23.
-//
-
 import UIKit
 
 class KeyboardNotificationManager {
@@ -26,7 +19,7 @@ class KeyboardNotificationManager {
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-    
+
     private func keyboardWillShow(notification: Notification) {
         guard let userInfo = notification.userInfo,
               let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
@@ -54,6 +47,10 @@ class KeyboardNotificationManager {
         UIView.animate(withDuration: duration) {
             view.transform = .identity
         }
+    }
+    
+    static func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
 

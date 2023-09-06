@@ -1,10 +1,3 @@
-//
-//  ViewController.swift
-//  HandShakeProject
-//
-//  Created by Марк on 14.07.23.
-//
-
 import UIKit
 import FirebaseAuth
 
@@ -34,6 +27,14 @@ class AuthorizationViewController: UIViewController {
         setUI()
         bindViewModel()
     }
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        hideLoadingView()
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        KeyboardNotificationManager.hideKeyboard()
+    }
 
     private func bindViewModel() {
         authViewModel.statusText.bind({ [weak self](statusText) in
@@ -59,6 +60,10 @@ class AuthorizationViewController: UIViewController {
                 print(error.localizedDescription)
                 self.navigationController?.popToRootViewController(animated: false)
             }
+        }
+        authViewModel.loadingViewSwitcher.bind { [weak self] isSwitch in
+            guard let self = self else { return }
+            self.showLoadingView()
         }
     }
     
@@ -112,8 +117,9 @@ class AuthorizationViewController: UIViewController {
 // MARK: - Action
 
 private extension AuthorizationViewController {
-    
-    @objc private func loginAction(_ sender: Any) {
+    @objc
+    private func loginAction(_ sender: Any) {
+        
         guard let email = loginTextField.text,
                 let password = passwordTextField.text,
                 let rPassword = repeatPasswordTextField.text else { return }
@@ -135,5 +141,3 @@ extension AuthorizationViewController: UITextFieldDelegate {
         return true
     }
 }
-
-

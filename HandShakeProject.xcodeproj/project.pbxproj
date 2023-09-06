@@ -148,6 +148,7 @@
 			children = (
 				ADACF2D22A6186DB00550283 /* AuthorizationViewController.swift */,
 				AD13F6432A61E4F5007F5449 /* MainTabBarViewController.swift */,
+				AD1EB9032A7B118500B78AEA /* UsersListTableViewController.swift */,
 				AD1EB90A2A7BEBE200B78AEA /* Event */,
 				AD1EB9092A7BEBD600B78AEA /* Chat */,
 				AD840ED92A864C2700BEAF7C /* Team */,
@@ -186,9 +187,8 @@
 		AD13F6392A61A83E007F5449 /* Interface Builder */ = {
 			isa = PBXGroup;
 			children = (
-				AD33F4D82A6849960028E919 /* ViewCell */,
+				AD33F4D82A6849960028E919 /* SubView */,
 				AD13F63A2A61A85F007F5449 /* InterfaceBuilder.swift */,
-				ADA66AE62AA67FAC001609C9 /* LoadingView.swift */,
 				AD13F6412A61B337007F5449 /* SetupConstraint.swift */,
 				AD13F63C2A61AABB007F5449 /* Extension + typealias.swift */,
 				AD33F4DB2A695D6A0028E919 /* NavigationBar + Extension.swift */,
@@ -222,7 +222,6 @@
 			isa = PBXGroup;
 			children = (
 				AD5C62EB2A6310F00069A53F /* ChatViewController.swift */,
-				AD1EB9032A7B118500B78AEA /* UsersListTableViewController.swift */,
 				ADBFBB132A72894C00666533 /* ChatLogController.swift */,
 			);
 			path = Chat;
@@ -259,9 +258,10 @@
 			path = Managers;
 			sourceTree = "<group>";
 		};
-		AD33F4D82A6849960028E919 /* ViewCell */ = {
+		AD33F4D82A6849960028E919 /* SubView */ = {
 			isa = PBXGroup;
 			children = (
+				ADA66AE62AA67FAC001609C9 /* LoadingView.swift */,
 				AD34AC7A2A9F7CC50094EFD3 /* EventHeaderView.swift */,
 				ADDF7F1F2A6704FA009FE3C2 /* EventTableViewCell.swift */,
 				AD33F4D42A6836C60028E919 /* UsersTableViewCell.swift */,
@@ -269,7 +269,7 @@
 				AD1EB90C2A7BFEF700B78AEA /* MessageTableViewCell.swift */,
 				AD86E00F2A811DD6000306B2 /* MessageCollectionViewCell.swift */,
 			);
-			path = ViewCell;
+			path = SubView;
 			sourceTree = "<group>";
 		};
 		AD840ED92A864C2700BEAF7C /* Team */ = {
@@ -602,8 +602,7 @@
 				INFOPLIST_FILE = HandShakeProject/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -632,8 +631,7 @@
 				INFOPLIST_FILE = HandShakeProject/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

@@ -20,7 +20,6 @@ class EventsViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        setUI()
         reloadDataIfNeeded()
         setupNavBarManager()
     }
@@ -31,6 +30,7 @@ class EventsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setUI()
         bindViewModel()
     }
     
@@ -91,7 +91,7 @@ class EventsViewController: UIViewController {
 
 extension EventsViewController: NavigationBarManagerDelegate {
     func didTapNotificationButton() {
-        self.reloadTable()
+        showLoadingView()
     }
     
     func didTapAddButton() {

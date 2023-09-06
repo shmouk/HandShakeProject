@@ -7,11 +7,11 @@ class UserViewModel {
     var users = Bindable([User()])
     
     init() {
-        userAPI.notificationCenterManager.addObserver(self, selector: #selector(updateUsers), forNotification: .UserNotification)
+        userAPI.notificationCenterManager.addObserver(self, selector: #selector(updateUsers), forNotification: .userNotification)
     }
     
     deinit {
-        userAPI.notificationCenterManager.removeObserver(self, forNotification: .UserNotification)
+        userAPI.notificationCenterManager.removeObserver(self, forNotification: .userNotification)
     }
     
     func observeUsers() {

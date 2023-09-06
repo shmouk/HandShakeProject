@@ -14,11 +14,11 @@ class EventViewModel {
     var eventData = Bindable([((UIImage, String), [Event])]())
     
     init() {
-        eventAPI.notificationCenterManager.addObserver(self, selector: #selector(updateEvent), forNotification: .EventNotification)
+        eventAPI.notificationCenterManager.addObserver(self, selector: #selector(updateEvent), forNotification: .eventNotification)
     }
     
     deinit {
-        eventAPI.notificationCenterManager.removeObserver(self, forNotification: .EventNotification)
+        eventAPI.notificationCenterManager.removeObserver(self, forNotification: .eventNotification)
     }
     
     func createEvent(nameText: String?, descriptionText: String?, selectedState: Int?, selectedDate: Int?, selectedExecutorUser: String?,  completion: @escaping ResultCompletion) {

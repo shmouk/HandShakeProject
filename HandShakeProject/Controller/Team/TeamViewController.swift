@@ -14,12 +14,13 @@ class TeamViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        setUI()
         reloadDataIfNeeded()
+        setupNavBarManager()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setUI()
         bindViewModel()
     }
     
@@ -28,7 +29,6 @@ class TeamViewController: UIViewController {
     }
     
     private func setUI() {
-        setupNavBarManager()
         setSubviews()
         settingTableView()
         setupConstraints()

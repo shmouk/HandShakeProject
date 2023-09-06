@@ -1,10 +1,3 @@
-//
-//  NavigationBarManager.swift
-//  HandShakeProject
-//
-//  Created by Марк on 3.08.23.
-//
-
 import UIKit
 
 protocol NavigationBarManagerDelegate: AnyObject {

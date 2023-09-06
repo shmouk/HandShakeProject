@@ -3,9 +3,18 @@ import Firebase
 class AuthViewModel {
     private let userDefaults = UserDefaultsManager.shared
     private let userAPI = UserAPI.shared
-
+    
+    var loadingViewSwitcher = Bindable(Bool())
     var statusText = Bindable(String())
     var isSigningUp = Bindable(true)
+    
+    init() {
+        userAPI.notificationCenterManager.addObserver(self, selector: #selector(loadingViewHandle), forNotification: .loadDataNotification)
+    }
+    
+    deinit {
+        userAPI.notificationCenterManager.removeObserver(self, forNotification: .loadDataNotification)
+    }
     
     func toggleAuthState() {
         isSigningUp.value = !isSigningUp.value
@@ -51,6 +60,7 @@ class AuthViewModel {
                 completion(.failure(NSError(domain: "User logout,", code: 403, userInfo: nil)))
             }
             else {
+                userAPI.notificationCenterManager.postCustomNotification(named: .loadDataNotification)
                 APIManager.loadSingletonData {
                     completion(.success(()))
                 }
@@ -68,5 +78,11 @@ class AuthViewModel {
                 print("Error signing out: %@", signOutError)
             }
         }
+    }
+}
+extension AuthViewModel {
+    @objc
+    func loadingViewHandle() {
+        loadingViewSwitcher.value = true
     }
 }

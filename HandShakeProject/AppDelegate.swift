@@ -1,10 +1,3 @@
-//
-//  AppDelegate.swift
-//  HandShakeProject
-//
-//  Created by Марк on 14.07.23.
-//
-
 import UIKit
 import Firebase
 

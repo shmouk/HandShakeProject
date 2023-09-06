@@ -1,4 +1,5 @@
 import UIKit
+
 class EventInfoViewController: UIViewController {
     private let interfaceBuilder = InterfaceBuilder()
     private let eventViewModel = EventViewModel()
@@ -28,15 +29,11 @@ class EventInfoViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        bindViewModel()
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
         loadData()
+        bindViewModel()
     }
     
     private func setUI() {

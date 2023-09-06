@@ -25,17 +25,17 @@ class TeamInfoViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         reloadDataIfNeeded()
-        bindViewModel()
+        setupNavBarManager()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
         loadData()
+        bindViewModel()
     }
     
     private func setUI() {
-        setupNavBarManager()
         settingButton()
         settingLabel()
         settingImage()
@@ -61,7 +61,6 @@ class TeamInfoViewController: UIViewController {
         teamViewModel.fetchUsersFromSelectedTeam.bind { [weak self] users in
             guard let self = self else { return }
             self.users = users
-            print(users)
         }
         
         teamViewModel.creatorName.bind { [weak self] name in

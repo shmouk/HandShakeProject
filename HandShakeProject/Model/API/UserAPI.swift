@@ -9,7 +9,7 @@ class UserAPI: APIClient {
     
     var users = [User]() {
         didSet {
-            notificationCenterManager.postCustomNotification(named: .UserNotification)
+            notificationCenterManager.postCustomNotification(named: .userNotification)
         }
     }
     var databaseReferenceData: [DatabaseReference]?

@@ -13,11 +13,11 @@ class TeamViewModel {
     var satusText = Bindable(String())
     
     init() {
-        teamAPI.notificationCenterManager.addObserver(self, selector: #selector(updateTeams), forNotification: .TeamNotification)
+        teamAPI.notificationCenterManager.addObserver(self, selector: #selector(updateTeams), forNotification: .teamNotification)
     }
     
     deinit {
-        teamAPI.notificationCenterManager.removeObserver(self, forNotification: .TeamNotification)
+        teamAPI.notificationCenterManager.removeObserver(self, forNotification: .teamNotification)
     }
     
     func createTeam(_ text: String) {

@@ -173,4 +173,12 @@ class InterfaceBuilder {
     
         return datePicker
     }
+    func createProgressView() -> UIProgressView {
+        let progressView = UIProgressView(progressViewStyle: .default)
+        progressView.translatesAutoresizingMaskIntoConstraints = false
+        progressView.progress = 0.0
+        progressView.progressTintColor = .colorForTitleText()
+        return progressView
+
+    }
 }

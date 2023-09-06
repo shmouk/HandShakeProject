@@ -10,11 +10,11 @@ class ChatViewModel {
     var fetchUser = Bindable(User())
     
     init() {
-        chatAPI.notificationCenterManager.addObserver(self, selector: #selector(updateMessages), forNotification: .MessageNotification)
+        chatAPI.notificationCenterManager.addObserver(self, selector: #selector(updateMessages), forNotification: .messageNotification)
     }
     
     deinit {
-        chatAPI.notificationCenterManager.removeObserver(self, forNotification: .MessageNotification)
+        chatAPI.notificationCenterManager.removeObserver(self, forNotification: .messageNotification)
     }
     
     func observeChattingUser(user: User) {

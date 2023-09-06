@@ -7,7 +7,7 @@ class ChatAPI: APIClient {
     var lastMessageFromMessages = [Message]()
     var allMessages = [Message]() {
         didSet {
-            notificationCenterManager.postCustomNotification(named: .MessageNotification)
+            notificationCenterManager.postCustomNotification(named: .messageNotification)
         }
     }
 
@@ -104,9 +104,9 @@ class ChatAPI: APIClient {
             guard let self = self else { return }
 
             ref.observe(.childAdded) { [weak self] (snapshot) in
-
                 guard let self = self else { return }
                 let messageId = snapshot.key
+                
                 self.observeMessageInRef(messageId: messageId) { result in
                     switch result {
                     case .success(let message):

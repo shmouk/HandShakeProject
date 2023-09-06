@@ -13,14 +13,14 @@ class TeamCeateViewController: UIViewController {
     
     lazy var namingTextField = interfaceBuilder.createTextField()
     lazy var teamLabel = interfaceBuilder.createTitleLabel()
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        setUI()
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        KeyboardNotificationManager.hideKeyboard()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setUI()
     }
     
     private func setUI() {

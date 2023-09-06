@@ -3,8 +3,6 @@ import Firebase
 import FirebaseStorage
 import UIKit
 
-
-
 protocol APIClient: AnyObject {
     var databaseReferenceData: [DatabaseReference]? { get set }
     var notificationCenterManager: NotificationCenterManager { get }

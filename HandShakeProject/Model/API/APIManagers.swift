@@ -2,13 +2,15 @@ import UIKit
 
 final class APIManager {
     static func clearSingletonData(completion: @escaping () -> Void) {
-        DispatchQueue.global().async {
             UserAPI.shared.removeData()
             ChatAPI.shared.removeData()
             TeamAPI.shared.removeData()
             EventAPI.shared.removeData()
             completion()
-        }
+    }
+    
+    private static func pullNotification() {
+        NotificationCenterManager.shared.postCustomNotification(named: .addProgressNotification)
     }
     
     static func loadSingletonData(completion: @escaping () -> Void) {
@@ -19,6 +21,7 @@ final class APIManager {
             switch observeUsersResult {
             case .success:
                 print("Users observed successfully")
+                pullNotification()
             case .failure(let error):
                 print("Failed to observe users: \(error.localizedDescription)")
             }
@@ -27,7 +30,7 @@ final class APIManager {
         
         dispatchGroup.notify(queue: .main) {
             DispatchQueue.main.async {
-                observeMessagesAndComplete(completion)
+                observeMessagesAndComplete { }
                 observeTeamAndComplete(completion)
             }
         }
@@ -41,6 +44,7 @@ final class APIManager {
             switch observeMessagesResult {
             case .success:
                 print("Messages observed successfully")
+                pullNotification()
             case .failure(let error):
                 print("Failed to observe messages: \(error.localizedDescription)")
             }
@@ -59,6 +63,7 @@ final class APIManager {
             switch observeTeamResult {
             case .success:
                 print("Team observed successfully")
+                pullNotification()
             case .failure(let error):
                 print("Failed to observe messages: \(error.localizedDescription)")
             }
