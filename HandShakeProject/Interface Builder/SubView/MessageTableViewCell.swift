@@ -8,15 +8,6 @@ class MessageTableViewCell: UITableViewCell {
     lazy var userImageView = interfaceBuilder.createImageView()
     lazy var timeTextLabel = interfaceBuilder.createDescriptionLabel()
     
-    var message: Message? {
-        didSet {
-            userImageView.image = message?.image
-            nameLabel.text = message?.name
-            messageTextLabel.text = message?.text
-            timeTextLabel.text = message?.timestamp.convertTimestampToDate()
-        }
-    }
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setSubviews()
@@ -26,7 +17,14 @@ class MessageTableViewCell: UITableViewCell {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-
+    
+    func configure(with message: Message) {
+        userImageView.image = message.image
+        nameLabel.text = message.name
+        messageTextLabel.text = message.text
+        timeTextLabel.text = message.timestamp.convertTimestampToDate()
+    }
+    
     private func setSubviews() {
         contentView.addSubviews(userImageView, nameLabel, messageTextLabel, timeTextLabel)
     }

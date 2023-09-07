@@ -7,13 +7,6 @@ class UsersTableViewCell : UITableViewCell {
     
     let interfaceBuilder = InterfaceBuilder()
     
-    var user: User? {
-        didSet {
-            userImageView.image = user?.image
-            nameLabel.text = user?.name
-        }
-    }
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setSubviews()
@@ -22,6 +15,11 @@ class UsersTableViewCell : UITableViewCell {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+    }
+    
+    func configure(with user: User) {
+        userImageView.image = user.image
+        nameLabel.text = user.name
     }
     
     private func setSubviews() {

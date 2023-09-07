@@ -42,6 +42,6 @@ class EventTableViewCell: UITableViewCell {
     }
     
     private func calculateSizeForView() -> CGSize {
-        return titleLabel.text?.calculateLabelSize(for: titleLabel.text, maxSize: frame.size) ?? CGSize()
+        return titleLabel.calculateSize()
     }
 }

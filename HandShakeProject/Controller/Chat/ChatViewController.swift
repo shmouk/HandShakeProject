@@ -147,9 +147,11 @@ extension ChatViewController: UsersListTableViewControllerDelegate {
 
 extension ChatViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? MessageTableViewCell else { return UITableViewCell() }
-        let message = messages?[indexPath.row]
-        cell.message = message
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? MessageTableViewCell,
+              let message = messages?[indexPath.row] else
+        { return UITableViewCell() }
+        
+        cell.configure(with: message)
         return cell
     }
     

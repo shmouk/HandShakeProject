@@ -71,13 +71,17 @@ class EventInfoViewController: UIViewController {
     private func bindViewModel() {
         eventViewModel.userNames.bind { [weak self] names in
             guard let self = self else { return }
-            readerTextView.text = names.joined(separator: ", ")
+            readerTextView.text = "Everyone"
+//            readerTextView.text = names.joined(separator: ", ")
         }
     }
     
     private func settingButton() {
         closeVCButton.setImage(UIImage(systemName: "xmark.circle"), for: .normal)
         readyButton.setTitle("Ready", for: .normal)
+        eventViewModel.checkExecutor(event: event) { isExecutor in
+            readyButton.isEnabled = isExecutor
+        }
     }
     
     private func settingLabel() {
@@ -107,8 +111,6 @@ class EventInfoViewController: UIViewController {
         readyButton.addTarget(self, action: #selector(readyAction), for: .touchUpInside)
         closeVCButton.addTarget(self, action: #selector(closeVCAction), for: .touchUpInside)
     }
-    
-    
 }
 
 // MARK: - Action
@@ -117,6 +119,7 @@ private extension EventInfoViewController {
     
     @objc
     private func readyAction(_ sender: Any) {
+        eventViewModel.updateEventReadiness(event: event)
     }
     
     @objc
@@ -128,13 +131,13 @@ private extension EventInfoViewController {
 extension EventInfoViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? UsersTableViewCell else { return UITableViewCell() }
-        cell.user = event.executorInfo
+        cell.configure(with: event.executorInfo)
         cell.selectionStyle = .none
         return cell
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        RoundedCellDecorator.roundCorners(for: cell, cornerRadius: 10.0)
+        self.customTableView(tableView, willDisplay: cell, forRowAt: indexPath)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

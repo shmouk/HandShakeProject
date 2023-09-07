@@ -1,9 +1,8 @@
 import UIKit
 
 class EventCreateViewController: UIViewController {
-    
     private let interfaceBuilder = InterfaceBuilder()
-    private let eventViewModel = EventViewModel()
+    lazy var eventViewModel = EventViewModel()
     private let deadlineState = ["No time", "Low", "Medium", "High"]
     
     lazy var namingTextField = interfaceBuilder.createTextField()
@@ -168,7 +167,6 @@ class EventCreateViewController: UIViewController {
                 
                 switch result {
                 case .success(let text):
-                    dismiss(animated: true)
                     AlertManager.showAlert(title: "Success", message: text, viewController: self)
                     
                 case .failure(let error):

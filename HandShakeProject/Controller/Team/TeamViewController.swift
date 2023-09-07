@@ -47,6 +47,7 @@ class TeamViewController: UIViewController {
     }
     
     private func setSubviews() {
+        view.backgroundColor = .colorForView()
         view.addSubview(tableView)
     }
     
@@ -119,6 +120,10 @@ extension TeamViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return sectionTitles[section]
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        self.customTableView(tableView, willDisplay: cell, forRowAt: indexPath)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

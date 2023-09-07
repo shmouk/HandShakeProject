@@ -121,6 +121,7 @@ private extension TeamInfoViewController {
     
     @objc
     private func editProfile(_ sender: Any) {
+        AlertManager.showAlert(title: "Warning", message: "Image change not available", viewController: self)
     }
     
     @objc

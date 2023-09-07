@@ -54,7 +54,6 @@ class AuthorizationViewController: UIViewController {
             switch result {
             case .success():
                 delegate?.didLogin()
-                AlertManager.showAlert(title: "Success", message: "Account successfully login", viewController: self)
 
             case .failure(let error):
                 print(error.localizedDescription)

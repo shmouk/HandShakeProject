@@ -30,6 +30,7 @@ class EventsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        requestsАfterFirstLaunch()
         setUI()
         bindViewModel()
     }
@@ -39,6 +40,11 @@ class EventsViewController: UIViewController {
         setSubviews()
         setupTargets()
         setupConstraints()
+    }
+    
+    private func requestsАfterFirstLaunch() {
+        AlertManager.showAlert(title: "Success", message: "Account successfully login", viewController: self)
+        eventViewModel.sendRequestAuthorization()
     }
     
     private func reloadDataIfNeeded() {
@@ -69,13 +75,13 @@ class EventsViewController: UIViewController {
     }
     
     private func reloadTable() {
-
         tableView.reloadData()
     }
     
     private func settingTableView() {
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.showsVerticalScrollIndicator = false
         tableView.register(EventTableViewCell.self, forCellReuseIdentifier: cellId)
         tableView.register(EventHeaderView.self, forHeaderFooterViewReuseIdentifier: headerId)
     }
@@ -91,7 +97,6 @@ class EventsViewController: UIViewController {
 
 extension EventsViewController: NavigationBarManagerDelegate {
     func didTapNotificationButton() {
-        showLoadingView()
     }
     
     func didTapAddButton() {
@@ -109,7 +114,8 @@ extension EventsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerId) as? EventHeaderView
-        headerView?.teamInfo = eventData?[section].0
+
+        headerView?.configure(with: eventData?[section].0)
         return headerView
     }
     
@@ -129,6 +135,10 @@ extension EventsViewController: UITableViewDelegate, UITableViewDataSource {
         cell.configure(with: event)
         cell.accessoryType = .disclosureIndicator
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        self.customTableView(tableView, willDisplay: cell, forRowAt: indexPath)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

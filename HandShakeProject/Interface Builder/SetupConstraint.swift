@@ -90,8 +90,8 @@ extension EventsViewController {
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
@@ -260,6 +260,7 @@ extension EventTableViewCell {
             titleLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1/2)
         ])
 
+        stateView.removeConstraints(stateView.constraints)
         NSLayoutConstraint.activate([
             stateView.heightAnchor.constraint(equalToConstant: sizeForView.height + 6),
             stateView.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor, constant: -4),
@@ -276,7 +277,7 @@ extension EventTableViewCell {
         
         NSLayoutConstraint.activate([
             dateLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            dateLabel.leadingAnchor.constraint(equalTo: centerXAnchor, constant: 48),
+            dateLabel.leadingAnchor.constraint(equalTo: centerXAnchor, constant: 36),
             dateLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             dateLabel.heightAnchor.constraint(equalToConstant: frame.height / 2)
         ])
@@ -386,8 +387,8 @@ extension TeamViewController {
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
@@ -555,7 +556,7 @@ extension UsersListTableViewController {
             tableView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 12),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -64)
         ])
     }
 }
@@ -677,30 +678,29 @@ extension MessageCollectionViewCell {
     func setupConstraints() {
         
         guard let isMessageForUser = isMessageForUser else { return }
-        
+
         contentView.translatesAutoresizingMaskIntoConstraints = false
         messageTextView.translatesAutoresizingMaskIntoConstraints = false
         timeTextLabel.translatesAutoresizingMaskIntoConstraints = false
-        
+
         contentView.removeConstraints(contentView.constraints)
         messageTextView.removeConstraints(messageTextView.constraints)
         timeTextLabel.removeConstraints(timeTextLabel.constraints)
-        
-        let width = calculateWidth(textView: messageTextView).width
-        
+
         NSLayoutConstraint.activate([
             contentView.topAnchor.constraint(equalTo: topAnchor),
             contentView.leadingAnchor.constraint(equalTo: leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
-        
+
         NSLayoutConstraint.activate([
             messageTextView.topAnchor.constraint(equalTo: contentView.topAnchor),
             messageTextView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            messageTextView.widthAnchor.constraint(equalToConstant: width)
+            messageTextView.heightAnchor.constraint(lessThanOrEqualToConstant: cellSize.height),
+            messageTextView.widthAnchor.constraint(lessThanOrEqualToConstant: cellSize.width)
         ])
-        
+        print(messageTextView.frame.size)
         if isMessageForUser {
             NSLayoutConstraint.activate([
                 messageTextView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
@@ -710,7 +710,7 @@ extension MessageCollectionViewCell {
                 messageTextView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor)
             ])
         }
-        
+
         NSLayoutConstraint.activate([
             timeTextLabel.topAnchor.constraint(equalTo: messageTextView.bottomAnchor, constant: -24),
             timeTextLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
@@ -719,7 +719,6 @@ extension MessageCollectionViewCell {
         ])
     }
 }
-
     
 // MARK: - ProfileViewController Constraint
 

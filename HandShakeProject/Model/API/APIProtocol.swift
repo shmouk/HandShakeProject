@@ -6,6 +6,7 @@ import UIKit
 protocol APIClient: AnyObject {
     var databaseReferenceData: [DatabaseReference]? { get set }
     var notificationCenterManager: NotificationCenterManager { get }
+    var userNotificationsManager: UserNotificationsManager { get }
     func removeObserver()
     func startObserveNewData(ref: DatabaseReference) 
     func removeData<T>(data: inout [T]) -> [T]
@@ -15,9 +16,13 @@ protocol APIClient: AnyObject {
 
 extension APIClient {
     var notificationCenterManager: NotificationCenterManager {
-            return NotificationCenterManager.shared
-        }
+        return NotificationCenterManager.shared
+    }
 
+    var userNotificationsManager: UserNotificationsManager {
+        return UserNotificationsManager.shared
+    }
+    
     func removeObserver() {
         guard let dataReferences = databaseReferenceData else { return }
         

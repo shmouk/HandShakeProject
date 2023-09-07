@@ -31,7 +31,9 @@ final class APIManager {
         dispatchGroup.notify(queue: .main) {
             DispatchQueue.main.async {
                 observeMessagesAndComplete { }
-                observeTeamAndComplete(completion)
+                observeTeamAndComplete {
+                    observeEventAndComplete(completion)
+                }
             }
         }
     }
@@ -62,10 +64,10 @@ final class APIManager {
         TeamAPI.shared.observeTeams { observeTeamResult in
             switch observeTeamResult {
             case .success:
-                print("Team observed successfully")
+                print("Teams observed successfully")
                 pullNotification()
             case .failure(let error):
-                print("Failed to observe messages: \(error.localizedDescription)")
+                print("Failed to observe teams: \(error.localizedDescription)")
             }
             dispatchGroup.leave()
         }
@@ -74,24 +76,23 @@ final class APIManager {
             completion()
         }
     }
-    //
-    //        DispatchQueue.main.async {
-    //            TeamAPI.shared.observeTeams(completion: observeCompletion)
-    //
-    //        }
-    //
-    //        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-    //            EventAPI.shared.observeEventsFromTeam { result in
-    //                switch result {
-    //                case .success():
-    //                    completion()
-    //
-    //                case .failure(let error):
-    //                    print(error.localizedDescription)
-    //                    completion()
-    //
-    //                }
-    //            }
-    //        }
+
+    private static func observeEventAndComplete(_ completion: @escaping () -> Void) {
+        
+        EventAPI.shared.observeEventsFromTeam { observeTeamResult in
+            switch observeTeamResult {
+            case .success:
+                print("Events observed successfully")
+                pullNotification()
+                completion()
+                
+            case .failure(let error):
+                print("Failed to observe events: \(error.localizedDescription)")
+                completion()
+                
+            }
+        }
+    }
 }
+
 

@@ -116,6 +116,7 @@ class ChatLogController: UIViewController {
         self.collectionView.reloadData()
         
         if let indexPath = self.getLastIndexPath() {
+            collectionView.reloadItems(at: [indexPath])
             self.collectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
         }
     }
@@ -160,26 +161,29 @@ extension ChatLogController: UICollectionViewDataSource {
 
 extension ChatLogController: UICollectionViewDelegateFlowLayout {
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        guard let text = messages?[indexPath.row].text else { return .zero }
-
-        var width = collectionView.frame.width
-        var height = collectionView.calculateCellHeight(withText: text, cellWidth: width).height + 36
-        return CGSize(width: width, height: height)
-    }
-    
+   
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         messages?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? MessageCollectionViewCell,
-              let message = messages?[indexPath.row]  else { return UICollectionViewCell() }
-        var width = collectionView.frame.width
+            let message = messages?[indexPath.item] else {
+            return UICollectionViewCell() }
+        let cellSize = message.text.calculateLabelSize(for: message.text, width: (collectionView.bounds.width * 2/3))
+        cell.cellSize = cellSize
         cell.partnerUID = user.uid
-        cell.message = message
-        cell.width = collectionView.calculateCellHeight(withText: message.text, cellWidth: width).width
+        cell.configure(with: message)
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? MessageCollectionViewCell,
+            let message = messages?[indexPath.item] else {
+            return .zero }
+        let width = collectionView.frame.width
+        let cellSize = message.text.calculateLabelSize(for: message.text, width: (collectionView.bounds.width * 2/3))
+        return CGSize(width: width, height: cellSize.height)
     }
 }
 

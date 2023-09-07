@@ -1,4 +1,5 @@
 import UIKit
+import Photos
 
 class ProfileViewModel {
     var currentUser = Bindable(User())
@@ -23,4 +24,18 @@ class ProfileViewModel {
             
         })
     }
+    
+    func requestPhotoLibraryAccess(completion: @escaping (Bool) -> ()) {
+        PHPhotoLibrary.requestAuthorization { status in
+            switch status {
+            case .authorized:
+                completion(true)
+            case .denied, .restricted, .notDetermined, .limited:
+                completion(false)
+            @unknown default:
+                completion(false)
+            }
+        }
+    }
+
 }

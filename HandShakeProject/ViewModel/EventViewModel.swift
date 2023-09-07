@@ -2,6 +2,8 @@ import UIKit
 import Foundation
 
 class EventViewModel {
+    private static var observerAdded = false
+    
     private let eventAPI = EventAPI.shared
     private let userDefaults = UserDefaultsManager.shared
     private var withUser: User?
@@ -14,11 +16,21 @@ class EventViewModel {
     var eventData = Bindable([((UIImage, String), [Event])]())
     
     init() {
-        eventAPI.notificationCenterManager.addObserver(self, selector: #selector(updateEvent), forNotification: .eventNotification)
-    }
+           if !EventViewModel.observerAdded {
+               eventAPI.notificationCenterManager.addObserver(self, selector: #selector(updateEvent), forNotification: .eventNotification)
+               EventViewModel.observerAdded = true
+           }
+       }
     
     deinit {
-        eventAPI.notificationCenterManager.removeObserver(self, forNotification: .eventNotification)
+        if EventViewModel.observerAdded {
+            eventAPI.notificationCenterManager.removeObserver(self, forNotification: .eventNotification)
+            EventViewModel.observerAdded = false 
+        }
+    }
+    
+    func sendRequestAuthorization() {
+        eventAPI.userNotificationsManager.requestAuthorization()
     }
     
     func createEvent(nameText: String?, descriptionText: String?, selectedState: Int?, selectedDate: Int?, selectedExecutorUser: String?,  completion: @escaping ResultCompletion) {
@@ -58,6 +70,7 @@ class EventViewModel {
         eventData["deadlineState"] = stateIndex
         eventData["date"] = date
         eventData["executor"] = executorUid
+        eventData["isReady"] = false
         eventData["readerList"] = userListDict
         
         eventAPI.writeToDatabase(currentTeam.value.teamId, eventData) { [weak self] result in
@@ -70,7 +83,18 @@ class EventViewModel {
             }
         }
     }
-
+    
+    func updateEventReadiness(event: Event) {
+        eventAPI.updateEventReadiness(event)
+    }
+    
+    func checkExecutor(event: Event, completion: (Bool) -> Void) {
+        if event.creatorInfo.uid == User.fetchCurrentId() {
+            completion(true)
+        }
+        completion(false)
+    }
+    
     func convertIdToNames(ids: [String]) {
         let users = userAPI.users
         
@@ -132,8 +156,23 @@ class EventViewModel {
 
 extension EventViewModel {
     @objc
-    private func updateEvent() {
-        fetchEventData()
+    func updateTeam() {
+    }
+    
+    @objc
+    func updateEvent() {
+        eventAPI.observeEventsFromTeam(completion: { [weak self] result in
+            guard let self = self else { return }
+
+            switch result {
+            case .success():
+                fetchEventData()
+                eventAPI.userNotificationsManager.scheduleNotification(withTitle: "You received a notification", body: "An event has been created")
+
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        })
     }
 }
 

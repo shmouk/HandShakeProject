@@ -1,10 +1,3 @@
-//
-//  TeamCeateViewController.swift
-//  HandShakeProject
-//
-//  Created by Марк on 11.08.23.
-//
-
 import UIKit
 
 class TeamCeateViewController: UIViewController {

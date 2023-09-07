@@ -29,7 +29,7 @@ class LoadingView: UIView {
     }
     
     private func setSubviews() {
-        backgroundColor = .colorForStroke()
+        backgroundColor = .colorForView()
         addSubviews(logoImageView, progressView)
     }
     

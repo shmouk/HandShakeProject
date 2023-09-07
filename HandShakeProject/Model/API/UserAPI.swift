@@ -134,58 +134,6 @@ class UserAPI: APIClient {
         })
     }
     
-//    func observeUsers123(completion: @escaping VoidCompletion) {
-//        guard let currentUid = User.fetchCurrentId() else { return  }
-//
-//        let usersRef = SetupDatabase.setDatabase().child("users")
-//        let dispatchGroup = DispatchGroup()
-
-//        usersRef.observe(.childAdded, with: { [weak self] snapshot in
-//            guard let self = self,
-//                  let userDict = snapshot.value as? [String: Any],
-//                  let imageUrlString = userDict["downloadURL"] as? String,
-//                  let imageUrl = URL(string: imageUrlString)
-//            else {
-//                return
-//            }
-//
-//            var userImage: UIImage?
-//            let uid = snapshot.key
-//
-//            dispatchGroup.enter()
-//            DispatchQueue.global(qos: .userInteractive).async { [weak self] in
-//                guard let self = self else { return }
-//                self.downloadImage(from: imageUrl) { result in
-//                    switch result {
-//                    case .success(let image):
-//                        userImage = image
-//
-//                        let user = User(uid: uid, image: userImage)
-//                        user.setValuesForKeys(userDict)
-//
-//                        dispatchGroup.enter()
-//                        DispatchQueue.main.async { [weak self] in
-//                            guard let self = self else { return }
-//                            self.users.append(user)
-//                            self.users.sort(by: { $0.uid == currentUid && $1.uid != currentUid })
-//                            dispatchGroup.leave()
-//                        }
-//
-//                    case .failure(let error):
-//                        completion(.failure(error))
-//                    }
-//
-//                    dispatchGroup.leave()
-//                }
-//            }
-//        })
-//
-//        dispatchGroup.notify(queue: DispatchQueue.main) {
-//            completion(.success(()))
-//        }
-//        databaseReferenceData = [usersRef]
-//    }
-    
     func uploadImageToFirebaseStorage(image: UIImage, completion: @escaping (Result<URL, Error>) -> Void) {
         guard let uid = User.fetchCurrentId() else { return }
         

@@ -7,26 +7,30 @@ typealias MessageCompletion = (Result<Message, Error>) -> Void
 typealias ResultCompletion = (Result<String, Error>) -> Void
 typealias VoidCompletion = (Result<Void, Error>) -> Void
 
-extension String {
-    func size(constrainedToWidth width: CGFloat) -> CGSize {
-        let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16)]
-        let maxSize = CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)
-        let options: NSStringDrawingOptions = [.usesLineFragmentOrigin, .usesFontLeading]
-        let rect = self.boundingRect(with: maxSize, options: options, attributes: attributes, context: nil)
-        return CGSize(width: ceil(rect.width), height: ceil(rect.height))
+extension UILabel {
+    func calculateSize() -> CGSize {
+        let maxSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
+        let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+        let attributes = [NSAttributedString.Key.font: self.font]
+        let textRect = self.text?.boundingRect(with: maxSize, options: options, attributes: attributes, context: nil)
+        
+        return textRect?.size ?? CGSize.zero
     }
-    
-    func calculateLabelSize(for text: String?, font: UIFont = .systemFont(ofSize: 16), maxSize: CGSize) -> CGSize {
+}
+
+
+extension String {
+    func calculateLabelSize(for text: String?, font: UIFont = .systemFont(ofSize: 16), width: CGFloat) -> CGSize {
         guard let text = text else { return CGSize() }
         let options: NSStringDrawingOptions = [.usesLineFragmentOrigin, .usesFontLeading]
         let attributes: [NSAttributedString.Key: Any] = [.font: font]
-        let maxSize = CGSize(width: maxSize.width, height: CGFloat.greatestFiniteMagnitude)
+        let maxSize = CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)
         let boundingRect = text.boundingRect(with: maxSize,
                                              options: options,
                                              attributes: attributes,
                                              context: nil)
         
-        return CGSize(width: ceil(boundingRect.width), height: ceil(boundingRect.height))
+        return CGSize(width: ceil(boundingRect.width), height: ceil(boundingRect.height) )
     }
 }
 
@@ -40,31 +44,6 @@ extension Int {
         let date = Date(timeIntervalSince1970: TimeInterval(self))
         return dateFormatter.string(from: date)
 
-    }
-}
-
-extension UIView {
-    func calculateCellHeight(withText text: String, cellWidth: CGFloat) -> CGSize {
-        let twoThirdsScreenWidth = cellWidth * 2 / 3
-        var size = text.size(constrainedToWidth: twoThirdsScreenWidth)
-
-        if size.width > twoThirdsScreenWidth {
-            size.width = twoThirdsScreenWidth
-            return size
-        } else {
-            return size
-//            return UIFont.systemFont(ofSize: 16).lineHeight
-        }
-    }
-    
-    func calculateWidth(textView: UITextView) -> CGSize {
-        let twoThirdsScreenWidth = (2/3) * frame.width
-        guard let text = textView.text else { return .zero }
-        if text.size(constrainedToWidth: twoThirdsScreenWidth).width > twoThirdsScreenWidth {
-            textView.textContainer.size = CGSize(width: twoThirdsScreenWidth, height: CGFloat.greatestFiniteMagnitude)
-             return textView.contentSize
-        }
-        return CGSize(width: twoThirdsScreenWidth, height: CGFloat.greatestFiniteMagnitude)
     }
 }
 
@@ -147,4 +126,26 @@ extension UIViewController {
         }
     }
 }
+
+extension UIViewController {
+    func customTableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let totalRows = tableView.numberOfRows(inSection: indexPath.section)
+        var orientation: UIRectCorner = []
+        
+        if indexPath.row == 0 {
+            orientation = [.topLeft, .topRight]
+        }
+        if indexPath.row == totalRows - 1 {
+            orientation = [.bottomLeft, .bottomRight]
+        }
+        if totalRows == 1 {
+            orientation = [.allCorners]
+        }
+        RoundedCellDecorator.roundCorners(orientation: orientation, for: cell, cornerRadius: 10.0)
+    }
+}
+
+
+
+
 

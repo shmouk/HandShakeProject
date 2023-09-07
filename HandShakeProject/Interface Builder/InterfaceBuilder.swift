@@ -42,7 +42,7 @@ class InterfaceBuilder {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .colorForView()
         view.layer.cornerRadius = 10
-       return view
+        return view
     }
     
     func createCollectionView() -> UICollectionView {
@@ -50,6 +50,7 @@ class InterfaceBuilder {
         layout.minimumLineSpacing = 8
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+//        collectionView.contentInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
         collectionView.backgroundColor = .colorForView()
         collectionView.isScrollEnabled = true
         collectionView.isPrefetchingEnabled = false
@@ -89,7 +90,7 @@ class InterfaceBuilder {
         let leftPaddingView = UIView(frame: CGRect(x: 8, y: 0, width: 10, height: 40))
         textField.leftView = leftPaddingView
         textField.leftViewMode = .always
-
+        
         return textField
     }
     
@@ -154,7 +155,7 @@ class InterfaceBuilder {
         textView.text = "Input text"
         textView.isScrollEnabled = false
         textView.isEditable = false
-//        textView.textContainer.lineBreakMode = .byWordWrapping
+        //        textView.textContainer.lineBreakMode = .byWordWrapping
         return textView
     }
     
@@ -163,22 +164,28 @@ class InterfaceBuilder {
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         return activityIndicator
     }
-
+    
     func createDatePicker() -> UIDatePicker {
         let datePicker =  UIDatePicker()
         datePicker.translatesAutoresizingMaskIntoConstraints = false
         datePicker.datePickerMode = .date
         datePicker.preferredDatePickerStyle = .wheels
         datePicker.minimumDate = Date()
-    
         return datePicker
     }
+    
     func createProgressView() -> UIProgressView {
         let progressView = UIProgressView(progressViewStyle: .default)
         progressView.translatesAutoresizingMaskIntoConstraints = false
         progressView.progress = 0.0
         progressView.progressTintColor = .colorForTitleText()
         return progressView
-
+        
+    }
+    
+    func createBlurView() -> UIVisualEffectView {
+        let blurEffect = UIBlurEffect(style: .systemChromeMaterialLight)
+        let blurView = UIVisualEffectView(effect: blurEffect)
+        return blurView
     }
 }

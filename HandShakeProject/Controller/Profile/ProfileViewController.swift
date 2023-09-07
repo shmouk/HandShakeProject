@@ -1,10 +1,3 @@
-//
-//  ProfileViewController.swift
-//  HandShakeProject
-//
-//  Created by Марк on 15.07.23.
-//
-
 import UIKit
 
 class ProfileViewController: UIViewController {
@@ -103,7 +96,14 @@ private extension ProfileViewController {
     
     @objc
     private func editProfile(_ sender: Any) {
-        selectProfileImageView()
+        profileViewModel.requestPhotoLibraryAccess { [weak self] isAccess in
+            guard let self = self else { return }
+            if isAccess {
+                selectProfileImageView()
+            } else {
+                AlertManager.showAlert(title: "Failure", message: "You have not granted access to the gallery.", viewController: self)
+            }
+        }
     }
     
     @objc

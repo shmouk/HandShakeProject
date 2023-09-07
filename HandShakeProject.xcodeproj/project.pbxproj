@@ -66,6 +66,7 @@
 		ADDA9CA12A6579FD0008C481 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDA9CA02A6579FD0008C481 /* SceneDelegate.swift */; };
 		ADDBC56D2A6589BD004CD8E6 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDBC56C2A6589BD004CD8E6 /* Coordinator.swift */; };
 		ADDF7F202A6704FA009FE3C2 /* EventTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDF7F1F2A6704FA009FE3C2 /* EventTableViewCell.swift */; };
+		ADE1BC132AA967E0008BAAC8 /* UserNotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE1BC122AA967E0008BAAC8 /* UserNotificationsManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -125,6 +126,7 @@
 		ADDA9CA02A6579FD0008C481 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		ADDBC56C2A6589BD004CD8E6 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		ADDF7F1F2A6704FA009FE3C2 /* EventTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTableViewCell.swift; sourceTree = "<group>"; };
+		ADE1BC122AA967E0008BAAC8 /* UserNotificationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNotificationsManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -254,6 +256,7 @@
 				AD2199712A9633E10015A409 /* DataManager.swift */,
 				AD2199772A97527A0015A409 /* AlertManager.swift */,
 				AD3050862AA526190019F594 /* NotificationCenterManager.swift */,
+				ADE1BC122AA967E0008BAAC8 /* UserNotificationsManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -428,6 +431,7 @@
 				AD2199742A96ABA90015A409 /* EventAPI.swift in Sources */,
 				AD21997F2A98EC420015A409 /* APIManagers.swift in Sources */,
 				AD13F63F2A61AD28007F5449 /* Bindable.swift in Sources */,
+				ADE1BC132AA967E0008BAAC8 /* UserNotificationsManager.swift in Sources */,
 				AD2199722A9633E10015A409 /* DataManager.swift in Sources */,
 				AD34AC7D2AA0B6490094EFD3 /* EventInfoViewController.swift in Sources */,
 				AD5C62F02A6311060069A53F /* ProfileViewController.swift in Sources */,
@@ -600,6 +604,7 @@
 				DEVELOPMENT_TEAM = BRUHN3JJ9Z;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HandShakeProject/Info.plist;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Requires gallery access to change your profile photo.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -629,6 +634,7 @@
 				DEVELOPMENT_TEAM = BRUHN3JJ9Z;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HandShakeProject/Info.plist;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Requires gallery access to change your profile photo.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;

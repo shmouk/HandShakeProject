@@ -302,5 +302,76 @@ extension UIViewController {
 //Надеюсь, эти обновления помогут решить проблему! Если у тебя возникнут еще вопросы, не стесняйся задавать дальше!
 
 
+Для отправки и отображения уведомлений на iOS устройства с использованием UserNotifications.framework, вам необходимо создать и настроить экземпляр класса UNUserNotificationCenter. Вот пример кода реализации "UserNotificationsManager":
+
+import UserNotifications
+
+class UserNotificationsManager: NSObject, UNUserNotificationCenterDelegate {
+
+    // Singleton instance
+    static let shared = UserNotificationsManager()
+
+    private override init() {
+        super.init()
+    }
+
+    // Request user's permission to display notifications
+    func requestAuthorization() {
+        let center = UNUserNotificationCenter.current()
+        center.delegate = self
+
+        center.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
+            if granted {
+                // Permission granted
+                print("Notification authorization granted.")
+            } else {
+                // Permission denied
+                print("Notification authorization denied.")
+            }
+        }
+    }
+
+    // Schedule a notification
+    func scheduleNotification(withTitle title: String, body: String, at date: Date) {
+        let center = UNUserNotificationCenter.current()
+
+        let content = UNMutableNotificationContent()
+        content.title = title
+        content.body = body
+        content.sound = UNNotificationSound.default
+
+        let calendar = Calendar(identifier: .gregorian)
+        let components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: date)
+        let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+        center.add(request) { (error) in
+            if let error = error {
+                print("Failed to schedule notification:", error.localizedDescription)
+            } else {
+                print("Notification scheduled successfully.")
+            }
+        }
+    }
+
+    // UNUserNotificationCenterDelegate method - called when a notification is delivered while the app is running in the foreground
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.alert, .badge, .sound])
+    }
+}
 
 
+Пример использования класса "UserNotificationsManager" для отправки уведомления:
+
+let notificationsManager = UserNotificationsManager.shared
+notificationsManager.requestAuthorization()
+
+let notificationDate = Date().addingTimeInterval(60)  // Установите нужный вам интервал для уведомления
+notificationsManager.scheduleNotification(withTitle: "Заголовок уведомления", body: "Текст уведомления", at: notificationDate)
+
+
+В этом примере мы сначала вызываем метод "requestAuthorization()" для запроса разрешения на отправку уведомлений. Затем мы создаем экземпляр "UserNotificationsManager" и используем его метод "scheduleNotification()" для запланированного отображения уведомления через 60 секунд (в данном примере). Заголовок и текст уведомления могут быть настроены в соответствии с вашими потребностями.
+
+Обратите внимание, что для работы с уведомлениями класс "UserNotificationsManager" должен быть подписан на протокол "UNUserNotificationCenterDelegate" и быть установлен в качестве делегата текущего центра уведомлений (UNUserNotificationCenter.current().delegate = self).
+
+Надеюсь, это поможет вам отправлять уведомления на ваше iOS устройство с использованием UIKit и Swift без использования Storyboard!
