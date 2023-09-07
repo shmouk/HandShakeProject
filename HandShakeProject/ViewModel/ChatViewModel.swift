@@ -82,6 +82,5 @@ extension ChatViewModel {
     private func updateMessages() {
         loadLastMessagePerUser()
         loadMessagesPerUser()
-        chatAPI.userNotificationsManager.scheduleNotification(withTitle: "You received a notification", body: "You have a new message")
     }
 }

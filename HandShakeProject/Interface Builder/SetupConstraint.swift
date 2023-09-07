@@ -700,6 +700,7 @@ extension MessageCollectionViewCell {
             messageTextView.heightAnchor.constraint(lessThanOrEqualToConstant: cellSize.height),
             messageTextView.widthAnchor.constraint(lessThanOrEqualToConstant: cellSize.width)
         ])
+        
         print(messageTextView.frame.size)
         if isMessageForUser {
             NSLayoutConstraint.activate([

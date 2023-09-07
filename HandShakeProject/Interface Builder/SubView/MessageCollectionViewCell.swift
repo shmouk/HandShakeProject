@@ -15,7 +15,6 @@ class MessageCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
         setSubviews()
         setViewAppearance()
-        setupConstraints()
     }
     
     required init?(coder: NSCoder) {
@@ -26,6 +25,7 @@ class MessageCollectionViewCell: UICollectionViewCell {
         messageTextView.text = message.text
         timeTextLabel.text =  message.timestamp.convertTimestampToDate()
         isMessageForUser = partnerUID == message.fromId ? false : true
+        setupConstraints()
     }
     
     private func setViewAppearance() {

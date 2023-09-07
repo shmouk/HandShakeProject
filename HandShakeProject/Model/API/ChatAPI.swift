@@ -7,7 +7,12 @@ class ChatAPI: APIClient {
     var lastMessageFromMessages = [Message]()
     var allMessages = [Message]() {
         didSet {
-            notificationCenterManager.postCustomNotification(named: .messageNotification)
+            if !oldValue.isEmpty {
+                if allMessages.last?.toId == User.fetchCurrentId() {
+                    userNotificationsManager.scheduleNotification(withTitle: "You received a notification", body: "You have a new message")
+                }
+                notificationCenterManager.postCustomNotification(named: .messageNotification)
+            }
         }
     }
 
@@ -73,6 +78,7 @@ class ChatAPI: APIClient {
                     }
                     startObserveNewData(ref: userMessagesRef)
                     self.allMessages = messages
+                    self.allMessages.sort { $0.timestamp < $1.timestamp}
                     completion(.success(()))
                 }
             }
@@ -113,7 +119,9 @@ class ChatAPI: APIClient {
                         let alreadyAdded = self.allMessages.contains { $0.messageId == messageId }
 
                         if !alreadyAdded {
+                            
                             self.allMessages.append(message)
+                            self.allMessages.sort { $0.timestamp < $1.timestamp}
                         }
                 
                     case .failure(let error):
