@@ -6,17 +6,16 @@ protocol AuthorizationViewControllerDelegate: AnyObject {
 }
 
 class AuthorizationViewController: UIViewController {
-    private let interfaceBuilder = InterfaceBuilder()
     private let authViewModel = AuthViewModel()
     
     weak var delegate: AuthorizationViewControllerDelegate?
     
-    lazy var loginTextField = interfaceBuilder.createTextField()
-    lazy var passwordTextField = interfaceBuilder.createTextField()
-    lazy var repeatPasswordTextField = interfaceBuilder.createTextField()
-    lazy var statusAuthLabel = interfaceBuilder.createTitleLabel()
-    lazy var loginButton = interfaceBuilder.createButton()
-    lazy var authSegmentControl = interfaceBuilder.createSegmentControl(items: authState)
+    var loginTextField = InterfaceBuilder.createTextField()
+    var passwordTextField = InterfaceBuilder.createTextField()
+    var repeatPasswordTextField = InterfaceBuilder.createTextField()
+    var statusAuthLabel = InterfaceBuilder.createTitleLabel()
+    var loginButton = InterfaceBuilder.createButton()
+    lazy var authSegmentControl = InterfaceBuilder.createSegmentControl(items: authState)
 
     private let authState = ["Sign up", "Log in"]
     private var isSignup = true

@@ -1,14 +1,13 @@
 import UIKit
 
 class TeamInfoViewController: UIViewController {
-    private let interfaceBuilder = InterfaceBuilder()
     private let teamViewModel = TeamViewModel()
     
-    lazy var userListButton = interfaceBuilder.createButton()
-    lazy var editTeamButton = interfaceBuilder.createButton()
-    lazy var creatorID = interfaceBuilder.createDescriptionLabel()
-    lazy var nameLabel = interfaceBuilder.createTitleLabel()
-    lazy var teamImageView = interfaceBuilder.createImageView()
+    var userListButton = InterfaceBuilder.createButton()
+    var editTeamButton = InterfaceBuilder.createButton()
+    var creatorID = InterfaceBuilder.createDescriptionLabel()
+    var nameLabel = InterfaceBuilder.createTitleLabel()
+    var teamImageView = InterfaceBuilder.createImageView()
     
     private let team: Team
     private var users: [User]?

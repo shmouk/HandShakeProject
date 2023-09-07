@@ -9,8 +9,8 @@ class EventsViewController: UIViewController {
     
     private let interfaceBuilder = InterfaceBuilder()
     
-    lazy var tableView = interfaceBuilder.createTableView()
-    lazy var headerView = interfaceBuilder.createView()
+    var tableView = InterfaceBuilder.createTableView()
+    var headerView = InterfaceBuilder.createView()
 
     var eventData: [((UIImage, String), [Event])]? {
         didSet {

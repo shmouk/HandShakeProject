@@ -1,29 +1,28 @@
 import UIKit
 
 class EventCreateViewController: UIViewController {
-    private let interfaceBuilder = InterfaceBuilder()
     lazy var eventViewModel = EventViewModel()
     private let deadlineState = ["No time", "Low", "Medium", "High"]
     
-    lazy var namingTextField = interfaceBuilder.createTextField()
-    lazy var descriptionTextView = interfaceBuilder.createTextView()
-    lazy var readingListTextView = interfaceBuilder.createTextView()
+    var namingTextField = InterfaceBuilder.createTextField()
+    var descriptionTextView = InterfaceBuilder.createTextView()
+    var readingListTextView = InterfaceBuilder.createTextView()
     
-    lazy var teamTitleLabel = interfaceBuilder.createTitleLabel()
-    lazy var pickedTeamLabel = interfaceBuilder.createTitleLabel()
-    lazy var nameTitleLabel = interfaceBuilder.createTitleLabel()
-    lazy var deadlineTypeTitleLabel = interfaceBuilder.createTitleLabel()
-    lazy var dateTitleLabel = interfaceBuilder.createTitleLabel()
-    lazy var descriptionTitleLabel = interfaceBuilder.createTitleLabel()
-    lazy var executorTitleLabel = interfaceBuilder.createTitleLabel()
-    lazy var pickedExecutorLabel = interfaceBuilder.createTitleLabel()
-    lazy var readerTitleLabel = interfaceBuilder.createTitleLabel()
+    var teamTitleLabel = InterfaceBuilder.createTitleLabel()
+    var pickedTeamLabel = InterfaceBuilder.createTitleLabel()
+    var nameTitleLabel = InterfaceBuilder.createTitleLabel()
+    var deadlineTypeTitleLabel = InterfaceBuilder.createTitleLabel()
+    var dateTitleLabel = InterfaceBuilder.createTitleLabel()
+    var descriptionTitleLabel = InterfaceBuilder.createTitleLabel()
+    var executorTitleLabel = InterfaceBuilder.createTitleLabel()
+    var pickedExecutorLabel = InterfaceBuilder.createTitleLabel()
+    var readerTitleLabel = InterfaceBuilder.createTitleLabel()
     
-    lazy var chooseTeamButton = interfaceBuilder.createButton()
-    lazy var chooseExecutorButton = interfaceBuilder.createButton()
+    var chooseTeamButton = InterfaceBuilder.createButton()
+    var chooseExecutorButton = InterfaceBuilder.createButton()
     
-    lazy var importanceSegmentControl = interfaceBuilder.createSegmentControl(items: deadlineState)
-    lazy var datePicker = interfaceBuilder.createDatePicker()
+    lazy var importanceSegmentControl = InterfaceBuilder.createSegmentControl(items: deadlineState)
+    var datePicker = InterfaceBuilder.createDatePicker()
         
     private var selectedTeam: Team?
     private var selectedDate: Int?

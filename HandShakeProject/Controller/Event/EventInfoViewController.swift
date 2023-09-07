@@ -1,22 +1,21 @@
 import UIKit
 
 class EventInfoViewController: UIViewController {
-    private let interfaceBuilder = InterfaceBuilder()
     private let eventViewModel = EventViewModel()
     private let cellId = "UsersTableViewCell"
 
-    lazy var nameLabel = interfaceBuilder.createTitleLabel()
-    lazy var stateView = interfaceBuilder.createView()
-    lazy var dateLabel = interfaceBuilder.createTitleLabel()
-    lazy var creatorImageView = interfaceBuilder.createImageView()
-    lazy var creatorNameLabel = interfaceBuilder.createTitleLabel()
-    lazy var descriptionTextView = interfaceBuilder.createTextView()
-    lazy var executorTitleLabel = interfaceBuilder.createTitleLabel()
-    lazy var tableView = interfaceBuilder.createTableView()
-    lazy var readerTitleLabel = interfaceBuilder.createTitleLabel()
-    lazy var readerTextView = interfaceBuilder.createTextView()
-    lazy var readyButton = interfaceBuilder.createButton()
-    lazy var closeVCButton = interfaceBuilder.createButton()
+    var nameLabel = InterfaceBuilder.createTitleLabel()
+    var stateView = InterfaceBuilder.createView()
+    var dateLabel = InterfaceBuilder.createTitleLabel()
+    var creatorImageView = InterfaceBuilder.createImageView()
+    var creatorNameLabel = InterfaceBuilder.createTitleLabel()
+    var descriptionTextView = InterfaceBuilder.createTextView()
+    var executorTitleLabel = InterfaceBuilder.createTitleLabel()
+    var tableView = InterfaceBuilder.createTableView()
+    var readerTitleLabel = InterfaceBuilder.createTitleLabel()
+    var readerTextView = InterfaceBuilder.createTextView()
+    var readyButton = InterfaceBuilder.createButton()
+    var closeVCButton = InterfaceBuilder.createButton()
 
     private let event: Event
     

@@ -3,16 +3,15 @@ import UIKit
 
 class AddUserViewController: UIViewController {
     private let cellId = "cellId"
-    private let interfaceBuilder = InterfaceBuilder()
     private let teamViewModel = TeamViewModel()
     private var user: User?
     private var team: Team
 
-    lazy var namingTextField = interfaceBuilder.createTextField()
-    lazy var userNameLabel = interfaceBuilder.createTitleLabel()
-    lazy var statusLabel = interfaceBuilder.createDescriptionLabel()
-    lazy var searchButton = interfaceBuilder.createButton()
-    lazy var tableView = interfaceBuilder.createTableView()
+    var namingTextField = InterfaceBuilder.createTextField()
+    var userNameLabel = InterfaceBuilder.createTitleLabel()
+    var statusLabel = InterfaceBuilder.createDescriptionLabel()
+    var searchButton = InterfaceBuilder.createButton()
+    var tableView = InterfaceBuilder.createTableView()
 
     init(team: Team) {
         self.team = team

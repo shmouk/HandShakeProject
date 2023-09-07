@@ -1,11 +1,10 @@
 import UIKit
 
 class TeamCeateViewController: UIViewController {
-    private let interfaceBuilder = InterfaceBuilder()
     private let teamViewModel = TeamViewModel()
     
-    lazy var namingTextField = interfaceBuilder.createTextField()
-    lazy var teamLabel = interfaceBuilder.createTitleLabel()
+    var namingTextField = InterfaceBuilder.createTextField()
+    var teamLabel = InterfaceBuilder.createTitleLabel()
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         KeyboardNotificationManager.hideKeyboard()

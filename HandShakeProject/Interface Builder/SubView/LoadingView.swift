@@ -1,11 +1,10 @@
 import UIKit
 
 class LoadingView: UIView {
-    private let interfaceBuilder = InterfaceBuilder()
     private let notificationCenterManager = NotificationCenterManager.shared
     
-    lazy var logoImageView = interfaceBuilder.createImageView()
-    lazy var progressView = interfaceBuilder.createProgressView()
+    var logoImageView = InterfaceBuilder.createImageView()
+    var progressView = InterfaceBuilder.createProgressView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)

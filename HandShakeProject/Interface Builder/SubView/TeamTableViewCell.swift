@@ -1,10 +1,8 @@
 import UIKit
 
 class TeamTableViewCell: UITableViewCell {
-    private let interfaceBuilder = InterfaceBuilder()
-
-    lazy var teamNameLabel = interfaceBuilder.createTitleLabel()
-    lazy var teamImageView = interfaceBuilder.createImageView()
+    var teamNameLabel = InterfaceBuilder.createTitleLabel()
+    var teamImageView = InterfaceBuilder.createImageView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

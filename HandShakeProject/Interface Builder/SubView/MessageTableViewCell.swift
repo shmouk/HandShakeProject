@@ -1,13 +1,11 @@
 import UIKit
 
 class MessageTableViewCell: UITableViewCell {
-    private let interfaceBuilder = InterfaceBuilder()
-
-    lazy var nameLabel = interfaceBuilder.createTitleLabel()
-    lazy var messageTextLabel = interfaceBuilder.createDescriptionLabel()
-    lazy var userImageView = interfaceBuilder.createImageView()
-    lazy var timeTextLabel = interfaceBuilder.createDescriptionLabel()
-    
+   var nameLabel = InterfaceBuilder.createTitleLabel()
+   var messageTextLabel = InterfaceBuilder.createDescriptionLabel()
+   var userImageView = InterfaceBuilder.createImageView()
+   var timeTextLabel = InterfaceBuilder.createDescriptionLabel()
+   
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setSubviews()

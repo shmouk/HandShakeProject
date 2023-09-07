@@ -1,10 +1,8 @@
 import UIKit
 
 class EventHeaderView: UITableViewHeaderFooterView {
-    private let interfaceBuilder = InterfaceBuilder()
-
-    lazy var teamName = interfaceBuilder.createTitleLabel()
-    lazy var teamImage = interfaceBuilder.createImageView()
+   var teamName = InterfaceBuilder.createTitleLabel()
+   var teamImage = InterfaceBuilder.createImageView()
     
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)

@@ -8,15 +8,14 @@ protocol UsersListTableViewControllerDelegate: AnyObject {
 class UsersListTableViewController: UIViewController {
     private let cellId = "UsersTableViewCell"
     private let userViewModel = UserViewModel()
-    private let interfaceBuilder = InterfaceBuilder()
     private let users: [User]
     private let isCellBeUsed: Bool
     
     weak var delegate: UsersListTableViewControllerDelegate?
 
-    lazy var tableView = interfaceBuilder.createTableView()
-    lazy var titleLabel = interfaceBuilder.createTitleLabel()
-    lazy var closeVCButton = interfaceBuilder.createButton()
+    var tableView = InterfaceBuilder.createTableView()
+    var titleLabel = InterfaceBuilder.createTitleLabel()
+    var closeVCButton = InterfaceBuilder.createButton()
 
     init(users: [User], isCellBeUsed: Bool) {
         self.isCellBeUsed = isCellBeUsed

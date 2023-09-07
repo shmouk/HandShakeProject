@@ -676,38 +676,38 @@ extension ChatLogController {
 extension MessageTextTableViewCell {
     
     func setupConstraints() {
-        
+        let width = UIScreen.main.bounds.width * 2/3 - 24
         guard let isMessageForUser = isMessageForUser else { return }
-        print(isMessageForUser)
-        NSLayoutConstraint.activate([
-            messageLabel.topAnchor.constraint(equalTo: topAnchor, constant: 24),
-            messageLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -24),
-            messageLabel.widthAnchor.constraint(equalToConstant: frame.width * 2/3)
-        ])
-        
-        NSLayoutConstraint.activate([
-            customBackgroundView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
-            customBackgroundView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16),
-            customBackgroundView.widthAnchor.constraint(equalToConstant: frame.width * 2/3 + 16)
-        ])
-        
+       
         if isMessageForUser {
             NSLayoutConstraint.activate([
-                messageLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24),
                 customBackgroundView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
             ])
         } else {
             NSLayoutConstraint.activate([
-                messageLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
                 customBackgroundView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16)
             ])
-        } 
+        }
         
         NSLayoutConstraint.activate([
-            timeTextLabel.topAnchor.constraint(equalTo: bottomAnchor, constant: -24),
-            timeTextLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
-            timeTextLabel.leadingAnchor.constraint(equalTo: trailingAnchor, constant: -72),
-            timeTextLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24)
+            customBackgroundView.topAnchor.constraint(equalTo: topAnchor),
+            customBackgroundView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            customBackgroundView.heightAnchor.constraint(equalTo: heightAnchor),
+            customBackgroundView.widthAnchor.constraint(lessThanOrEqualToConstant: width)
+        ])
+        
+        NSLayoutConstraint.activate([
+            messageLabel.topAnchor.constraint(equalTo: customBackgroundView.topAnchor, constant: 8),
+            messageLabel.bottomAnchor.constraint(equalTo: customBackgroundView.bottomAnchor, constant: -8),
+            messageLabel.leadingAnchor.constraint(equalTo: customBackgroundView.leadingAnchor, constant: 8),
+            messageLabel.trailingAnchor.constraint(equalTo: customBackgroundView.trailingAnchor, constant: -8)
+        ])
+        
+        NSLayoutConstraint.activate([
+            timeTextLabel.topAnchor.constraint(equalTo: customBackgroundView.bottomAnchor, constant: -24),
+            timeTextLabel.bottomAnchor.constraint(equalTo: customBackgroundView.bottomAnchor),
+            timeTextLabel.leadingAnchor.constraint(equalTo: customBackgroundView.trailingAnchor, constant: -48),
+            timeTextLabel.trailingAnchor.constraint(equalTo: customBackgroundView.trailingAnchor)
         ])
     }
 }

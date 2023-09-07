@@ -3,15 +3,14 @@ import UIKit
 
 
 class ChatLogController: UIViewController {
-    private let interfaceBuilder = InterfaceBuilder()
     private let chatViewModel = ChatViewModel()
     
     private let cellId = "MessageCollectionViewCell"
     
-    lazy var containerView = interfaceBuilder.createView()
-    lazy var sendButton = interfaceBuilder.createButton()
-    lazy var textField = interfaceBuilder.createTextField()
-    lazy var tableView = interfaceBuilder.createTableView()
+    var containerView = InterfaceBuilder.createView()
+    var sendButton = InterfaceBuilder.createButton()
+    var textField = InterfaceBuilder.createTextField()
+    var tableView = InterfaceBuilder.createTableView()
     
     private var messages: [Message]?
     private var keyboardManager: KeyboardNotificationManager?

@@ -7,10 +7,9 @@ class ChatViewController: UIViewController {
     private let cellId = "MessageTableViewCell"
     private let chatViewModel = ChatViewModel()
     private let userViewModel = UserViewModel()
-    private let interfaceBuilder = InterfaceBuilder()
     private let refreshCntrl = UIRefreshControl()
 
-    lazy var tableView = interfaceBuilder.createTableView()
+    var tableView = InterfaceBuilder.createTableView()
     
     private var user: User?
     private var messages: [Message]? {

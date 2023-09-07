@@ -1,12 +1,9 @@
 import UIKit
 
 class MessageTextTableViewCell: UITableViewCell {
-    
-    private let interfaceBuilder = InterfaceBuilder()
-    
-    lazy var messageLabel = interfaceBuilder.createTitleLabel()
-    lazy var timeTextLabel = interfaceBuilder.createDescriptionLabel()
-    lazy var customBackgroundView = interfaceBuilder.createView()
+    var messageLabel = InterfaceBuilder.createTitleLabel()
+    var timeTextLabel = InterfaceBuilder.createDescriptionLabel()
+    var customBackgroundView = InterfaceBuilder.createView()
 
     var isMessageForUser: Bool?
     var partnerUID: String?
@@ -15,8 +12,9 @@ class MessageTextTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setSubviews()
         setViewAppearance()
+        setupConstraints()
     }
-    
+
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
@@ -29,14 +27,16 @@ class MessageTextTableViewCell: UITableViewCell {
     }
     
     private func setViewAppearance() {
-        backgroundColor = .clear
-        messageLabel.backgroundColor = .colorForSubview()
+        backgroundColor = .colorForView()
+        customBackgroundView.backgroundColor = .colorForSubview()
+        messageLabel.backgroundColor = .colorForView()
         messageLabel.numberOfLines = 0
         messageLabel.lineBreakMode = .byWordWrapping
     }
     
     private func setSubviews() {
-        addSubviews(customBackgroundView, messageLabel, timeTextLabel)
+        addSubviews(customBackgroundView)
+        customBackgroundView.addSubviews(messageLabel, timeTextLabel)
     }
 }
 

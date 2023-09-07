@@ -2,17 +2,16 @@ import UIKit
 
 class ProfileViewController: UIViewController {
     private let navigationBarManager = NavigationBarManager()
-    private let interfaceBuilder = InterfaceBuilder()
     private let authViewModel = AuthViewModel()
 
     let profileViewModel = ProfileViewModel()
     
-    lazy var activityIndicator = interfaceBuilder.createActivityIndicator()
-    lazy var logoutButton = interfaceBuilder.createButton()
-    lazy var editProfileButton = interfaceBuilder.createButton()
-    lazy var nameLabel = interfaceBuilder.createTitleLabel()
-    lazy var emailLabel = interfaceBuilder.createDescriptionLabel()
-    lazy var profileImageView = interfaceBuilder.createImageView()
+    var activityIndicator = InterfaceBuilder.createActivityIndicator()
+    var logoutButton = InterfaceBuilder.createButton()
+    var editProfileButton = InterfaceBuilder.createButton()
+    var nameLabel = InterfaceBuilder.createTitleLabel()
+    var emailLabel = InterfaceBuilder.createDescriptionLabel()
+    var profileImageView = InterfaceBuilder.createImageView()
  
     
     init() {

@@ -1,13 +1,11 @@
 import UIKit
 
 class EventTableViewCell: UITableViewCell {
-    private let interfaceBuilder = InterfaceBuilder()
-
-    lazy var titleLabel = interfaceBuilder.createTitleLabel()
-    lazy var descriptionLabel = interfaceBuilder.createDescriptionLabel()
-    lazy var dateLabel = interfaceBuilder.createTitleLabel()
-    lazy var executorImageView = interfaceBuilder.createImageView()
-    lazy var stateView = interfaceBuilder.createView()
+   var titleLabel = InterfaceBuilder.createTitleLabel()
+   var descriptionLabel = InterfaceBuilder.createDescriptionLabel()
+   var dateLabel = InterfaceBuilder.createTitleLabel()
+   var executorImageView = InterfaceBuilder.createImageView()
+   var stateView = InterfaceBuilder.createView()
     
     var sizeForView = CGSize()
     

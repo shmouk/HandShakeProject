@@ -4,9 +4,8 @@ class TeamViewController: UIViewController {
     private let navigationBarManager = NavigationBarManager()
     private let teamViewModel = TeamViewModel()
     private let cellId = "TeamTableViewCell"
-    private let interfaceBuilder = InterfaceBuilder()
     
-    lazy var tableView = interfaceBuilder.createTableView()
+    var tableView = InterfaceBuilder.createTableView()
     
     private var sectionTitles = ["Your Teams", "Other Teams"]
     private var firstSectionTeams: [Team]?

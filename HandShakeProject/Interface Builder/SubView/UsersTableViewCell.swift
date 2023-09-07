@@ -2,10 +2,8 @@ import UIKit
 
 class UsersTableViewCell : UITableViewCell {
     
-    lazy var nameLabel = interfaceBuilder.createTitleLabel()
-    lazy var userImageView = interfaceBuilder.createImageView()
-    
-    let interfaceBuilder = InterfaceBuilder()
+    var nameLabel = InterfaceBuilder.createTitleLabel()
+    var userImageView = InterfaceBuilder.createImageView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
