@@ -18,22 +18,6 @@ extension UILabel {
     }
 }
 
-
-extension String {
-    func calculateLabelSize(for text: String?, font: UIFont = .systemFont(ofSize: 16), width: CGFloat) -> CGSize {
-        guard let text = text else { return CGSize() }
-        let options: NSStringDrawingOptions = [.usesLineFragmentOrigin, .usesFontLeading]
-        let attributes: [NSAttributedString.Key: Any] = [.font: font]
-        let maxSize = CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)
-        let boundingRect = text.boundingRect(with: maxSize,
-                                             options: options,
-                                             attributes: attributes,
-                                             context: nil)
-        
-        return CGSize(width: ceil(boundingRect.width), height: ceil(boundingRect.height) )
-    }
-}
-
 extension Int {
     func convertTimestampToDate(timeStyle: DateFormatter.Style = .short) -> String {
         let dateFormatter = DateFormatter()

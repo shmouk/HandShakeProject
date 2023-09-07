@@ -122,6 +122,8 @@ class InterfaceBuilder {
         label.textColor = .colorForDescriptionText()
         label.font = UIFont.boldSystemFont(ofSize: 14)
         label.textAlignment = .left
+        label.numberOfLines = 0
+        label.lineBreakMode = .byCharWrapping
         label.isSkeletonable = true
         return label
     }

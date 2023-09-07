@@ -642,10 +642,10 @@ extension ChatLogController {
     func setupConstraints() {
         
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: containerView.topAnchor)
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: containerView.topAnchor)
         ])
         
         NSLayoutConstraint.activate([
@@ -673,49 +673,41 @@ extension ChatLogController {
 
 // MARK: - MessageCollectionViewCell Constraint
 
-extension MessageCollectionViewCell {
+extension MessageTextTableViewCell {
     
     func setupConstraints() {
         
         guard let isMessageForUser = isMessageForUser else { return }
-
-        contentView.translatesAutoresizingMaskIntoConstraints = false
-        messageTextView.translatesAutoresizingMaskIntoConstraints = false
-        timeTextLabel.translatesAutoresizingMaskIntoConstraints = false
-
-        contentView.removeConstraints(contentView.constraints)
-        messageTextView.removeConstraints(messageTextView.constraints)
-        timeTextLabel.removeConstraints(timeTextLabel.constraints)
-
+        print(isMessageForUser)
         NSLayoutConstraint.activate([
-            contentView.topAnchor.constraint(equalTo: topAnchor),
-            contentView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            messageLabel.topAnchor.constraint(equalTo: topAnchor, constant: 24),
+            messageLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -24),
+            messageLabel.widthAnchor.constraint(equalToConstant: frame.width * 2/3)
         ])
-
+        
         NSLayoutConstraint.activate([
-            messageTextView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            messageTextView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            messageTextView.heightAnchor.constraint(lessThanOrEqualToConstant: cellSize.height),
-            messageTextView.widthAnchor.constraint(lessThanOrEqualToConstant: cellSize.width)
+            customBackgroundView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
+            customBackgroundView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16),
+            customBackgroundView.widthAnchor.constraint(equalToConstant: frame.width * 2/3 + 16)
         ])
         
         if isMessageForUser {
             NSLayoutConstraint.activate([
-                messageTextView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
+                messageLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24),
+                customBackgroundView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
             ])
         } else {
             NSLayoutConstraint.activate([
-                messageTextView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor)
+                messageLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
+                customBackgroundView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16)
             ])
-        }
-
+        } 
+        
         NSLayoutConstraint.activate([
-            timeTextLabel.topAnchor.constraint(equalTo: messageTextView.bottomAnchor, constant: -24),
-            timeTextLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            timeTextLabel.leadingAnchor.constraint(equalTo: messageTextView.trailingAnchor, constant: -48),
-            timeTextLabel.trailingAnchor.constraint(equalTo: messageTextView.trailingAnchor)
+            timeTextLabel.topAnchor.constraint(equalTo: bottomAnchor, constant: -24),
+            timeTextLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
+            timeTextLabel.leadingAnchor.constraint(equalTo: trailingAnchor, constant: -72),
+            timeTextLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24)
         ])
     }
 }

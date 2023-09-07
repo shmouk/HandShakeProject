@@ -1,18 +1,18 @@
 import UIKit
 
-class MessageCollectionViewCell: UICollectionViewCell {
+class MessageTextTableViewCell: UITableViewCell {
     
     private let interfaceBuilder = InterfaceBuilder()
     
-    lazy var messageTextView = interfaceBuilder.createTextView()
+    lazy var messageLabel = interfaceBuilder.createTitleLabel()
     lazy var timeTextLabel = interfaceBuilder.createDescriptionLabel()
-    
+    lazy var customBackgroundView = interfaceBuilder.createView()
+
     var isMessageForUser: Bool?
     var partnerUID: String?
-    var cellSize = CGSize()
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         setSubviews()
         setViewAppearance()
     }
@@ -22,19 +22,21 @@ class MessageCollectionViewCell: UICollectionViewCell {
     }
     
     func configure(with message: Message) {
-        messageTextView.text = message.text
+        messageLabel.text = message.text
         timeTextLabel.text =  message.timestamp.convertTimestampToDate()
         isMessageForUser = partnerUID == message.fromId ? false : true
         setupConstraints()
     }
     
     private func setViewAppearance() {
-        messageTextView.backgroundColor = .colorForStroke()
-        messageTextView.isEditable = false
+        backgroundColor = .clear
+        messageLabel.backgroundColor = .colorForSubview()
+        messageLabel.numberOfLines = 0
+        messageLabel.lineBreakMode = .byWordWrapping
     }
     
     private func setSubviews() {
-        contentView.addSubviews(messageTextView, timeTextLabel)
+        addSubviews(customBackgroundView, messageLabel, timeTextLabel)
     }
 }
 

@@ -11,7 +11,7 @@ class ChatLogController: UIViewController {
     lazy var containerView = interfaceBuilder.createView()
     lazy var sendButton = interfaceBuilder.createButton()
     lazy var textField = interfaceBuilder.createTextField()
-    lazy var collectionView = interfaceBuilder.createCollectionView()
+    lazy var tableView = interfaceBuilder.createTableView()
     
     private var messages: [Message]?
     private var keyboardManager: KeyboardNotificationManager?
@@ -60,14 +60,15 @@ class ChatLogController: UIViewController {
         tabBarController?.tabBar.isHidden = true
         containerView.addSubviews(textField, sendButton)
         view.addSubview(containerView)
-        view.addSubview(collectionView)
+        view.addSubview(tableView)
         view.backgroundColor = .colorForView()
     }
     
     private func settingsCollectionView() {
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        collectionView.register(MessageCollectionViewCell.self, forCellWithReuseIdentifier: cellId)
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.separatorStyle = .none
+        tableView.register(MessageTextTableViewCell.self, forCellReuseIdentifier: cellId)
     }
     
     private func settingTextLabel() {
@@ -113,32 +114,8 @@ class ChatLogController: UIViewController {
     }
        
     private func reloadTable() {
-        self.collectionView.reloadData()
-        
-        if let indexPath = self.getLastIndexPath() {
-            collectionView.reloadItems(at: [indexPath])
-            self.collectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
-        }
+        self.tableView.reloadData()
     }
-    
-    private func getLastIndexPath() -> IndexPath? {
-        guard self.messages != nil else {
-            return nil
-        }
-        
-        let lastSection = collectionView.numberOfSections - 1
-        if lastSection < 0 {
-            return nil
-        }
-        
-        let lastItem = collectionView.numberOfItems(inSection: lastSection) - 1
-        if lastItem < 0 {
-            return nil
-        }
-        
-        return IndexPath(item: lastItem, section: lastSection)
-    }
-
 }
 
 extension ChatLogController {
@@ -156,34 +133,18 @@ extension ChatLogController: UITextFieldDelegate {
     }
 }
 
-extension ChatLogController: UICollectionViewDataSource {
-}
-
-extension ChatLogController: UICollectionViewDelegateFlowLayout {
-    
-   
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+extension ChatLogController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         messages?.count ?? 0
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? MessageCollectionViewCell,
-            let message = messages?[indexPath.item] else {
-            return UICollectionViewCell() }
-        let cellSize = message.text.calculateLabelSize(for: message.text, width: (collectionView.bounds.width * 2/3))
-        cell.cellSize = cellSize
-        cell.partnerUID = user.uid
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? MessageTextTableViewCell,
+              let message = messages?[indexPath.row] else
+        { return UITableViewCell() }
         cell.configure(with: message)
+        cell.selectionStyle = .none
         return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? MessageCollectionViewCell,
-            let message = messages?[indexPath.item] else {
-            return .zero }
-        let width = collectionView.frame.width
-        let cellSize = message.text.calculateLabelSize(for: message.text, width: (collectionView.bounds.width * 2/3))
-        return CGSize(width: width, height: cellSize.height)
     }
 }
 

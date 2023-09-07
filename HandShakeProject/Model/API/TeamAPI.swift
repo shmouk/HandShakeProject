@@ -290,17 +290,15 @@ class TeamAPI: APIClient {
         ref.observe(.childAdded) { [weak self] snapshot in
             guard let self = self else { return }
             
+            let dispatchGroup = DispatchGroup()
             let teamId = snapshot.key
+
             if !self.teams.contains(where: { $0.teamId == teamId }) {
-                let dispatchGroup = DispatchGroup()
-                
                 var referenceData = [DatabaseReference]()
-                
+                dispatchGroup.enter()
                 let teamReference = SetupDatabase.setDatabase().child("teams").child(teamId)
                 
                 referenceData.append(teamReference)
-                
-                dispatchGroup.enter()
                 
                 teamReference.observeSingleEvent(of: .value) { [weak self] (snapshot) in
                     guard let self = self,
@@ -364,6 +362,8 @@ class TeamAPI: APIClient {
                     }
                     dispatchGroup.leave()
                 }
+            } else {
+//                dispatchGroup.leave()
             }
         }
     }
