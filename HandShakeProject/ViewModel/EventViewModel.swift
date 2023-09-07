@@ -89,10 +89,11 @@ class EventViewModel {
     }
     
     func checkExecutor(event: Event, completion: (Bool) -> Void) {
-        if event.creatorInfo.uid == User.fetchCurrentId() {
+        if event.executorInfo.uid == User.fetchCurrentId() {
             completion(true)
+        } else {
+            completion(false)
         }
-        completion(false)
     }
     
     func convertIdToNames(ids: [String]) {
@@ -167,7 +168,7 @@ extension EventViewModel {
             switch result {
             case .success():
                 fetchEventData()
-                eventAPI.userNotificationsManager.scheduleNotification(withTitle: "You received a notification", body: "An event has been created")
+                eventAPI.userNotificationsManager.scheduleNotification(withTitle: "You received a notification", body: "Notification from the team")
 
             case .failure(let error):
                 print(error.localizedDescription)

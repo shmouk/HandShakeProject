@@ -701,7 +701,6 @@ extension MessageCollectionViewCell {
             messageTextView.widthAnchor.constraint(lessThanOrEqualToConstant: cellSize.width)
         ])
         
-        print(messageTextView.frame.size)
         if isMessageForUser {
             NSLayoutConstraint.activate([
                 messageTextView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)

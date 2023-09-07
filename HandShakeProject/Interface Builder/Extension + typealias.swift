@@ -103,13 +103,11 @@ extension UIViewController {
     private static var loadingViewKey: UInt8 = 0
     
     func showLoadingView() {
-        // Проверяем, не показывается ли уже представление загрузки
         
         guard let _ = objc_getAssociatedObject(self, &UIViewController.loadingViewKey) as? LoadingView else {
             let loadingView = LoadingView(frame: view.bounds)
             view.addSubview(loadingView)
             
-            // Сохраняем экземпляр представления загрузки в ассоциированный объект
             objc_setAssociatedObject(self, &UIViewController.loadingViewKey, loadingView, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             
             return
@@ -117,11 +115,9 @@ extension UIViewController {
     }
     
     func hideLoadingView() {
-        // Удаляем представление загрузки
         if let loadingView = objc_getAssociatedObject(self, &UIViewController.loadingViewKey) as? LoadingView {
             loadingView.removeFromSuperview()
             
-            // Удаляем ссылку на представление загрузки
             objc_setAssociatedObject(self, &UIViewController.loadingViewKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }

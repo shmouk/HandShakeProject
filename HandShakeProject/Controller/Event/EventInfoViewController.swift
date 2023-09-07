@@ -80,6 +80,7 @@ class EventInfoViewController: UIViewController {
         closeVCButton.setImage(UIImage(systemName: "xmark.circle"), for: .normal)
         readyButton.setTitle("Ready", for: .normal)
         eventViewModel.checkExecutor(event: event) { isExecutor in
+            print(isExecutor)
             readyButton.isEnabled = isExecutor
         }
     }

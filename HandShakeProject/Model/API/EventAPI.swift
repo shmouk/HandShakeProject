@@ -49,9 +49,13 @@ class EventAPI: APIClient {
     }
     
     func updateEventReadiness(_ event: Event) {
-        let ref = SetupDatabase.setDatabase().child("events").child(event.eventId)
-        let newValue = ["isReady": true]
-        ref.updateChildValues(newValue)
+        let eventId = event.eventId
+        let ref = SetupDatabase.setDatabase().child("events").child(eventId)
+        let eventData: [String: Bool] = [
+            "isReady": true
+        ]
+
+        ref.updateChildValues(eventData) 
     }
     
     func updateTeamEvents(_ teamId: String, _ eventID: String, completion: @escaping VoidCompletion) {
@@ -82,7 +86,6 @@ class EventAPI: APIClient {
         
         for team in teams {
             dispatchGroup.enter()
-            print(team.eventList?.count)
             guard let eventList = team.eventList else {
                 dispatchGroup.leave()
                 continue
@@ -105,13 +108,13 @@ class EventAPI: APIClient {
                     dispatchGroup.leave()
                 }
             } else {
-                print("contain")
+
                 dispatchGroup.leave()
             }
         }
         dispatchGroup.notify(queue: .main) { [weak self] in
             guard let self = self else { return }
-            
+
             if !eventsData.isEmpty {
                 self.eventsData = eventsData
                 completion(.success(()))
@@ -213,7 +216,8 @@ class EventAPI: APIClient {
                             dispatchGroup.leave()
                             return
                         }
-                        let event = Event(creatorInfo: creatorData,
+                        let event = Event(eventId: eventId,
+                                          creatorInfo: creatorData,
                                           nameEvent: nameText,
                                           descriptionText: descriptionText,
                                           deadlineState: selectedState,

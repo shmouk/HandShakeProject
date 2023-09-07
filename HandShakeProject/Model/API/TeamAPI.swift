@@ -8,17 +8,6 @@ class TeamAPI: APIClient {
     
     var teams = [Team]() {
         didSet {
-            for value in oldValue {
-                for team in teams {
-                    if !(team.eventList?.isEmpty ?? true) && team.eventList != value.eventList  {
-                        print(101, team.eventList?.count, value.eventList?.count)
-                        //                            notificationCenterManager.postCustomNotification(named: .eventNotification)
-                    }
-                    break
-                }
-                break
-            }
-            
             notificationCenterManager.postCustomNotification(named: .teamNotification)
         }
     }
