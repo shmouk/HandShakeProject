@@ -10,9 +10,8 @@ class MessageTextTableViewCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setSubviews()
         setViewAppearance()
-        setupConstraints()
+        setSubviews()
     }
 
     required init?(coder: NSCoder) {
@@ -29,7 +28,7 @@ class MessageTextTableViewCell: UITableViewCell {
     private func setViewAppearance() {
         backgroundColor = .colorForView()
         customBackgroundView.backgroundColor = .colorForSubview()
-        messageLabel.backgroundColor = .colorForView()
+        messageLabel.backgroundColor = .colorForSubview()
         messageLabel.numberOfLines = 0
         messageLabel.lineBreakMode = .byWordWrapping
     }

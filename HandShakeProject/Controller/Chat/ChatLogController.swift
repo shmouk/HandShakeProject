@@ -5,7 +5,7 @@ import UIKit
 class ChatLogController: UIViewController {
     private let chatViewModel = ChatViewModel()
     
-    private let cellId = "MessageCollectionViewCell"
+    private let cellId = "MessageTextTableViewCell"
     
     var containerView = InterfaceBuilder.createView()
     var sendButton = InterfaceBuilder.createButton()
@@ -51,7 +51,7 @@ class ChatLogController: UIViewController {
         settingTextField()
         settingTextLabel()
         settingButton()
-        settingsCollectionView()
+        settingTableView()
     }
     
     private func setSubviews() {
@@ -63,7 +63,7 @@ class ChatLogController: UIViewController {
         view.backgroundColor = .colorForView()
     }
     
-    private func settingsCollectionView() {
+    private func settingTableView() {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.separatorStyle = .none

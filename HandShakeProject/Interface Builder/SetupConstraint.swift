@@ -679,6 +679,9 @@ extension MessageTextTableViewCell {
         let width = UIScreen.main.bounds.width * 2/3 - 24
         guard let isMessageForUser = isMessageForUser else { return }
        
+        
+        customBackgroundView.removeConstraints(customBackgroundView.constraints)
+        
         if isMessageForUser {
             NSLayoutConstraint.activate([
                 customBackgroundView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
@@ -690,17 +693,17 @@ extension MessageTextTableViewCell {
         }
         
         NSLayoutConstraint.activate([
-            customBackgroundView.topAnchor.constraint(equalTo: topAnchor),
-            customBackgroundView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            customBackgroundView.heightAnchor.constraint(equalTo: heightAnchor),
-            customBackgroundView.widthAnchor.constraint(lessThanOrEqualToConstant: width)
+            customBackgroundView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            customBackgroundView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.9),
+            customBackgroundView.widthAnchor.constraint(equalToConstant:  width)
+
         ])
         
         NSLayoutConstraint.activate([
-            messageLabel.topAnchor.constraint(equalTo: customBackgroundView.topAnchor, constant: 8),
-            messageLabel.bottomAnchor.constraint(equalTo: customBackgroundView.bottomAnchor, constant: -8),
-            messageLabel.leadingAnchor.constraint(equalTo: customBackgroundView.leadingAnchor, constant: 8),
-            messageLabel.trailingAnchor.constraint(equalTo: customBackgroundView.trailingAnchor, constant: -8)
+            messageLabel.topAnchor.constraint(equalTo: customBackgroundView.topAnchor, constant: 12),
+            messageLabel.bottomAnchor.constraint(equalTo: customBackgroundView.bottomAnchor, constant: -12),
+            messageLabel.leadingAnchor.constraint(equalTo: customBackgroundView.leadingAnchor, constant: 12),
+            messageLabel.trailingAnchor.constraint(equalTo: customBackgroundView.trailingAnchor, constant: -12)
         ])
         
         NSLayoutConstraint.activate([
