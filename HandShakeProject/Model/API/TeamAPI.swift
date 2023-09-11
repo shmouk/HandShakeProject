@@ -355,7 +355,6 @@ class TeamAPI: APIClient {
                         let team = Team(teamName: teamName, creatorId: creatorId, teamId: teamId, image: teamImage, downloadURL: downloadURLString, userList: updatedUserIDs, eventList: updatedEventListIds)
                         self.teams.append(team)
                         self.teams.sort { $0.teamName < $1.teamName }
-                        self.notificationCenterManager.postCustomNotification(named: .eventNotification)
                         self.startObserveUserListData(refs: referenceData)
                         self.startObserveEventListData(refs: referenceData)
                         self.databaseReferenceData?.append(contentsOf: referenceData)

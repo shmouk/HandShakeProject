@@ -4,10 +4,10 @@ import SkeletonView
 
 class ChatViewController: UIViewController {
     private let navigationBarManager = NavigationBarManager()
+    private let userNotificationsManager = UserNotificationsManager.shared
     private let cellId = "MessageTableViewCell"
     private let chatViewModel = ChatViewModel()
     private let userViewModel = UserViewModel()
-    private let refreshCntrl = UIRefreshControl()
 
     var tableView = InterfaceBuilder.createTableView()
     
@@ -17,7 +17,6 @@ class ChatViewController: UIViewController {
             reloadTable()
         }
     }
-    
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -37,7 +36,10 @@ class ChatViewController: UIViewController {
         setupNavBarManager()
     }
     
-    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
@@ -76,7 +78,7 @@ class ChatViewController: UIViewController {
     private func setupNavBarManager() {
         tabBarController?.tabBar.isHidden = false
         navigationBarManager.delegate = self
-        navigationBarManager.updateNavigationBar(for: self, isAddButtonNeeded: true)
+        navigationBarManager.updateNavigationBar(for: self, isLeftButtonNeeded: true)
     }
     
     private func openUsersListVC() {
@@ -107,7 +109,6 @@ class ChatViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(MessageTableViewCell.self, forCellReuseIdentifier: cellId)
-        tableView.addSubview(refreshCntrl)
         tableView.showSkeleton(usingColor: .skeletonDefault, transition: .crossDissolve(0.5))
     }
     
@@ -117,20 +118,12 @@ class ChatViewController: UIViewController {
     }
     
     private func setupTargets() {
-        refreshCntrl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
-    }
-}
-
-extension ChatViewController {
-    @objc
-    private func handleRefresh(_ sender: UIRefreshControl) {
-        chatViewModel.loadLastMessagePerUser()
-        refreshCntrl.endRefreshing()
     }
 }
 
 extension ChatViewController: NavigationBarManagerDelegate {
-    func didTapNotificationButton() {}
+    func didTapRightButton() {
+    }
     
     func didTapAddButton() {
         openUsersListVC()
@@ -168,7 +161,7 @@ extension ChatViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? MessageTableViewCell else { return }
-        cell.contentView.backgroundColor = .white
+        cell.backgroundColor = .white
     }
 }
 

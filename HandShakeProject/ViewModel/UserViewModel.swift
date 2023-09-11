@@ -2,7 +2,6 @@ import Firebase
 
 class UserViewModel {
     private let userAPI = UserAPI.shared
-    private let userDefaults = UserDefaultsManager.shared
     
     var users = Bindable([User()])
     

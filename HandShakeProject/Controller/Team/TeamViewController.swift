@@ -10,9 +10,14 @@ class TeamViewController: UIViewController {
     private var sectionTitles = ["Your Teams", "Other Teams"]
     private var firstSectionTeams: [Team]?
     private var secondSectionTeams: [Team]?
-    
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        UserNotificationsManager.shared.currentViewController = nil
+    }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        UserNotificationsManager.shared.currentViewController = self
         reloadDataIfNeeded()
         setupNavBarManager()
     }
@@ -35,7 +40,7 @@ class TeamViewController: UIViewController {
     
     private func setupNavBarManager() {
         navigationBarManager.delegate = self
-        navigationBarManager.updateNavigationBar(for: self, isAddButtonNeeded: true)
+        navigationBarManager.updateNavigationBar(for: self, isLeftButtonNeeded: true)
         tabBarController?.tabBar.isHidden = false
     }
     
@@ -99,8 +104,7 @@ class TeamViewController: UIViewController {
 }
 
 extension TeamViewController: NavigationBarManagerDelegate {
-    func didTapNotificationButton() {
-
+    func didTapRightButton() {
     }
     
     func didTapAddButton() {
@@ -152,6 +156,10 @@ extension TeamViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let team = fetchTeam(indexPath) else { return }
         openSelectedTeamVC(team)
+    }
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? TeamTableViewCell else { return }
+        cell.backgroundColor = .white
     }
 }
 

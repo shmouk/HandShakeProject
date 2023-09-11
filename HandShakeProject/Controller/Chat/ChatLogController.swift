@@ -4,7 +4,7 @@ import UIKit
 
 class ChatLogController: UIViewController {
     private let chatViewModel = ChatViewModel()
-    
+    private let userNotificationsManager = UserNotificationsManager.shared
     private let cellId = "MessageTextTableViewCell"
     
     var containerView = InterfaceBuilder.createView()
@@ -29,6 +29,10 @@ class ChatLogController: UIViewController {
         KeyboardNotificationManager.hideKeyboard()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         reloadDataIfNeeded()
@@ -37,7 +41,7 @@ class ChatLogController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
-        bindViewModel()        
+        bindViewModel()
     }
 
     private func setUI() {
@@ -100,6 +104,7 @@ class ChatLogController: UIViewController {
             guard let self = self else { return }
             self.messages = messages
             self.reloadTable()
+            self.scrollToLastRow()
         }
     }
 
@@ -108,6 +113,12 @@ class ChatLogController: UIViewController {
         chatViewModel.sendMessage(text: text, toId: user.uid )
     }
     
+    private func scrollToLastRow() {
+        guard let messages = self.messages, !messages.isEmpty else { return }
+        let lastIndexPath = IndexPath(row: messages.count - 1, section: 0)
+        tableView.scrollToRow(at: lastIndexPath, at: .bottom, animated: true)
+    }
+
     private func setupTargets() {
         sendButton.addTarget(self, action: #selector(sendAction(_:)), for: .touchUpInside)
     }
@@ -141,6 +152,7 @@ extension ChatLogController: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? MessageTextTableViewCell,
               let message = messages?[indexPath.row] else
         { return UITableViewCell() }
+        cell.partnerUID = user.uid
         cell.configure(with: message)
         cell.selectionStyle = .none
         return cell

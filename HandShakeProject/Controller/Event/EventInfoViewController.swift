@@ -78,10 +78,6 @@ class EventInfoViewController: UIViewController {
     private func settingButton() {
         closeVCButton.setImage(UIImage(systemName: "xmark.circle"), for: .normal)
         readyButton.setTitle("Ready", for: .normal)
-        eventViewModel.checkExecutor(event: event) { isExecutor in
-            print(isExecutor)
-            readyButton.isEnabled = isExecutor
-        }
     }
     
     private func settingLabel() {
@@ -116,10 +112,15 @@ class EventInfoViewController: UIViewController {
 // MARK: - Action
 
 private extension EventInfoViewController {
-    
     @objc
     private func readyAction(_ sender: Any) {
-        eventViewModel.updateEventReadiness(event: event)
+        eventViewModel.checkExecutor(event: event) { isExecutor in
+            if isExecutor {
+                eventViewModel.updateEventReadiness(event: event)
+            } else {
+                AlertManager.showAlert(title: "Failure", message: "You are not executor", viewController: self)
+            }
+        }
     }
     
     @objc

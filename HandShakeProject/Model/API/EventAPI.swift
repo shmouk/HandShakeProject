@@ -90,28 +90,31 @@ class EventAPI: APIClient {
                 dispatchGroup.leave()
                 continue
             }
-            if !self.eventsData.contains(where: { $0.1.contains { event in eventList.contains(event.eventId) } }) {
+            
+            let missingEvents = eventsData.filter { _, events in
+                !events.contains { events in eventList.contains(where: { $0 == events.eventId }) }
+            }
+            if missingEvents.isEmpty {
                 fetchEvents(for: team) { result in
                     switch result {
-                    case .success(let data):
+                    case .success(let eventData):
                         DispatchQueue.main.async {
-                            print("6. data", data.1.count)
-                            eventsData.append(data)
+                            eventsData.append(eventData)
+                            dispatchGroup.leave()
                         }
                         
                     case .failure(let error):
                         DispatchQueue.main.async {
+                            dispatchGroup.leave()
                             completion(.failure(error))
                         }
                     }
-                    
-                    dispatchGroup.leave()
                 }
             } else {
-
                 dispatchGroup.leave()
             }
         }
+        
         dispatchGroup.notify(queue: .main) { [weak self] in
             guard let self = self else { return }
 

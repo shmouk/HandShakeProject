@@ -12,7 +12,6 @@ class ProfileViewController: UIViewController {
     var nameLabel = InterfaceBuilder.createTitleLabel()
     var emailLabel = InterfaceBuilder.createDescriptionLabel()
     var profileImageView = InterfaceBuilder.createImageView()
- 
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -80,7 +79,7 @@ class ProfileViewController: UIViewController {
     
     private func setupNavBarManager() {
         navigationBarManager.delegate = self
-        navigationBarManager.updateNavigationBar(for: self, isAddButtonNeeded: false)
+        navigationBarManager.updateNavigationBar(for: self, isLeftButtonNeeded: false)
     }
     
     private func setupTargets() {
@@ -98,7 +97,9 @@ private extension ProfileViewController {
         profileViewModel.requestPhotoLibraryAccess { [weak self] isAccess in
             guard let self = self else { return }
             if isAccess {
-                selectProfileImageView()
+                DispatchQueue.main.async { [self] in
+                    self.selectProfileImageView()
+                }
             } else {
                 AlertManager.showAlert(title: "Failure", message: "You have not granted access to the gallery.", viewController: self)
             }
@@ -112,7 +113,8 @@ private extension ProfileViewController {
 }
 
 extension ProfileViewController: NavigationBarManagerDelegate {
-    func didTapNotificationButton() {}
+    func didTapRightButton() {
+    }
     
     func didTapAddButton() {
     }

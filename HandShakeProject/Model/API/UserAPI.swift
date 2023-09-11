@@ -4,7 +4,7 @@ import FirebaseStorage
 
 class UserAPI: APIClient {
     static let shared = UserAPI()
-    
+
     private init() { }
     
     var users = [User]() {

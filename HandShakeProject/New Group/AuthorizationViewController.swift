@@ -9,9 +9,9 @@ class AuthorizationViewController: UIViewController {
     private let authViewModel = AuthViewModel()
     
     weak var delegate: AuthorizationViewControllerDelegate?
-    
     var loginTextField = InterfaceBuilder.createTextField()
     var passwordTextField = InterfaceBuilder.createTextField()
+    var showHideButton = InterfaceBuilder.createButton()
     var repeatPasswordTextField = InterfaceBuilder.createTextField()
     var statusAuthLabel = InterfaceBuilder.createTitleLabel()
     var loginButton = InterfaceBuilder.createButton()
@@ -74,6 +74,7 @@ class AuthorizationViewController: UIViewController {
     
     private func setSubviews() {
         view.addSubviews(authSegmentControl, loginTextField, repeatPasswordTextField, passwordTextField,  statusAuthLabel, loginButton)
+        passwordTextField.addSubview(showHideButton)
     }
     
     private func setSettings() {
@@ -89,7 +90,7 @@ class AuthorizationViewController: UIViewController {
         
         passwordTextField.isSecureTextEntry = true
         repeatPasswordTextField.isSecureTextEntry = true
-
+        
         loginTextField.placeholder = "Input login (email)"
         passwordTextField.placeholder = "Input password"
         repeatPasswordTextField.placeholder = "Repeat password"
@@ -99,6 +100,8 @@ class AuthorizationViewController: UIViewController {
     
     private func settingButton(title: String) {
         loginButton.setTitle(title, for: .normal)
+        showHideButton.setImage(UIImage(systemName: "eye"), for: .normal)
+        showHideButton.backgroundColor = .clear
     }
     
     private func settingViews() {
@@ -107,6 +110,9 @@ class AuthorizationViewController: UIViewController {
     }
     
     private func setupTargets() {
+        showHideButton.addTarget(self, action: #selector(showHideButtonTouchDown), for: .touchDown)
+        showHideButton.addTarget(self, action: #selector(showHideButtonTouchUpInside), for: .touchUpInside)
+        showHideButton.addTarget(self, action: #selector(showHideButtonTouchUpOutside), for: .touchUpOutside)
         authSegmentControl.addTarget(self, action: #selector(changeAuthState(_:)), for: .valueChanged)
         loginButton.addTarget(self, action: #selector(loginAction(_:)), for: .touchUpInside)
     }
@@ -117,7 +123,6 @@ class AuthorizationViewController: UIViewController {
 private extension AuthorizationViewController {
     @objc
     private func loginAction(_ sender: Any) {
-        
         guard let email = loginTextField.text,
                 let password = passwordTextField.text,
                 let rPassword = repeatPasswordTextField.text else { return }
@@ -128,6 +133,25 @@ private extension AuthorizationViewController {
     @objc
     private func changeAuthState(_ sender: Any) {
         authViewModel.toggleAuthState()
+    }
+    
+    @objc
+    private func showHideButtonTouchDown() {
+        passwordTextField.isSecureTextEntry = false
+        repeatPasswordTextField.isSecureTextEntry = false
+    }
+    
+    @objc
+    private func showHideButtonTouchUpInside() {
+        passwordTextField.isSecureTextEntry = true
+        repeatPasswordTextField.isSecureTextEntry = true
+        
+    }
+    
+    @objc
+    private func showHideButtonTouchUpOutside() {
+        passwordTextField.isSecureTextEntry = true
+        repeatPasswordTextField.isSecureTextEntry = true
     }
 }
 

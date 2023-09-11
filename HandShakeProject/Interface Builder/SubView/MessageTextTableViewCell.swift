@@ -7,6 +7,8 @@ class MessageTextTableViewCell: UITableViewCell {
 
     var isMessageForUser: Bool?
     var partnerUID: String?
+    var backgroundLeadingConstraint: NSLayoutConstraint?
+    var backgroundTrailingConstraint: NSLayoutConstraint?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

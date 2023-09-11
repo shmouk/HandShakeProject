@@ -4,13 +4,11 @@ import UIKit
 class ChatAPI: APIClient {
     static let shared = ChatAPI()
     lazy var userAPI = UserAPI.shared
+    private let userDefaults = UserDefaultsManager.shared
     var lastMessageFromMessages = [Message]()
     var allMessages = [Message]() {
         didSet {
             if !oldValue.isEmpty {
-                if allMessages.last?.toId == User.fetchCurrentId() {
-                    userNotificationsManager.scheduleNotification(withTitle: "You received a notification", body: "You have a new message")
-                }
                 notificationCenterManager.postCustomNotification(named: .messageNotification)
             }
         }
@@ -100,7 +98,6 @@ class ChatAPI: APIClient {
                 }
             }
         }
-
     }
     
     func startObserveNewData(ref: DatabaseReference) {
@@ -113,13 +110,17 @@ class ChatAPI: APIClient {
                 guard let self = self else { return }
                 let messageId = snapshot.key
                 
-                self.observeMessageInRef(messageId: messageId) { result in
+                self.observeMessageInRef(messageId: messageId) { [weak self] result in
+                    guard let self = self else { return }
+
                     switch result {
                     case .success(let message):
                         let alreadyAdded = self.allMessages.contains { $0.messageId == messageId }
 
                         if !alreadyAdded {
-                            
+                            if message.toId == User.fetchCurrentId() {
+                                userNotificationsManager.scheduleNotification(withTitle: "You received a notification", body: message.name + ": " + message.text)
+                            }
                             self.allMessages.append(message)
                             self.allMessages.sort { $0.timestamp < $1.timestamp}
                         }
@@ -129,7 +130,6 @@ class ChatAPI: APIClient {
                     }
                 }
             }
-
         }
     }
     
@@ -225,7 +225,7 @@ class ChatAPI: APIClient {
                 }
             }
             
-            let sortedMessages = lastMessages.values.sorted { $0.timestamp < $1.timestamp }
+            let sortedMessages = lastMessages.values.sorted { $0.timestamp > $1.timestamp }
             
             DispatchQueue.main.async {
                 if !sortedMessages.isEmpty {

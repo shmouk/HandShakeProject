@@ -5,7 +5,6 @@ class EventViewModel {
     private static var observerAdded = false
     
     private let eventAPI = EventAPI.shared
-    private let userDefaults = UserDefaultsManager.shared
     private var withUser: User?
     lazy var userAPI = UserAPI.shared
     
@@ -16,21 +15,17 @@ class EventViewModel {
     var eventData = Bindable([((UIImage, String), [Event])]())
     
     init() {
-           if !EventViewModel.observerAdded {
-               eventAPI.notificationCenterManager.addObserver(self, selector: #selector(updateEvent), forNotification: .eventNotification)
-               EventViewModel.observerAdded = true
-           }
-       }
+        if !EventViewModel.observerAdded {
+            eventAPI.notificationCenterManager.addObserver(self, selector: #selector(updateEvent), forNotification: .eventNotification)
+            EventViewModel.observerAdded = true
+        }
+    }
     
     deinit {
         if EventViewModel.observerAdded {
             eventAPI.notificationCenterManager.removeObserver(self, forNotification: .eventNotification)
-            EventViewModel.observerAdded = false 
+            EventViewModel.observerAdded = false
         }
-    }
-    
-    func sendRequestAuthorization() {
-        eventAPI.userNotificationsManager.requestAuthorization()
     }
     
     func createEvent(nameText: String?, descriptionText: String?, selectedState: Int?, selectedDate: Int?, selectedExecutorUser: String?,  completion: @escaping ResultCompletion) {
@@ -39,10 +34,11 @@ class EventViewModel {
             return
         }
   
-        if descriptionText == nil || descriptionText == "Input text"  {
+        if  descriptionText?.isEmpty ?? true || descriptionText == "Input text"  {
             completion(.failure(NSError(domain: "Input description text,", code: 400, userInfo: nil)))
             return
         }
+        
         guard let stateIndex = selectedState else {
             completion(.failure(NSError(domain: "Deadline not choosen,", code: 400, userInfo: nil)))
             return
@@ -168,7 +164,7 @@ extension EventViewModel {
             switch result {
             case .success():
                 fetchEventData()
-                eventAPI.userNotificationsManager.scheduleNotification(withTitle: "You received a notification", body: "Notification from the team")
+                eventAPI.userNotificationsManager.scheduleNotification(withTitle: "You received a notification", body: "New event!")
 
             case .failure(let error):
                 print(error.localizedDescription)

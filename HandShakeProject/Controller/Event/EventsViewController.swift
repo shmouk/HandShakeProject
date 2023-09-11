@@ -2,6 +2,7 @@ import UIKit
 import SkeletonView
 
 class EventsViewController: UIViewController {
+    private let userNotificationsManager = UserNotificationsManager.shared
     private let navigationBarManager = NavigationBarManager()
     private let eventViewModel = EventViewModel()
     private let cellId = "EventTableViewCell"
@@ -24,6 +25,10 @@ class EventsViewController: UIViewController {
         setupNavBarManager()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+    }
+
     deinit {
         print("1")
     }
@@ -44,7 +49,6 @@ class EventsViewController: UIViewController {
     
     private func requestsАfterFirstLaunch() {
         AlertManager.showAlert(title: "Success", message: "Account successfully login", viewController: self)
-        eventViewModel.sendRequestAuthorization()
     }
     
     private func reloadDataIfNeeded() {
@@ -62,7 +66,7 @@ class EventsViewController: UIViewController {
     
     private func setupNavBarManager() {
         navigationBarManager.delegate = self
-        navigationBarManager.updateNavigationBar(for: self, isAddButtonNeeded: true)
+        navigationBarManager.updateNavigationBar(for: self, isLeftButtonNeeded: true, isRightButtonNeeded: true)
         tabBarController?.tabBar.isHidden = false
     }
     
@@ -96,7 +100,9 @@ class EventsViewController: UIViewController {
 }
 
 extension EventsViewController: NavigationBarManagerDelegate {
-    func didTapNotificationButton() {
+    func didTapRightButton() {
+        let helperVC = HelperViewController()
+        present(helperVC, animated: true)
     }
     
     func didTapAddButton() {
@@ -151,7 +157,7 @@ extension EventsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? EventTableViewCell else { return }
-        cell.contentView.backgroundColor = .white
+        cell.backgroundColor = .white
     }
 }
 

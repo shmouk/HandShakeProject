@@ -30,6 +30,13 @@ extension AuthorizationViewController {
         ])
         
         NSLayoutConstraint.activate([
+            showHideButton.centerYAnchor.constraint(equalTo: passwordTextField.centerYAnchor),
+            showHideButton.heightAnchor.constraint(equalTo: passwordTextField.heightAnchor, multiplier: 0.8),
+            showHideButton.widthAnchor.constraint(equalTo: passwordTextField.heightAnchor),
+            showHideButton.trailingAnchor.constraint(equalTo: passwordTextField.trailingAnchor),
+        ])
+        
+        NSLayoutConstraint.activate([
             repeatPasswordTextField.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 15),
             repeatPasswordTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             repeatPasswordTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
@@ -81,6 +88,38 @@ extension LoadingView {
         ])
     }
 }
+
+// MARK: - NotificationViewController Constraint
+
+extension HelperViewController {
+    
+    func setupConstraints() {
+        
+        let heightForView = view.frame.height / 14
+        
+        NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 12),
+            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            titleLabel.heightAnchor.constraint(equalToConstant: heightForView)
+        ])
+        
+        NSLayoutConstraint.activate([
+            closeVCButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
+            closeVCButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            closeVCButton.heightAnchor.constraint(equalToConstant: heightForView * 0.7),
+            closeVCButton.widthAnchor.constraint(equalTo: closeVCButton.heightAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            helpImageView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 12),
+            helpImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            helpImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            helpImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -64)
+        ])
+    }
+}
+
 
 // MARK: - EventsViewController Constraint
 
@@ -676,32 +715,29 @@ extension ChatLogController {
 extension MessageTextTableViewCell {
     
     func setupConstraints() {
-        let width = UIScreen.main.bounds.width * 2/3 - 24
         guard let isMessageForUser = isMessageForUser else { return }
        
-        
-        customBackgroundView.removeConstraints(customBackgroundView.constraints)
-        
+        backgroundLeadingConstraint?.isActive = false
+        backgroundTrailingConstraint?.isActive = false
+
         if isMessageForUser {
-            NSLayoutConstraint.activate([
-                customBackgroundView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
-            ])
+            backgroundTrailingConstraint = customBackgroundView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
+            backgroundTrailingConstraint?.isActive = true
         } else {
-            NSLayoutConstraint.activate([
-                customBackgroundView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16)
-            ])
+            backgroundLeadingConstraint = customBackgroundView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16)
+            backgroundLeadingConstraint?.isActive = true
         }
         
         NSLayoutConstraint.activate([
             customBackgroundView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            customBackgroundView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.9),
-            customBackgroundView.widthAnchor.constraint(equalToConstant:  width)
+            customBackgroundView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.8),
+            customBackgroundView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 2/3)
 
         ])
         
         NSLayoutConstraint.activate([
             messageLabel.topAnchor.constraint(equalTo: customBackgroundView.topAnchor, constant: 12),
-            messageLabel.bottomAnchor.constraint(equalTo: customBackgroundView.bottomAnchor, constant: -12),
+            messageLabel.bottomAnchor.constraint(equalTo: customBackgroundView.bottomAnchor, constant: -24),
             messageLabel.leadingAnchor.constraint(equalTo: customBackgroundView.leadingAnchor, constant: 12),
             messageLabel.trailingAnchor.constraint(equalTo: customBackgroundView.trailingAnchor, constant: -12)
         ])

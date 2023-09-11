@@ -29,9 +29,13 @@ class ProfileViewModel {
         PHPhotoLibrary.requestAuthorization { status in
             switch status {
             case .authorized:
-                completion(true)
+                DispatchQueue.main.async {
+                    completion(true)
+                }
             case .denied, .restricted, .notDetermined, .limited:
-                completion(false)
+                DispatchQueue.main.async {
+                    completion(false)
+                }
             @unknown default:
                 completion(false)
             }
