@@ -2,6 +2,7 @@ import Foundation
 
 class TeamViewModel {
     let teamAPI = TeamAPI.shared
+    lazy var userAPI = UserAPI.shared
     
     var fetchUser = Bindable(User())
     var ownTeams = Bindable([Team()])
@@ -12,12 +13,25 @@ class TeamViewModel {
     var satusText = Bindable(String())
     
     init() {
+        teamAPI.notificationCenterManager.addObserver(self, selector: #selector(updateTeams), forNotification: .teamNotification)
+    }
+    
+    deinit {
+        teamAPI.notificationCenterManager.removeObserver(self, forNotification: .teamNotification)
     }
     
     func createTeam(_ text: String) {
         teamAPI.writeToDatabase(text) { _ in
             
         }
+    }
+    
+    func isTeamExist(teams: [Team]?) -> Bool {
+        let uid = User.fetchCurrentId()
+        guard let team = teams?.first(where: { $0.creatorId == uid }) else {
+            return false
+        }
+        return true
     }
     
     func filterTeam() {
@@ -48,24 +62,21 @@ class TeamViewModel {
         }
     }
     
-    func convertIdToUserName(id: String) {
-        teamAPI.convertIdToUserName(id: id) { [weak self] name in
+    func convertIdToName(id: String) {
+        teamAPI.convertIdToUserName(users: userAPI.users, id: id) { [weak self] name in
             guard let self = self else { return }
             self.creatorName.value = name
         }
     }
     
     func fetchUsersFromUserList(team: Team) {
-        teamAPI.fetchUserFromTeam(team) { [weak self] users in
+        DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.fetchUsersFromSelectedTeam.value = users
-        }
-    }
-    
-    func fetchSelectedTeam(_ selectedTeam: Team) {
-        teamAPI.fetchSelectedTeam(selectedTeam) { [weak self] team in
-            guard let self = self else { return }
-            self.selectedTeam.value = team
+            
+            teamAPI.fetchUserFromTeam(team) { [weak self] users in
+                guard let self = self else { return }
+                self.fetchUsersFromSelectedTeam.value = users
+            }
         }
     }
     
@@ -82,5 +93,12 @@ class TeamViewModel {
                 break
             }
         }
+    }
+}
+
+extension TeamViewModel {
+    @objc
+    private func updateTeams() {
+        filterTeam()
     }
 }

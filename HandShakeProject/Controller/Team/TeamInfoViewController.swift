@@ -1,14 +1,13 @@
 import UIKit
 
 class TeamInfoViewController: UIViewController {
-    private let interfaceBuilder = InterfaceBuilder()
     private let teamViewModel = TeamViewModel()
     
-    lazy var userListButton = interfaceBuilder.createButton()
-    lazy var editTeamButton = interfaceBuilder.createButton()
-    lazy var creatorID = interfaceBuilder.createDescriptionLabel()
-    lazy var nameLabel = interfaceBuilder.createTitleLabel()
-    lazy var teamImageView = interfaceBuilder.createImageView()
+    var userListButton = InterfaceBuilder.createButton()
+    var editTeamButton = InterfaceBuilder.createButton()
+    var creatorID = InterfaceBuilder.createDescriptionLabel()
+    var nameLabel = InterfaceBuilder.createTitleLabel()
+    var teamImageView = InterfaceBuilder.createImageView()
     
     private let team: Team
     private var users: [User]?
@@ -18,27 +17,24 @@ class TeamInfoViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
     
-    deinit {
-        print("4")
-    }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        bindViewModel()
+        reloadDataIfNeeded()
+        setupNavBarManager()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
         loadData()
+        bindViewModel()
     }
     
     private func setUI() {
-        setupNavBarManager()
         settingButton()
         settingLabel()
         settingImage()
@@ -53,7 +49,10 @@ class TeamInfoViewController: UIViewController {
     }
     
     private func loadData() {
-        teamViewModel.convertIdToUserName(id: team.creatorId)
+        teamViewModel.convertIdToName(id: team.creatorId)
+    }
+    
+    private func reloadDataIfNeeded() {
         teamViewModel.fetchUsersFromUserList(team: team)
     }
     
@@ -121,6 +120,7 @@ private extension TeamInfoViewController {
     
     @objc
     private func editProfile(_ sender: Any) {
+        AlertManager.showAlert(title: "Warning", message: "Image change not available", viewController: self)
     }
     
     @objc

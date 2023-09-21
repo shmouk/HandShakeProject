@@ -27,6 +27,8 @@
 		AD21997F2A98EC420015A409 /* APIManagers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD21997E2A98EC420015A409 /* APIManagers.swift */; };
 		AD2F8BEE2A6F014300743601 /* UserAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2F8BED2A6F014300743601 /* UserAPI.swift */; };
 		AD2F8BF02A6F0C0500743601 /* SetupDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD2F8BEF2A6F0C0400743601 /* SetupDatabase.swift */; };
+		AD3050852AA4F71B0019F594 /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3050842AA4F71B0019F594 /* UserViewModel.swift */; };
+		AD3050872AA526190019F594 /* NotificationCenterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3050862AA526190019F594 /* NotificationCenterManager.swift */; };
 		AD33F4D32A682C320028E919 /* EventsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD33F4D22A682C320028E919 /* EventsModel.swift */; };
 		AD33F4D52A6836C60028E919 /* UsersTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD33F4D42A6836C60028E919 /* UsersTableViewCell.swift */; };
 		AD33F4DA2A684C880028E919 /* EventCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD33F4D92A684C880028E919 /* EventCreateViewController.swift */; };
@@ -48,21 +50,24 @@
 		AD840EDB2A86561600BEAF7C /* TeamCeateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD840EDA2A86561600BEAF7C /* TeamCeateViewController.swift */; };
 		AD840EDD2A865BC500BEAF7C /* TeamViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD840EDC2A865BC500BEAF7C /* TeamViewModel.swift */; };
 		AD840EDF2A86976E00BEAF7C /* TeamTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD840EDE2A86976E00BEAF7C /* TeamTableViewCell.swift */; };
-		AD86E0102A811DD6000306B2 /* MessageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD86E00F2A811DD6000306B2 /* MessageCollectionViewCell.swift */; };
+		AD86E0102A811DD6000306B2 /* MessageTextTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD86E00F2A811DD6000306B2 /* MessageTextTableViewCell.swift */; };
 		ADA1BA202A8E75160008E353 /* KeyboardNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA1BA1F2A8E75160008E353 /* KeyboardNotificationManager.swift */; };
+		ADA66AE72AA67FAD001609C9 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA66AE62AA67FAC001609C9 /* LoadingView.swift */; };
 		ADACF2CF2A6186DB00550283 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADACF2CE2A6186DB00550283 /* AppDelegate.swift */; };
 		ADACF2D32A6186DB00550283 /* AuthorizationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADACF2D22A6186DB00550283 /* AuthorizationViewController.swift */; };
 		ADACF2D82A6186DF00550283 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ADACF2D72A6186DF00550283 /* Assets.xcassets */; };
 		ADACF2DB2A6186DF00550283 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ADACF2D92A6186DF00550283 /* LaunchScreen.storyboard */; };
+		ADB347C02AAF17AF00F91DB3 /* HelperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB347BF2AAF17AF00F91DB3 /* HelperViewController.swift */; };
 		ADBFBB0B2A7009D900666533 /* PickerProfileImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBFBB0A2A7009D900666533 /* PickerProfileImageView.swift */; };
 		ADBFBB0E2A70166100666533 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = ADBFBB0D2A70166100666533 /* FirebaseStorage */; };
 		ADBFBB102A71612D00666533 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBFBB0F2A71612D00666533 /* ProfileViewModel.swift */; };
 		ADBFBB142A72894C00666533 /* ChatLogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBFBB132A72894C00666533 /* ChatLogController.swift */; };
 		ADBFBB162A72917500666533 /* ChatAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBFBB152A72917500666533 /* ChatAPI.swift */; };
-		ADBFBB182A754C6F00666533 /* UserChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBFBB172A754C6F00666533 /* UserChatViewModel.swift */; };
+		ADBFBB182A754C6F00666533 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBFBB172A754C6F00666533 /* ChatViewModel.swift */; };
 		ADDA9CA12A6579FD0008C481 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDA9CA02A6579FD0008C481 /* SceneDelegate.swift */; };
 		ADDBC56D2A6589BD004CD8E6 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDBC56C2A6589BD004CD8E6 /* Coordinator.swift */; };
 		ADDF7F202A6704FA009FE3C2 /* EventTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADDF7F1F2A6704FA009FE3C2 /* EventTableViewCell.swift */; };
+		ADE1BC132AA967E0008BAAC8 /* UserNotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE1BC122AA967E0008BAAC8 /* UserNotificationsManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -86,6 +91,8 @@
 		AD21997E2A98EC420015A409 /* APIManagers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManagers.swift; sourceTree = "<group>"; };
 		AD2F8BED2A6F014300743601 /* UserAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAPI.swift; sourceTree = "<group>"; };
 		AD2F8BEF2A6F0C0400743601 /* SetupDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupDatabase.swift; sourceTree = "<group>"; };
+		AD3050842AA4F71B0019F594 /* UserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewModel.swift; sourceTree = "<group>"; };
+		AD3050862AA526190019F594 /* NotificationCenterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCenterManager.swift; sourceTree = "<group>"; };
 		AD33F4D22A682C320028E919 /* EventsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsModel.swift; sourceTree = "<group>"; };
 		AD33F4D42A6836C60028E919 /* UsersTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersTableViewCell.swift; sourceTree = "<group>"; };
 		AD33F4D92A684C880028E919 /* EventCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCreateViewController.swift; sourceTree = "<group>"; };
@@ -103,22 +110,25 @@
 		AD840EDA2A86561600BEAF7C /* TeamCeateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamCeateViewController.swift; sourceTree = "<group>"; };
 		AD840EDC2A865BC500BEAF7C /* TeamViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamViewModel.swift; sourceTree = "<group>"; };
 		AD840EDE2A86976E00BEAF7C /* TeamTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamTableViewCell.swift; sourceTree = "<group>"; };
-		AD86E00F2A811DD6000306B2 /* MessageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCollectionViewCell.swift; sourceTree = "<group>"; };
+		AD86E00F2A811DD6000306B2 /* MessageTextTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTextTableViewCell.swift; sourceTree = "<group>"; };
 		ADA1BA1F2A8E75160008E353 /* KeyboardNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardNotificationManager.swift; sourceTree = "<group>"; };
+		ADA66AE62AA67FAC001609C9 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		ADACF2CB2A6186DB00550283 /* HandShakeProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HandShakeProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADACF2CE2A6186DB00550283 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		ADACF2D22A6186DB00550283 /* AuthorizationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AuthorizationViewController.swift; path = "../New Group/AuthorizationViewController.swift"; sourceTree = "<group>"; };
 		ADACF2D72A6186DF00550283 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		ADACF2DA2A6186DF00550283 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ADACF2DC2A6186DF00550283 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		ADB347BF2AAF17AF00F91DB3 /* HelperViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperViewController.swift; sourceTree = "<group>"; };
 		ADBFBB0A2A7009D900666533 /* PickerProfileImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerProfileImageView.swift; sourceTree = "<group>"; };
 		ADBFBB0F2A71612D00666533 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		ADBFBB132A72894C00666533 /* ChatLogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogController.swift; sourceTree = "<group>"; };
 		ADBFBB152A72917500666533 /* ChatAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatAPI.swift; sourceTree = "<group>"; };
-		ADBFBB172A754C6F00666533 /* UserChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserChatViewModel.swift; sourceTree = "<group>"; };
+		ADBFBB172A754C6F00666533 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		ADDA9CA02A6579FD0008C481 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		ADDBC56C2A6589BD004CD8E6 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		ADDF7F1F2A6704FA009FE3C2 /* EventTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTableViewCell.swift; sourceTree = "<group>"; };
+		ADE1BC122AA967E0008BAAC8 /* UserNotificationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNotificationsManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +152,8 @@
 			children = (
 				ADACF2D22A6186DB00550283 /* AuthorizationViewController.swift */,
 				AD13F6432A61E4F5007F5449 /* MainTabBarViewController.swift */,
+				AD1EB9032A7B118500B78AEA /* UsersListTableViewController.swift */,
+				ADB347BF2AAF17AF00F91DB3 /* HelperViewController.swift */,
 				AD1EB90A2A7BEBE200B78AEA /* Event */,
 				AD1EB9092A7BEBD600B78AEA /* Chat */,
 				AD840ED92A864C2700BEAF7C /* Team */,
@@ -167,7 +179,8 @@
 			children = (
 				AD2199792A9752830015A409 /* Managers */,
 				AD13F6372A61A6B0007F5449 /* AuthViewModel.swift */,
-				ADBFBB172A754C6F00666533 /* UserChatViewModel.swift */,
+				ADBFBB172A754C6F00666533 /* ChatViewModel.swift */,
+				AD3050842AA4F71B0019F594 /* UserViewModel.swift */,
 				AD2199752A96AE150015A409 /* EventViewModel.swift */,
 				AD840EDC2A865BC500BEAF7C /* TeamViewModel.swift */,
 				ADBFBB0F2A71612D00666533 /* ProfileViewModel.swift */,
@@ -179,7 +192,7 @@
 		AD13F6392A61A83E007F5449 /* Interface Builder */ = {
 			isa = PBXGroup;
 			children = (
-				AD33F4D82A6849960028E919 /* ViewCell */,
+				AD33F4D82A6849960028E919 /* SubView */,
 				AD13F63A2A61A85F007F5449 /* InterfaceBuilder.swift */,
 				AD13F6412A61B337007F5449 /* SetupConstraint.swift */,
 				AD13F63C2A61AABB007F5449 /* Extension + typealias.swift */,
@@ -214,7 +227,6 @@
 			isa = PBXGroup;
 			children = (
 				AD5C62EB2A6310F00069A53F /* ChatViewController.swift */,
-				AD1EB9032A7B118500B78AEA /* UsersListTableViewController.swift */,
 				ADBFBB132A72894C00666533 /* ChatLogController.swift */,
 			);
 			path = Chat;
@@ -246,21 +258,24 @@
 				ADA1BA1F2A8E75160008E353 /* KeyboardNotificationManager.swift */,
 				AD2199712A9633E10015A409 /* DataManager.swift */,
 				AD2199772A97527A0015A409 /* AlertManager.swift */,
+				AD3050862AA526190019F594 /* NotificationCenterManager.swift */,
+				ADE1BC122AA967E0008BAAC8 /* UserNotificationsManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
 		};
-		AD33F4D82A6849960028E919 /* ViewCell */ = {
+		AD33F4D82A6849960028E919 /* SubView */ = {
 			isa = PBXGroup;
 			children = (
+				ADA66AE62AA67FAC001609C9 /* LoadingView.swift */,
 				AD34AC7A2A9F7CC50094EFD3 /* EventHeaderView.swift */,
 				ADDF7F1F2A6704FA009FE3C2 /* EventTableViewCell.swift */,
 				AD33F4D42A6836C60028E919 /* UsersTableViewCell.swift */,
 				AD840EDE2A86976E00BEAF7C /* TeamTableViewCell.swift */,
 				AD1EB90C2A7BFEF700B78AEA /* MessageTableViewCell.swift */,
-				AD86E00F2A811DD6000306B2 /* MessageCollectionViewCell.swift */,
+				AD86E00F2A811DD6000306B2 /* MessageTextTableViewCell.swift */,
 			);
-			path = ViewCell;
+			path = SubView;
 			sourceTree = "<group>";
 		};
 		AD840ED92A864C2700BEAF7C /* Team */ = {
@@ -399,12 +414,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				ADDBC56D2A6589BD004CD8E6 /* Coordinator.swift in Sources */,
+				AD3050872AA526190019F594 /* NotificationCenterManager.swift in Sources */,
 				ADA1BA202A8E75160008E353 /* KeyboardNotificationManager.swift in Sources */,
 				AD840EDF2A86976E00BEAF7C /* TeamTableViewCell.swift in Sources */,
 				AD1EB9062A7BE89700B78AEA /* MessageModel.swift in Sources */,
 				AD13F6382A61A6B0007F5449 /* AuthViewModel.swift in Sources */,
 				AD13F63B2A61A85F007F5449 /* InterfaceBuilder.swift in Sources */,
-				AD86E0102A811DD6000306B2 /* MessageCollectionViewCell.swift in Sources */,
+				AD86E0102A811DD6000306B2 /* MessageTextTableViewCell.swift in Sources */,
 				AD33F4DA2A684C880028E919 /* EventCreateViewController.swift in Sources */,
 				AD70293D2A8D2C42004FF7A9 /* AddUserViewController.swift in Sources */,
 				AD33F4D32A682C320028E919 /* EventsModel.swift in Sources */,
@@ -418,6 +434,7 @@
 				AD2199742A96ABA90015A409 /* EventAPI.swift in Sources */,
 				AD21997F2A98EC420015A409 /* APIManagers.swift in Sources */,
 				AD13F63F2A61AD28007F5449 /* Bindable.swift in Sources */,
+				ADE1BC132AA967E0008BAAC8 /* UserNotificationsManager.swift in Sources */,
 				AD2199722A9633E10015A409 /* DataManager.swift in Sources */,
 				AD34AC7D2AA0B6490094EFD3 /* EventInfoViewController.swift in Sources */,
 				AD5C62F02A6311060069A53F /* ProfileViewController.swift in Sources */,
@@ -430,17 +447,20 @@
 				AD5C62EA2A6310E30069A53F /* EventsViewController.swift in Sources */,
 				AD840ED82A8635BA00BEAF7C /* TeamModel.swift in Sources */,
 				AD1EB9042A7B118500B78AEA /* UsersListTableViewController.swift in Sources */,
+				ADB347C02AAF17AF00F91DB3 /* HelperViewController.swift in Sources */,
 				AD2F8BF02A6F0C0500743601 /* SetupDatabase.swift in Sources */,
 				AD1EB9022A7B0D3D00B78AEA /* NavigationBarManager.swift in Sources */,
 				AD840EDB2A86561600BEAF7C /* TeamCeateViewController.swift in Sources */,
 				AD33F4D52A6836C60028E919 /* UsersTableViewCell.swift in Sources */,
 				AD13F63D2A61AABB007F5449 /* Extension + typealias.swift in Sources */,
+				ADA66AE72AA67FAD001609C9 /* LoadingView.swift in Sources */,
 				ADACF2CF2A6186DB00550283 /* AppDelegate.swift in Sources */,
 				AD2199762A96AE150015A409 /* EventViewModel.swift in Sources */,
 				AD5C62EC2A6310F00069A53F /* ChatViewController.swift in Sources */,
 				AD840ED62A86357A00BEAF7C /* TeamAPI.swift in Sources */,
-				ADBFBB182A754C6F00666533 /* UserChatViewModel.swift in Sources */,
+				ADBFBB182A754C6F00666533 /* ChatViewModel.swift in Sources */,
 				ADBFBB162A72917500666533 /* ChatAPI.swift in Sources */,
+				AD3050852AA4F71B0019F594 /* UserViewModel.swift in Sources */,
 				ADBFBB0B2A7009D900666533 /* PickerProfileImageView.swift in Sources */,
 				AD13F6442A61E4F5007F5449 /* MainTabBarViewController.swift in Sources */,
 				AD1EB90D2A7BFEF700B78AEA /* MessageTableViewCell.swift in Sources */,
@@ -588,10 +608,10 @@
 				DEVELOPMENT_TEAM = BRUHN3JJ9Z;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HandShakeProject/Info.plist;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Requires gallery access to change your profile photo.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -618,10 +638,10 @@
 				DEVELOPMENT_TEAM = BRUHN3JJ9Z;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HandShakeProject/Info.plist;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Requires gallery access to change your profile photo.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

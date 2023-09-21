@@ -1,9 +1,10 @@
 import UIKit
+import Photos
 
 class ProfileViewModel {
     var currentUser = Bindable(User())
     let userAPI = UserAPI.shared
-
+    
     func fetchUser(completion: @escaping () -> ()) {
         userAPI.fetchUser { [weak self] result in
             guard let self = self else { return }
@@ -23,4 +24,22 @@ class ProfileViewModel {
             
         })
     }
+    
+    func requestPhotoLibraryAccess(completion: @escaping (Bool) -> ()) {
+        PHPhotoLibrary.requestAuthorization { status in
+            switch status {
+            case .authorized:
+                DispatchQueue.main.async {
+                    completion(true)
+                }
+            case .denied, .restricted, .notDetermined, .limited:
+                DispatchQueue.main.async {
+                    completion(false)
+                }
+            @unknown default:
+                completion(false)
+            }
+        }
+    }
+    
 }

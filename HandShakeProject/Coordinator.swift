@@ -1,10 +1,3 @@
-//
-//  Coordinator.swift
-//  HandShakeProject
-//
-//  Created by Марк on 17.07.23.
-//
-
 import UIKit
 import FirebaseAuth
 

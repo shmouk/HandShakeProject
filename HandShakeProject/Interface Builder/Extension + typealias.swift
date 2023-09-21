@@ -1,27 +1,22 @@
-//
-//  UIView + Extension.swift
-//  HandShakeProject
-//
-//  Created by Марк on 14.07.23.
-//
-
 import UIKit
 
 typealias UserCompletion = (Result<User, Error>) -> Void
 typealias UserInfoCompletion = (Result<(UIImage, String), Error>) -> Void
+typealias MessagesCompletion = (Result<[Message], Error>) -> Void
+typealias MessageCompletion = (Result<Message, Error>) -> Void
 typealias ResultCompletion = (Result<String, Error>) -> Void
 typealias VoidCompletion = (Result<Void, Error>) -> Void
 
-extension String {
-    func size(constrainedToWidth width: CGFloat) -> CGSize {
-        let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16)]
-        let maxSize = CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)
-        let options: NSStringDrawingOptions = [.usesLineFragmentOrigin, .usesFontLeading]
-        let rect = self.boundingRect(with: maxSize, options: options, attributes: attributes, context: nil)
-        return CGSize(width: ceil(rect.width), height: ceil(rect.height))
+extension UILabel {
+    func calculateSize() -> CGSize {
+        let maxSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
+        let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+        let attributes = [NSAttributedString.Key.font: self.font]
+        let textRect = self.text?.boundingRect(with: maxSize, options: options, attributes: attributes, context: nil)
+        
+        return textRect?.size ?? CGSize.zero
     }
 }
-
 
 extension Int {
     func convertTimestampToDate(timeStyle: DateFormatter.Style = .short) -> String {
@@ -32,32 +27,6 @@ extension Int {
         }
         let date = Date(timeIntervalSince1970: TimeInterval(self))
         return dateFormatter.string(from: date)
-
-    }
-}
-
-extension UIView {
-    func calculateCellHeight(withText text: String, cellWidth: CGFloat) -> CGSize {
-        let twoThirdsScreenWidth = cellWidth * 2 / 3
-        var size = text.size(constrainedToWidth: twoThirdsScreenWidth)
-
-        if size.width > twoThirdsScreenWidth {
-            size.width = twoThirdsScreenWidth
-            return size
-        } else {
-            return size
-//            return UIFont.systemFont(ofSize: 16).lineHeight
-        }
-    }
-    
-    func calculateWidth(textView: UITextView) -> CGSize {
-        let twoThirdsScreenWidth = (2/3) * frame.width
-        guard let text = textView.text else { return .zero }
-        if text.size(constrainedToWidth: twoThirdsScreenWidth).width > twoThirdsScreenWidth {
-            textView.textContainer.size = CGSize(width: twoThirdsScreenWidth, height: CGFloat.greatestFiniteMagnitude)
-             return textView.contentSize
-        }
-        return CGSize(width: twoThirdsScreenWidth, height: CGFloat.greatestFiniteMagnitude)
     }
 }
 
@@ -89,7 +58,7 @@ extension UIColor {
         case 3:
             return #colorLiteral(red: 0.9254901961, green: 0.2064778552, blue: 0.234777142, alpha: 1)
         default:
-            return . white
+            return .white
         }
     }
     static func colorForStroke() -> UIColor {
@@ -111,4 +80,68 @@ extension UIColor {
         return #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
     }
 }
-// button  9CB9D1 tint CFDAEC view e1e6ef
+
+extension UIViewController {
+    
+    private static var loadingViewKey: UInt8 = 0
+    
+    func showLoadingView() {
+        
+        guard let _ = objc_getAssociatedObject(self, &UIViewController.loadingViewKey) as? LoadingView else {
+            let loadingView = LoadingView(frame: view.bounds)
+            view.addSubview(loadingView)
+            
+            objc_setAssociatedObject(self, &UIViewController.loadingViewKey, loadingView, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            
+            return
+        }
+    }
+    
+    func hideLoadingView() {
+        if let loadingView = objc_getAssociatedObject(self, &UIViewController.loadingViewKey) as? LoadingView {
+            loadingView.removeFromSuperview()
+            
+            objc_setAssociatedObject(self, &UIViewController.loadingViewKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+}
+
+extension UIViewController {
+    func customTableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let totalRows = tableView.numberOfRows(inSection: indexPath.section)
+        var orientation: UIRectCorner = []
+        
+        if indexPath.row == 0 {
+            orientation = [.topLeft, .topRight]
+        }
+        if indexPath.row == totalRows - 1 {
+            orientation = [.bottomLeft, .bottomRight]
+        }
+        if totalRows == 1 {
+            orientation = [.allCorners]
+        }
+        RoundedCellDecorator.roundCorners(orientation: orientation, for: cell, cornerRadius: 10.0)
+    }
+}
+
+extension UIApplication {
+    class func topViewController(controller: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
+        if let navigationController = controller as? UINavigationController {
+            return topViewController(controller: navigationController.visibleViewController)
+        }
+        if let tabController = controller as? UITabBarController {
+            if let selected = tabController.selectedViewController {
+                return topViewController(controller: selected)
+            }
+        }
+        if let presented = controller?.presentedViewController {
+            return topViewController(controller: presented)
+        }
+        return controller
+    }
+}
+
+
+
+
+

@@ -1,66 +1,98 @@
 import UIKit
 
-
-class APIManager {
-    //    static let shared = APIManager()
-    //
-    //    private init() {}
-    //
-    func clearSingletonData(completion: @escaping () -> Void) {
-        DispatchQueue.global().async {
-            UserAPI.shared.users.removeAll()
-            ChatAPI.shared.allMessages.removeAll()
-            ChatAPI.shared.lastMessageFromMessages.removeAll()
-            TeamAPI.shared.teams.removeAll()
-            EventAPI.shared.eventsData.removeAll()
+final class APIManager {
+    static func clearSingletonData(completion: @escaping () -> Void) {
+        UserAPI.shared.removeData()
+        ChatAPI.shared.removeData()
+        TeamAPI.shared.removeData()
+        EventAPI.shared.removeData()
+        completion()
+    }
+    
+    private static func pullNotification() {
+        NotificationCenterManager.shared.postCustomNotification(named: .addProgressNotification)
+    }
+    
+    static func loadSingletonData(completion: @escaping () -> Void) {
+        let dispatchGroup = DispatchGroup()
+        
+        dispatchGroup.enter()
+        UserAPI.shared.observeUsers { observeUsersResult in
+            switch observeUsersResult {
+            case .success:
+                print("Users observed successfully")
+                pullNotification()
+            case .failure(let error):
+                print("Failed to observe users: \(error.localizedDescription)")
+            }
+            dispatchGroup.leave()
+        }
+        
+        dispatchGroup.notify(queue: .main) {
+            DispatchQueue.main.async {
+                observeMessagesAndComplete { }
+                observeTeamAndComplete {
+                    observeEventAndComplete(completion)
+                }
+            }
+        }
+    }
+    
+    private static func observeMessagesAndComplete(_ completion: @escaping () -> Void) {
+        let dispatchGroup = DispatchGroup()
+        
+        dispatchGroup.enter()
+        ChatAPI.shared.observeMessages { observeMessagesResult in
+            switch observeMessagesResult {
+            case .success:
+                print("Messages observed successfully")
+                pullNotification()
+            case .failure(let error):
+                print("Failed to observe messages: \(error.localizedDescription)")
+            }
+            dispatchGroup.leave()
+        }
+        
+        dispatchGroup.notify(queue: .main) {
+            completion()
+        }
+    }
+    private static func observeTeamAndComplete(_ completion: @escaping () -> Void) {
+        let dispatchGroup = DispatchGroup()
+        
+        dispatchGroup.enter()
+        TeamAPI.shared.observeTeams { observeTeamResult in
+            switch observeTeamResult {
+            case .success:
+                print("Teams observed successfully")
+                pullNotification()
+            case .failure(let error):
+                print("Failed to observe teams: \(error.localizedDescription)")
+            }
+            dispatchGroup.leave()
+        }
+        
+        dispatchGroup.notify(queue: .main) {
             completion()
         }
     }
     
-    func loadSingletonData(completion: @escaping () -> Void) {
-         
-        UserAPI.shared.observeUsers { result in
-            switch result {
-            case .success():
-                break
+    private static func observeEventAndComplete(_ completion: @escaping () -> Void) {
+        
+        EventAPI.shared.observeEventsFromTeam { observeTeamResult in
+            switch observeTeamResult {
+            case .success:
+                print("Events observed successfully")
+                pullNotification()
+                completion()
+                
             case .failure(let error):
-                print(error.localizedDescription)
+                print("Failed to observe events: \(error.localizedDescription)")
+                completion()
                 
-            }
-        }
-        
-        DispatchQueue.main.async {
-            ChatAPI.shared.observeMessages { result in
-                
-                switch result {
-                case .success():
-                    break
-                case .failure(let error):
-                    print(error.localizedDescription)
-                }
-            }
-        }
-        
-        DispatchQueue.main.async {
-            TeamAPI.shared.observeTeams { result in
-                switch result {
-                case .success():
-                    DispatchQueue.main.async {
-                        EventAPI.shared.observeEventsFromTeam { result in
-                            switch result {
-                            case .success():
-                                completion()
-                                break
-                            case .failure(let error):
-                                print(error.localizedDescription)
-                            }
-                        }
-                    }
-                case .failure(let error):
-                    print(error.localizedDescription)
-                    
-                }
             }
         }
     }
 }
+
+

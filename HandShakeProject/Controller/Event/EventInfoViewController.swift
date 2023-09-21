@@ -1,22 +1,22 @@
 import UIKit
+
 class EventInfoViewController: UIViewController {
-    private let interfaceBuilder = InterfaceBuilder()
     private let eventViewModel = EventViewModel()
     private let cellId = "UsersTableViewCell"
-
-    lazy var nameLabel = interfaceBuilder.createTitleLabel()
-    lazy var stateView = interfaceBuilder.createView()
-    lazy var dateLabel = interfaceBuilder.createTitleLabel()
-    lazy var creatorImageView = interfaceBuilder.createImageView()
-    lazy var creatorNameLabel = interfaceBuilder.createTitleLabel()
-    lazy var descriptionTextView = interfaceBuilder.createTextView()
-    lazy var executorTitleLabel = interfaceBuilder.createTitleLabel()
-    lazy var tableView = interfaceBuilder.createTableView()
-    lazy var readerTitleLabel = interfaceBuilder.createTitleLabel()
-    lazy var readerTextView = interfaceBuilder.createTextView()
-    lazy var readyButton = interfaceBuilder.createButton()
-    lazy var closeVCButton = interfaceBuilder.createButton()
-
+    
+    var nameLabel = InterfaceBuilder.createTitleLabel()
+    var stateView = InterfaceBuilder.createView()
+    var dateLabel = InterfaceBuilder.createTitleLabel()
+    var creatorImageView = InterfaceBuilder.createImageView()
+    var creatorNameLabel = InterfaceBuilder.createTitleLabel()
+    var descriptionTextView = InterfaceBuilder.createTextView()
+    var executorTitleLabel = InterfaceBuilder.createTitleLabel()
+    var tableView = InterfaceBuilder.createTableView()
+    var readerTitleLabel = InterfaceBuilder.createTitleLabel()
+    var readerTextView = InterfaceBuilder.createTextView()
+    var readyButton = InterfaceBuilder.createButton()
+    var closeVCButton = InterfaceBuilder.createButton()
+    
     private let event: Event
     
     init(event: Event) {
@@ -24,23 +24,15 @@ class EventInfoViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
     
-    deinit {
-        print("4")
-    }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        bindViewModel()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
         loadData()
+        bindViewModel()
     }
     
     private func setUI() {
@@ -72,13 +64,14 @@ class EventInfoViewController: UIViewController {
     }
     
     private func loadData() {
-        eventViewModel.convertIdToUserName(ids: event.readerList)
+        eventViewModel.convertIdToNames(ids: event.readerList)
     }
     
     private func bindViewModel() {
         eventViewModel.userNames.bind { [weak self] names in
             guard let self = self else { return }
-            readerTextView.text = names.joined(separator: ", ")
+            readerTextView.text = "Everyone"
+            //            readerTextView.text = names.joined(separator: ", ")
         }
     }
     
@@ -114,16 +107,20 @@ class EventInfoViewController: UIViewController {
         readyButton.addTarget(self, action: #selector(readyAction), for: .touchUpInside)
         closeVCButton.addTarget(self, action: #selector(closeVCAction), for: .touchUpInside)
     }
-    
-    
 }
 
 // MARK: - Action
 
 private extension EventInfoViewController {
-    
     @objc
     private func readyAction(_ sender: Any) {
+        eventViewModel.checkExecutor(event: event) { isExecutor in
+            if isExecutor {
+                eventViewModel.updateEventReadiness(event: event)
+            } else {
+                AlertManager.showAlert(title: "Failure", message: "You are not executor", viewController: self)
+            }
+        }
     }
     
     @objc
@@ -135,13 +132,13 @@ private extension EventInfoViewController {
 extension EventInfoViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? UsersTableViewCell else { return UITableViewCell() }
-        cell.user = event.executorInfo
+        cell.configure(with: event.executorInfo)
         cell.selectionStyle = .none
         return cell
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        RoundedCellDecorator.roundCorners(for: cell, cornerRadius: 10.0)
+        self.customTableView(tableView, willDisplay: cell, forRowAt: indexPath)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -149,7 +146,7 @@ extension EventInfoViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        64
+        80
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {

@@ -2,17 +2,8 @@ import UIKit
 
 class UsersTableViewCell : UITableViewCell {
     
-    lazy var nameLabel = interfaceBuilder.createTitleLabel()
-    lazy var userImageView = interfaceBuilder.createImageView()
-    
-    let interfaceBuilder = InterfaceBuilder()
-    
-    var user: User? {
-        didSet {
-            userImageView.image = user?.image
-            nameLabel.text = user?.name
-        }
-    }
+    var nameLabel = InterfaceBuilder.createTitleLabel()
+    var userImageView = InterfaceBuilder.createImageView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -24,8 +15,13 @@ class UsersTableViewCell : UITableViewCell {
         super.init(coder: aDecoder)
     }
     
+    func configure(with user: User) {
+        userImageView.image = user.image
+        nameLabel.text = user.name
+    }
+    
     private func setSubviews() {
         addSubviews(userImageView, nameLabel)
     }
-
+    
 }

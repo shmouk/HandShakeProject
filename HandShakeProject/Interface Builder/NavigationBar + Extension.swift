@@ -1,10 +1,3 @@
-//
-//  NavigationBar + Extension.swift
-//  HandShakeProject
-//
-//  Created by Марк on 20.07.23.
-//
-
 import UIKit
 
 extension UINavigationController {

@@ -4,12 +4,12 @@ import SkeletonView
 
 class ChatViewController: UIViewController {
     private let navigationBarManager = NavigationBarManager()
+    private let userNotificationsManager = UserNotificationsManager.shared
     private let cellId = "MessageTableViewCell"
-    private let userChatViewModel = UserChatViewModel()
-    private let interfaceBuilder = InterfaceBuilder()
-    private let refreshCntrl = UIRefreshControl()
-
-    lazy var tableView = interfaceBuilder.createTableView()
+    private let chatViewModel = ChatViewModel()
+    private let userViewModel = UserViewModel()
+    
+    var tableView = InterfaceBuilder.createTableView()
     
     private var user: User?
     private var messages: [Message]? {
@@ -17,7 +17,6 @@ class ChatViewController: UIViewController {
             reloadTable()
         }
     }
-    
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -37,6 +36,9 @@ class ChatViewController: UIViewController {
         setupNavBarManager()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,8 +54,9 @@ class ChatViewController: UIViewController {
     }
     
     private func reloadDataIfNeeded() {
+        
         if messages?.isEmpty ?? true {
-            userChatViewModel.loadLastMessagePerUser()
+            chatViewModel.loadLastMessagePerUser()
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
@@ -62,11 +65,11 @@ class ChatViewController: UIViewController {
     }
     
     private func bindViewModel() {
-        userChatViewModel.lastMessageArray.bind { [weak self] messages in
+        chatViewModel.lastMessageArray.bind { [weak self] messages in
             guard let self = self else { return }
             self.messages = messages
         }
-        userChatViewModel.fetchUser.bind { [weak self] user in
+        chatViewModel.fetchUser.bind { [weak self] user in
             guard let self = self else { return }
             self.user = user
         }
@@ -75,12 +78,12 @@ class ChatViewController: UIViewController {
     private func setupNavBarManager() {
         tabBarController?.tabBar.isHidden = false
         navigationBarManager.delegate = self
-        navigationBarManager.updateNavigationBar(for: self, isAddButtonNeeded: true)
+        navigationBarManager.updateNavigationBar(for: self, isLeftButtonNeeded: true)
     }
     
     private func openUsersListVC() {
-        userChatViewModel.loadUsers()
-        userChatViewModel.users.bind { [weak self] users in
+        userViewModel.observeUsers()
+        userViewModel.observeUsersWithoutMe { [weak self] users in
             guard let self = self else { return }
             let usersListTableViewController = UsersListTableViewController(users: users, isCellBeUsed: true)
             usersListTableViewController.delegate = self
@@ -90,16 +93,9 @@ class ChatViewController: UIViewController {
     }
     
     private func openSelectedChat(_ index: Int) {
-        userChatViewModel.fetchUserFromMessage(index) { [weak self] result in
-            guard let self = self, let user = self.user else { return }
-            
-            switch result {
-            case .success():
-                self.chooseUser(user)
-                
-            case .failure(_):
-                break
-            }
+        chatViewModel.fetchUserFromMessage(index) { [weak self] user in
+            guard let self = self else { return }
+            self.openChatWithChosenUser(user)
         }
     }
     
@@ -113,7 +109,6 @@ class ChatViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(MessageTableViewCell.self, forCellReuseIdentifier: cellId)
-        tableView.addSubview(refreshCntrl)
         tableView.showSkeleton(usingColor: .skeletonDefault, transition: .crossDissolve(0.5))
     }
     
@@ -123,20 +118,12 @@ class ChatViewController: UIViewController {
     }
     
     private func setupTargets() {
-        refreshCntrl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
-    }
-}
-
-extension ChatViewController {
-    @objc
-    private func handleRefresh(_ sender: UIRefreshControl) {
-        userChatViewModel.loadLastMessagePerUser()
-        refreshCntrl.endRefreshing()
     }
 }
 
 extension ChatViewController: NavigationBarManagerDelegate {
-    func didTapNotificationButton() {}
+    func didTapRightButton() {
+    }
     
     func didTapAddButton() {
         openUsersListVC()
@@ -144,7 +131,7 @@ extension ChatViewController: NavigationBarManagerDelegate {
 }
 
 extension ChatViewController: UsersListTableViewControllerDelegate {
-    func chooseUser(_ user: User) {
+    func openChatWithChosenUser(_ user: User) {
         let chatLogController = ChatLogController(user: user)
         navigationController?.pushViewController(chatLogController, animated: true)
     }
@@ -152,9 +139,10 @@ extension ChatViewController: UsersListTableViewControllerDelegate {
 
 extension ChatViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? MessageTableViewCell else { return UITableViewCell() }
-        let message = messages?[indexPath.row]
-        cell.message = message
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? MessageTableViewCell,
+              let message = messages?[indexPath.row] else
+        { return UITableViewCell() }
+        cell.configure(with: message)
         return cell
     }
     
@@ -163,7 +151,7 @@ extension ChatViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        64
+        80
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -172,7 +160,7 @@ extension ChatViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? MessageTableViewCell else { return }
-        cell.contentView.backgroundColor = .white
+        cell.backgroundColor = .white
     }
 }
 
@@ -182,7 +170,7 @@ extension ChatViewController: SkeletonTableViewDataSource {
     }
     
     func collectionSkeletonView(_ skeletonView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        userChatViewModel.loadMessagesIntoUserDefaults()
+        chatViewModel.loadMessagesIntoUserDefaults()
     }
     
     func collectionSkeletonView(_ skeletonView: UITableView, cellIdentifierForRowAt indexPath: IndexPath) -> ReusableCellIdentifier {

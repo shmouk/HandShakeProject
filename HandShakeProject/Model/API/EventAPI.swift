@@ -1,27 +1,41 @@
 import Firebase
-import FirebaseStorage
 import UIKit
 
-class EventAPI {
+class EventAPI: APIClient {
+    func startObserveNewData(ref: DatabaseReference) {
+        return
+    }
+    
     static var shared = EventAPI()
-    private let database = SetupDatabase().setDatabase()
-    private let storage = Storage.storage().reference()
+    lazy var userApi = UserAPI.shared
+    lazy var teamAPI = TeamAPI.shared
+    
     var eventsData = [((UIImage, String), [Event])]()
+    
+    var teams: [Team]?
+    
+    var databaseReferenceData: [DatabaseReference]?
     
     private init() {}
     
+    func removeData() {
+        removeObserver()
+        eventsData = removeData(data: &eventsData)
+    }
+    
     func writeToDatabase(_ teamId: String, _ eventData: [String : Any], completion: @escaping ResultCompletion) {
-        let ref = database.child("events")
+        let ref = SetupDatabase.setDatabase().child("events")
         let childRef = ref.childByAutoId()
+        
         guard let eventId = childRef.key else { return }
-        childRef.setValue(eventData) { (error, _) in
+        childRef.setValue(eventData) { [weak self] (error, _) in
+            guard let self = self else { return }
+            
             if let error = error {
                 completion(.failure(error))
             } else {
-                self.updateTeamEvents(teamId, eventId) { [weak self] result in
-                    guard let self = self else { return }
+                self.updateTeamEvents(teamId, eventId) { result in
                     switch result {
-                        
                     case .success():
                         let text = "Success added to database"
                         completion(.success(text))
@@ -34,8 +48,18 @@ class EventAPI {
         }
     }
     
+    func updateEventReadiness(_ event: Event) {
+        let eventId = event.eventId
+        let ref = SetupDatabase.setDatabase().child("events").child(eventId)
+        let eventData: [String: Bool] = [
+            "isReady": true
+        ]
+        
+        ref.updateChildValues(eventData) 
+    }
+    
     func updateTeamEvents(_ teamId: String, _ eventID: String, completion: @escaping VoidCompletion) {
-        let ref = database.child("teams").child(teamId).child("eventListId")
+        let ref = SetupDatabase.setDatabase().child("teams").child(teamId).child("eventListId")
         let eventData: [String: Int] = [
             eventID: Int(Date().timeIntervalSince1970)
         ]
@@ -51,56 +75,62 @@ class EventAPI {
     
     func observeEventsFromTeam(completion: @escaping VoidCompletion) {
         guard let uid = User.fetchCurrentId() else { return }
-        
         let dispatchGroup = DispatchGroup()
-        let teams = TeamAPI.shared.teams
+        let teams = teamAPI.teams
+        guard !teams.isEmpty else {
+            completion(.success(()))
+            return
+        }
         
         var eventsData = [((UIImage, String), [Event])]()
         
         for team in teams {
             dispatchGroup.enter()
+            guard let eventList = team.eventList else {
+                dispatchGroup.leave()
+                continue
+            }
             
-            fetchEventList(team) { eventIds in
-                self.fetchEvents(for: team, eventIds: eventIds) { result in
+            let missingEvents = eventsData.filter { _, events in
+                !events.contains { events in eventList.contains(where: { $0 == events.eventId }) }
+            }
+            if missingEvents.isEmpty {
+                fetchEvents(for: team) { result in
                     switch result {
-                    case .success(let data):
+                    case .success(let eventData):
                         DispatchQueue.main.async {
-                            print("5. data", data.1.count)
-                            eventsData.append(data)
+                            eventsData.append(eventData)
+                            dispatchGroup.leave()
                         }
                         
                     case .failure(let error):
                         DispatchQueue.main.async {
+                            dispatchGroup.leave()
                             completion(.failure(error))
                         }
                     }
-                    
-                    dispatchGroup.leave()
                 }
+            } else {
+                dispatchGroup.leave()
             }
         }
         
-        dispatchGroup.notify(queue: .main) {
+        dispatchGroup.notify(queue: .main) { [weak self] in
+            guard let self = self else { return }
+            
             if !eventsData.isEmpty {
-                
                 self.eventsData = eventsData
                 completion(.success(()))
             } else {
-                completion(.failure(NSError(domain: "No events found", code: 401, userInfo: nil)))
+                completion(.failure(NSError(domain: "No events found", code: 404, userInfo: nil)))
             }
-        }
-    }
-    
-    func fetchEventList(_ team: Team, completion: @escaping ([String]) -> Void) {
-        DispatchQueue.global().async {
-            guard let eventList = team.eventList else { return }
-            completion(eventList)
         }
     }
     
     func fetchUserInfo(uid: String, completion: @escaping UserCompletion) {
-        DispatchQueue.global().async {
-            UserAPI.shared.fetchUser(uid: uid) { result in
+        DispatchQueue.global().async { [weak self] in
+            guard let self = self else { return }
+            self.userApi.fetchUser(uid: uid) { result in
                 switch result {
                 case .success(let user):
                     DispatchQueue.main.async {
@@ -115,18 +145,23 @@ class EventAPI {
         }
     }
     
-    func fetchEvents(for team: Team, eventIds: [String], completion: @escaping (Result<((UIImage, String), [Event]), Error>) -> Void) {
-        DispatchQueue.global().async {
+    func fetchEvents(for team: Team, completion: @escaping (Result<((UIImage, String), [Event]), Error>) -> Void) {
+        DispatchQueue.global(qos: .userInteractive).async {
             var events = [Event]()
+            let dispatchGroup = DispatchGroup()
             let group = DispatchGroup()
             
-            for eventId in eventIds {
+            guard let eventList = team.eventList else {
+                completion(.failure(NSError(domain: "Events not created", code: 500, userInfo: nil)))
+                return }
+            
+            for eventId in eventList {
+                dispatchGroup.enter()
                 group.enter()
-                
-                let ref = self.database.child("events").child(eventId)
+                let ref = SetupDatabase.setDatabase().child("events").child(eventId)
                 
                 ref.observeSingleEvent(of: .value) { [weak self] snapshot in
-                    defer { group.leave() }
+                    defer { dispatchGroup.leave() }
                     
                     guard let self = self,
                           let eventDict = snapshot.value as? [String: Any],
@@ -141,50 +176,51 @@ class EventAPI {
                     var creatorData: User?
                     var readerList: [String] = []
                     
-                    group.enter()
+                    dispatchGroup.enter()
                     self.fetchUserInfo(uid: selectedExecutorUser) { result in
                         
                         switch result {
                         case .success(let user):
                             executorData = user
-                            group.leave()
-                            print("1.1 fetchUserInfo")
+                            dispatchGroup.leave()
+                            print("1 fetchUserInfo")
                         case .failure(let error):
                             completion(.failure(error))
-                            group.leave()
+                            dispatchGroup.leave()
                         }
                     }
                     
-                    group.enter()
+                    dispatchGroup.enter()
                     self.fetchUserInfo(uid: team.creatorId) { result in
                         
                         switch result {
                         case .success(let user):
                             creatorData = user
-                            group.leave()
-                            print("1.2 fetchUserInfo")
+                            dispatchGroup.leave()
+                            print("2 fetchUserInfo")
                         case .failure(let error):
                             completion(.failure(error))
-                            group.leave()
+                            dispatchGroup.leave()
                         }
                     }
                     
-                    group.enter()
+                    dispatchGroup.enter()
                     self.fetchReaderList(for: ref) { resultList in
-                        defer { group.leave() }
-                        print("2. fetchReaderList")
+                        defer { dispatchGroup.leave() }
+                        print("3 fetchReaderList")
                         readerList = resultList
                     }
                     
                     
-                    group.notify(queue: .global(qos: .userInteractive)) {
-                        group.enter()
+                    dispatchGroup.notify(queue: .main) {
+                        dispatchGroup.enter()
                         guard let executorData = executorData, let creatorData = creatorData else {
-                            completion(.failure(NSError(domain: "Failure load executor and creator data", code: 401, userInfo: nil)))
-                            group.leave()
+                            completion(.failure(NSError(domain: "Failure load executor and creator data", code: 500, userInfo: nil)))
+                            dispatchGroup.leave()
                             return
                         }
-                        let event = Event(creatorInfo: creatorData,
+                        let event = Event(eventId: eventId,
+                                          creatorInfo: creatorData,
                                           nameEvent: nameText,
                                           descriptionText: descriptionText,
                                           deadlineState: selectedState,
@@ -193,24 +229,29 @@ class EventAPI {
                                           readerList: readerList)
                         
                         events.append(event)
-                        print("3. events.append")
+                        events.sort { $0.date < $1.date }
+                        print("4 events.append")
                         group.leave()
                     }
                 }
             }
             
             group.notify(queue: .main) {
-                print("4. events.count", events.count)
+                print("5 events.count", events.count)
                 guard let image = team.image else {
-                    completion(.failure(NSError(domain: "Failure image data", code: 401, userInfo: nil)))
+                    completion(.failure(NSError(domain: "Failure image data", code: 404, userInfo: nil)))
                     return
                 }
-                let dataTuple = ((image, team.teamName), events.sorted(by: { $0.date < $1.date }))
+                
+                
+                let dataTuple = ((image, team.teamName), events)
                 
                 completion(.success(dataTuple))
             }
         }
     }
+    
+    
     
     func fetchReaderList(for ref: DatabaseReference, completion: @escaping ([String]) -> Void) {
         ref.child("readerList").observeSingleEvent(of: .value) { snapshot in
@@ -223,26 +264,10 @@ class EventAPI {
             completion(readerList)
         }
     }
-    
-    
-    
-    func convertIdToUserName(_ ids: [String], completion: @escaping ([String]) -> Void) {
-        let users = UserAPI.shared.users
-        DispatchQueue.global().async { [weak self] in
-            guard self != nil else { return }
-            
-            var userNames: [String] = []
-            
-            for id in ids {
-                if let userName = users.first(where: { $0.uid == id })?.name {
-                    userNames.append(userName)
-                }
-            }
-            
-            DispatchQueue.main.async {
-                completion(userNames)
-            }
-        }
-    }
 }
 
+extension EventAPI {
+    @objc func teamListDidChange() {
+        
+    }
+}

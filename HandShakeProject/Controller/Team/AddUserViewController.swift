@@ -3,33 +3,32 @@ import UIKit
 
 class AddUserViewController: UIViewController {
     private let cellId = "cellId"
-    private let interfaceBuilder = InterfaceBuilder()
     private let teamViewModel = TeamViewModel()
     private var user: User?
     private var team: Team
-
-    lazy var namingTextField = interfaceBuilder.createTextField()
-    lazy var userNameLabel = interfaceBuilder.createTitleLabel()
-    lazy var statusLabel = interfaceBuilder.createDescriptionLabel()
-    lazy var searchButton = interfaceBuilder.createButton()
-    lazy var tableView = interfaceBuilder.createTableView()
-
+    
+    var namingTextField = InterfaceBuilder.createTextField()
+    var userNameLabel = InterfaceBuilder.createTitleLabel()
+    var statusLabel = InterfaceBuilder.createDescriptionLabel()
+    var searchButton = InterfaceBuilder.createButton()
+    var tableView = InterfaceBuilder.createTableView()
+    
     init(team: Team) {
         self.team = team
         super.init(nibName: nil, bundle: nil)
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        KeyboardNotificationManager.hideKeyboard()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        setUI()
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        setUI()
         bindViewModel()
     }
     
@@ -146,14 +145,17 @@ extension AddUserViewController: UITextFieldDelegate {
 
 extension AddUserViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? UsersTableViewCell else { return UITableViewCell() }
-        cell.user = user
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? UsersTableViewCell,
+              let user = self.user else
+        { return UITableViewCell() }
+        
+        cell.configure(with: user)
         cell.selectionStyle = .none
         return cell
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        RoundedCellDecorator.roundCorners(for: cell, cornerRadius: 10.0)
+        self.customTableView(tableView, willDisplay: cell, forRowAt: indexPath)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -161,11 +163,12 @@ extension AddUserViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        64
+        80
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? UsersTableViewCell else { return }
         cell.contentView.backgroundColor = .white
     }
+    
 }

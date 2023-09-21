@@ -1,10 +1,3 @@
-//
-//  Bindable.swift
-//  HandShakeProject
-//
-//  Created by Марк on 14.07.23.
-//
-
 import Foundation
 
 class Bindable<T> {

@@ -1,10 +1,3 @@
-//
-//  ViewController.swift
-//  HandShakeProject
-//
-//  Created by Марк on 14.07.23.
-//
-
 import UIKit
 import FirebaseAuth
 
@@ -13,27 +6,35 @@ protocol AuthorizationViewControllerDelegate: AnyObject {
 }
 
 class AuthorizationViewController: UIViewController {
-    private let interfaceBuilder = InterfaceBuilder()
     private let authViewModel = AuthViewModel()
     
     weak var delegate: AuthorizationViewControllerDelegate?
+    var loginTextField = InterfaceBuilder.createTextField()
+    var passwordTextField = InterfaceBuilder.createTextField()
+    var showHideButton = InterfaceBuilder.createButton()
+    var repeatPasswordTextField = InterfaceBuilder.createTextField()
+    var statusAuthLabel = InterfaceBuilder.createTitleLabel()
+    var loginButton = InterfaceBuilder.createButton()
+    lazy var authSegmentControl = InterfaceBuilder.createSegmentControl(items: authState)
     
-    lazy var loginTextField = interfaceBuilder.createTextField()
-    lazy var passwordTextField = interfaceBuilder.createTextField()
-    lazy var repeatPasswordTextField = interfaceBuilder.createTextField()
-    lazy var statusAuthLabel = interfaceBuilder.createTitleLabel()
-    lazy var loginButton = interfaceBuilder.createButton()
-    lazy var authSegmentControl = interfaceBuilder.createSegmentControl(items: authState)
-
     private let authState = ["Sign up", "Log in"]
     private var isSignup = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        //        authViewModel.userLogoutAction()
         setUI()
         bindViewModel()
     }
-
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        hideLoadingView()
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        KeyboardNotificationManager.hideKeyboard()
+    }
+    
     private func bindViewModel() {
         authViewModel.statusText.bind({ [weak self](statusText) in
             guard let self = self else { return }
@@ -52,12 +53,15 @@ class AuthorizationViewController: UIViewController {
             switch result {
             case .success():
                 delegate?.didLogin()
-                AlertManager.showAlert(title: "Success", message: "Account successfully login", viewController: self)
-
+                
             case .failure(let error):
+                print(error.localizedDescription)
                 self.navigationController?.popToRootViewController(animated: false)
-//                AlertManager.showAlert(title: "Failure", message: "Account logout \(error)", viewController: self)
             }
+        }
+        authViewModel.loadingViewSwitcher.bind { [weak self] isSwitch in
+            guard let self = self else { return }
+            self.showLoadingView()
         }
     }
     
@@ -70,6 +74,7 @@ class AuthorizationViewController: UIViewController {
     
     private func setSubviews() {
         view.addSubviews(authSegmentControl, loginTextField, repeatPasswordTextField, passwordTextField,  statusAuthLabel, loginButton)
+        passwordTextField.addSubview(showHideButton)
     }
     
     private func setSettings() {
@@ -85,22 +90,29 @@ class AuthorizationViewController: UIViewController {
         
         passwordTextField.isSecureTextEntry = true
         repeatPasswordTextField.isSecureTextEntry = true
-
+        
         loginTextField.placeholder = "Input login (email)"
         passwordTextField.placeholder = "Input password"
         repeatPasswordTextField.placeholder = "Repeat password"
+        statusAuthLabel.textAlignment = .center
+        statusAuthLabel.numberOfLines = 2
     }
     
     private func settingButton(title: String) {
         loginButton.setTitle(title, for: .normal)
+        showHideButton.setImage(UIImage(systemName: "eye"), for: .normal)
+        showHideButton.backgroundColor = .clear
     }
     
     private func settingViews() {
-        self.navigationController?.isNavigationBarHidden = true
+        navigationController?.isNavigationBarHidden = true
         view.backgroundColor = .white
     }
     
     private func setupTargets() {
+        showHideButton.addTarget(self, action: #selector(showHideButtonTouchDown), for: .touchDown)
+        showHideButton.addTarget(self, action: #selector(showHideButtonTouchUpInside), for: .touchUpInside)
+        showHideButton.addTarget(self, action: #selector(showHideButtonTouchUpOutside), for: .touchUpOutside)
         authSegmentControl.addTarget(self, action: #selector(changeAuthState(_:)), for: .valueChanged)
         loginButton.addTarget(self, action: #selector(loginAction(_:)), for: .touchUpInside)
     }
@@ -109,18 +121,39 @@ class AuthorizationViewController: UIViewController {
 // MARK: - Action
 
 private extension AuthorizationViewController {
-    
-    @objc private func loginAction(_ sender: Any) {
+    @objc
+    private func loginAction(_ sender: Any) {
+        KeyboardNotificationManager.hideKeyboard()
         guard let email = loginTextField.text,
-                let password = passwordTextField.text,
-                let rPassword = repeatPasswordTextField.text else { return }
+              let password = passwordTextField.text,
+              let rPassword = repeatPasswordTextField.text else { return }
         
         authViewModel.userLoginAction(email: email, password: password, repeatPassword: rPassword)
     }
-
+    
     @objc
     private func changeAuthState(_ sender: Any) {
         authViewModel.toggleAuthState()
+        passwordTextField.text = ""
+        repeatPasswordTextField.text = ""
+    }
+    
+    @objc
+    private func showHideButtonTouchDown() {
+        passwordTextField.isSecureTextEntry = false
+        repeatPasswordTextField.isSecureTextEntry = false
+    }
+    
+    @objc
+    private func showHideButtonTouchUpInside() {
+        passwordTextField.isSecureTextEntry = true
+        repeatPasswordTextField.isSecureTextEntry = true
+    }
+    
+    @objc
+    private func showHideButtonTouchUpOutside() {
+        passwordTextField.isSecureTextEntry = true
+        repeatPasswordTextField.isSecureTextEntry = true
     }
 }
 
@@ -132,5 +165,3 @@ extension AuthorizationViewController: UITextFieldDelegate {
         return true
     }
 }
-
-

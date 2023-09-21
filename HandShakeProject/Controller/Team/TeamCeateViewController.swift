@@ -1,26 +1,18 @@
-//
-//  TeamCeateViewController.swift
-//  HandShakeProject
-//
-//  Created by Марк on 11.08.23.
-//
-
 import UIKit
 
 class TeamCeateViewController: UIViewController {
-    private let interfaceBuilder = InterfaceBuilder()
     private let teamViewModel = TeamViewModel()
     
-    lazy var namingTextField = interfaceBuilder.createTextField()
-    lazy var teamLabel = interfaceBuilder.createTitleLabel()
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        setUI()
+    var namingTextField = InterfaceBuilder.createTextField()
+    var teamLabel = InterfaceBuilder.createTitleLabel()
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        KeyboardNotificationManager.hideKeyboard()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setUI()
     }
     
     private func setUI() {
@@ -79,5 +71,12 @@ extension TeamCeateViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         namingTextField.resignFirstResponder()
         return true
+    }
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let text = namingTextField.text else { return true }
+        
+        let newLength = text.count + string.count - range.length
+        
+        return newLength <= 15
     }
 }

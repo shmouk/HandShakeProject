@@ -1,38 +1,29 @@
-//
-//  EventCreateViewController.swift
-//  HandShakeProject
-//
-//  Created by Марк on 19.07.23.
-//
-
 import UIKit
 
 class EventCreateViewController: UIViewController {
-    
-    private let interfaceBuilder = InterfaceBuilder()
-    private let eventViewModel = EventViewModel()
+    lazy var eventViewModel = EventViewModel()
     private let deadlineState = ["No time", "Low", "Medium", "High"]
     
-    lazy var namingTextField = interfaceBuilder.createTextField()
-    lazy var descriptionTextView = interfaceBuilder.createTextView()
-    lazy var readingListTextView = interfaceBuilder.createTextView()
+    var namingTextField = InterfaceBuilder.createTextField()
+    var descriptionTextView = InterfaceBuilder.createTextView()
+    var readingListTextView = InterfaceBuilder.createTextView()
     
-    lazy var teamTitleLabel = interfaceBuilder.createTitleLabel()
-    lazy var pickedTeamLabel = interfaceBuilder.createTitleLabel()
-    lazy var nameTitleLabel = interfaceBuilder.createTitleLabel()
-    lazy var deadlineTypeTitleLabel = interfaceBuilder.createTitleLabel()
-    lazy var dateTitleLabel = interfaceBuilder.createTitleLabel()
-    lazy var descriptionTitleLabel = interfaceBuilder.createTitleLabel()
-    lazy var executorTitleLabel = interfaceBuilder.createTitleLabel()
-    lazy var pickedExecutorLabel = interfaceBuilder.createTitleLabel()
-    lazy var readerTitleLabel = interfaceBuilder.createTitleLabel()
+    var teamTitleLabel = InterfaceBuilder.createTitleLabel()
+    var pickedTeamLabel = InterfaceBuilder.createTitleLabel()
+    var nameTitleLabel = InterfaceBuilder.createTitleLabel()
+    var deadlineTypeTitleLabel = InterfaceBuilder.createTitleLabel()
+    var dateTitleLabel = InterfaceBuilder.createTitleLabel()
+    var descriptionTitleLabel = InterfaceBuilder.createTitleLabel()
+    var executorTitleLabel = InterfaceBuilder.createTitleLabel()
+    var pickedExecutorLabel = InterfaceBuilder.createTitleLabel()
+    var readerTitleLabel = InterfaceBuilder.createTitleLabel()
     
-    lazy var chooseTeamButton = interfaceBuilder.createButton()
-    lazy var chooseExecutorButton = interfaceBuilder.createButton()
+    var chooseTeamButton = InterfaceBuilder.createButton()
+    var chooseExecutorButton = InterfaceBuilder.createButton()
     
-    lazy var importanceSegmentControl = interfaceBuilder.createSegmentControl(items: deadlineState)
-    lazy var datePicker = interfaceBuilder.createDatePicker()
-        
+    lazy var importanceSegmentControl = InterfaceBuilder.createSegmentControl(items: deadlineState)
+    var datePicker = InterfaceBuilder.createDatePicker()
+    
     private var selectedTeam: Team?
     private var selectedDate: Int?
     private var selectedStateIndex: Int?
@@ -44,6 +35,10 @@ class EventCreateViewController: UIViewController {
         super.viewDidLoad()
         setUI()
         bindViewModel()
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        KeyboardNotificationManager.hideKeyboard()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -161,7 +156,7 @@ class EventCreateViewController: UIViewController {
         usersListTableViewController.modalPresentationStyle = .automatic
         present(usersListTableViewController, animated: true)
     }
-
+    
     
     private func createEvent() {
         AlertManager.showConfirmationAlert(title: "Create Alert", message: "Are you sure you want to create an event and it doesn't need to be changed?", viewController: self) { [weak self] in
@@ -171,7 +166,6 @@ class EventCreateViewController: UIViewController {
                 
                 switch result {
                 case .success(let text):
-                    dismiss(animated: true)
                     AlertManager.showAlert(title: "Success", message: text, viewController: self)
                     
                 case .failure(let error):
@@ -183,7 +177,7 @@ class EventCreateViewController: UIViewController {
 }
 
 extension EventCreateViewController: UsersListTableViewControllerDelegate {
-    func chooseUser(_ user: User) {
+    func openChatWithChosenUser(_ user: User) {
         selectedExecutorUser = user
         pickedExecutorLabel.text = user.name
     }
@@ -236,6 +230,13 @@ extension EventCreateViewController: UITextViewDelegate {
         }
         let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
         return newText.count <= 130
+    }
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let text = namingTextField.text else { return true }
+        
+        let newLength = text.count + string.count - range.length
+        
+        return newLength <= 12
     }
 }
 

@@ -1,26 +1,17 @@
-//
-//  ProfileViewController.swift
-//  HandShakeProject
-//
-//  Created by Марк on 15.07.23.
-//
-
 import UIKit
 
 class ProfileViewController: UIViewController {
     private let navigationBarManager = NavigationBarManager()
-    private let interfaceBuilder = InterfaceBuilder()
     private let authViewModel = AuthViewModel()
-
+    
     let profileViewModel = ProfileViewModel()
     
-    lazy var activityIndicator = interfaceBuilder.createActivityIndicator()
-    lazy var logoutButton = interfaceBuilder.createButton()
-    lazy var editProfileButton = interfaceBuilder.createButton()
-    lazy var nameLabel = interfaceBuilder.createTitleLabel()
-    lazy var emailLabel = interfaceBuilder.createDescriptionLabel()
-    lazy var profileImageView = interfaceBuilder.createImageView()
- 
+    var activityIndicator = InterfaceBuilder.createActivityIndicator()
+    var logoutButton = InterfaceBuilder.createButton()
+    var editProfileButton = InterfaceBuilder.createButton()
+    var nameLabel = InterfaceBuilder.createTitleLabel()
+    var emailLabel = InterfaceBuilder.createDescriptionLabel()
+    var profileImageView = InterfaceBuilder.createImageView()
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -34,15 +25,11 @@ class ProfileViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        bindViewModel()
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
         loadData()
+        bindViewModel()
     }
     
     private func setUI() {
@@ -58,7 +45,7 @@ class ProfileViewController: UIViewController {
         view.addSubviews(activityIndicator, profileImageView, editProfileButton, emailLabel, nameLabel, logoutButton)
         view.backgroundColor = .colorForView()
     }
-
+    
     func loadData() {
         activityIndicator.startAnimating()
         DispatchQueue.global().async { [weak self] in
@@ -92,7 +79,7 @@ class ProfileViewController: UIViewController {
     
     private func setupNavBarManager() {
         navigationBarManager.delegate = self
-        navigationBarManager.updateNavigationBar(for: self, isAddButtonNeeded: false)
+        navigationBarManager.updateNavigationBar(for: self, isLeftButtonNeeded: false)
     }
     
     private func setupTargets() {
@@ -107,7 +94,16 @@ private extension ProfileViewController {
     
     @objc
     private func editProfile(_ sender: Any) {
-        selectProfileImageView()
+        profileViewModel.requestPhotoLibraryAccess { [weak self] isAccess in
+            guard let self = self else { return }
+            if isAccess {
+                DispatchQueue.main.async { [self] in
+                    self.selectProfileImageView()
+                }
+            } else {
+                AlertManager.showAlert(title: "Failure", message: "You have not granted access to the gallery.", viewController: self)
+            }
+        }
     }
     
     @objc
@@ -117,7 +113,8 @@ private extension ProfileViewController {
 }
 
 extension ProfileViewController: NavigationBarManagerDelegate {
-    func didTapNotificationButton() {}
+    func didTapRightButton() {
+    }
     
     func didTapAddButton() {
     }

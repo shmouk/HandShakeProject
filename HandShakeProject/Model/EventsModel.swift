@@ -1,23 +1,19 @@
-//
-//  EventsModel.swift
-//  HandShakeProject
-//
-//  Created by Марк on 19.07.23.
-//
-
 import UIKit
 
 
 class Event {
-    var creatorInfo: User
-    var nameEvent: String
-    var descriptionText: String
-    var deadlineState: Int
-    var date: Int
-    var executorInfo: User
-    var readerList: [String]
+    @objc dynamic var eventId: String
+    @objc dynamic var creatorInfo: User
+    @objc dynamic var nameEvent: String
+    @objc dynamic var descriptionText: String
+    @objc dynamic var deadlineState: Int
+    @objc dynamic var date: Int
+    @objc dynamic var executorInfo: User
+    @objc dynamic var readerList: [String]
+    @objc dynamic var isReady: Bool
     
-    init(creatorInfo: User = User(), nameEvent: String = "", descriptionText: String = "", deadlineState: Int = 0, date: Int = 0, executorInfo: User = User(), readerList: [String] = []) {
+    init(eventId: String = "", creatorInfo: User = User(), nameEvent: String = "", descriptionText: String = "", deadlineState: Int = 0, date: Int = 0, executorInfo: User = User(), readerList: [String] = [], isReady: Bool = false) {
+        self.eventId = eventId
         self.creatorInfo = creatorInfo
         self.nameEvent = nameEvent
         self.descriptionText = descriptionText
@@ -25,5 +21,6 @@ class Event {
         self.date = date
         self.executorInfo = executorInfo
         self.readerList = readerList
+        self.isReady = isReady
     }
 }

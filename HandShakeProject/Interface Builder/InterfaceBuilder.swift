@@ -24,9 +24,9 @@ class RoundedCellDecorator {
 }
 
 
-class InterfaceBuilder {
+final class InterfaceBuilder {
     
-    func createNavBar() -> UINavigationBar {
+    static func createNavBar() -> UINavigationBar {
         let navBar = UINavigationBar()
         navBar.translatesAutoresizingMaskIntoConstraints = false
         navBar.barTintColor = .white
@@ -37,19 +37,20 @@ class InterfaceBuilder {
         return navBar
     }
     
-    func createView() -> UIView {
+    static func createView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .colorForView()
         view.layer.cornerRadius = 10
-       return view
+        return view
     }
     
-    func createCollectionView() -> UICollectionView {
+    static func createCollectionView() -> UICollectionView {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 8
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        //        collectionView.contentInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
         collectionView.backgroundColor = .colorForView()
         collectionView.isScrollEnabled = true
         collectionView.isPrefetchingEnabled = false
@@ -57,7 +58,7 @@ class InterfaceBuilder {
         return collectionView
     }
     
-    func createTableView() -> UITableView {
+    static func createTableView() -> UITableView {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.backgroundColor = .colorForView()
@@ -65,7 +66,7 @@ class InterfaceBuilder {
         return tableView
     }
     
-    func createSegmentControl(items: [Any]?) -> UISegmentedControl {
+    static func createSegmentControl(items: [Any]?) -> UISegmentedControl {
         let viewSC = UISegmentedControl(items: items)
         viewSC.backgroundColor = .colorForView()
         viewSC.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 18)], for: .normal)
@@ -76,7 +77,7 @@ class InterfaceBuilder {
         return viewSC
     }
     
-    func createTextField() -> UITextField {
+    static func createTextField() -> UITextField {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.backgroundColor = .white
@@ -89,11 +90,11 @@ class InterfaceBuilder {
         let leftPaddingView = UIView(frame: CGRect(x: 8, y: 0, width: 10, height: 40))
         textField.leftView = leftPaddingView
         textField.leftViewMode = .always
-
+        
         return textField
     }
     
-    func createImageView() -> RoundImageView {
+    static func createImageView() -> RoundImageView {
         let imageView = RoundImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
@@ -102,11 +103,12 @@ class InterfaceBuilder {
         return imageView
     }
     
-    func createTitleLabel() -> UILabel {
+    static func createTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .colorForTitleText()
         label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.numberOfLines = 0
         label.textAlignment = .left
         label.layer.masksToBounds = true
         label.layer.cornerRadius = 10
@@ -114,17 +116,19 @@ class InterfaceBuilder {
         return label
     }
     
-    func createDescriptionLabel() -> UILabel {
+    static func createDescriptionLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .colorForDescriptionText()
         label.font = UIFont.boldSystemFont(ofSize: 14)
         label.textAlignment = .left
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
         label.isSkeletonable = true
         return label
     }
     
-    func createButton() -> UIButton {
+    static func createButton() -> UIButton {
         let button = UIButton(type: .custom)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = .colorForButton()
@@ -141,7 +145,7 @@ class InterfaceBuilder {
         return button
     }
     
-    func createTextView() -> UITextView {
+    static func createTextView() -> UITextView {
         let textView = UITextView()
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.backgroundColor = .white
@@ -153,23 +157,36 @@ class InterfaceBuilder {
         textView.text = "Input text"
         textView.isScrollEnabled = false
         textView.isEditable = false
-//        textView.textContainer.lineBreakMode = .byWordWrapping
+        //        textView.textContainer.lineBreakMode = .byWordWrapping
         return textView
     }
     
-    func createActivityIndicator() -> UIActivityIndicatorView {
+    static func createActivityIndicator() -> UIActivityIndicatorView {
         let activityIndicator = UIActivityIndicatorView(style: .medium)
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         return activityIndicator
     }
-
-    func createDatePicker() -> UIDatePicker {
+    
+    static func createDatePicker() -> UIDatePicker {
         let datePicker =  UIDatePicker()
         datePicker.translatesAutoresizingMaskIntoConstraints = false
         datePicker.datePickerMode = .date
         datePicker.preferredDatePickerStyle = .wheels
         datePicker.minimumDate = Date()
-    
         return datePicker
+    }
+    
+    static func createProgressView() -> UIProgressView {
+        let progressView = UIProgressView(progressViewStyle: .default)
+        progressView.translatesAutoresizingMaskIntoConstraints = false
+        progressView.progress = 0.0
+        progressView.progressTintColor = .colorForTitleText()
+        return progressView
+    }
+    
+    static func createBlurView() -> UIVisualEffectView {
+        let blurEffect = UIBlurEffect(style: .systemChromeMaterialLight)
+        let blurView = UIVisualEffectView(effect: blurEffect)
+        return blurView
     }
 }
