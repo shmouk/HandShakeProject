@@ -6,13 +6,13 @@ class AddUserViewController: UIViewController {
     private let teamViewModel = TeamViewModel()
     private var user: User?
     private var team: Team
-
+    
     var namingTextField = InterfaceBuilder.createTextField()
     var userNameLabel = InterfaceBuilder.createTitleLabel()
     var statusLabel = InterfaceBuilder.createDescriptionLabel()
     var searchButton = InterfaceBuilder.createButton()
     var tableView = InterfaceBuilder.createTableView()
-
+    
     init(team: Team) {
         self.team = team
         super.init(nibName: nil, bundle: nil)
@@ -170,5 +170,5 @@ extension AddUserViewController: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? UsersTableViewCell else { return }
         cell.contentView.backgroundColor = .white
     }
-
+    
 }

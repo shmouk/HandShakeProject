@@ -4,7 +4,7 @@ import Photos
 class ProfileViewModel {
     var currentUser = Bindable(User())
     let userAPI = UserAPI.shared
-
+    
     func fetchUser(completion: @escaping () -> ()) {
         userAPI.fetchUser { [weak self] result in
             guard let self = self else { return }
@@ -41,5 +41,5 @@ class ProfileViewModel {
             }
         }
     }
-
+    
 }

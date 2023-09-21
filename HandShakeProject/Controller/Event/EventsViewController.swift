@@ -12,7 +12,7 @@ class EventsViewController: UIViewController {
     
     var tableView = InterfaceBuilder.createTableView()
     var headerView = InterfaceBuilder.createView()
-
+    
     var eventData: [((UIImage, String), [Event])]? {
         didSet {
             reloadTable()
@@ -28,7 +28,7 @@ class EventsViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
     }
-
+    
     deinit {
         print("1")
     }
@@ -120,7 +120,7 @@ extension EventsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerId) as? EventHeaderView
-
+        
         headerView?.configure(with: eventData?[section].0)
         return headerView
     }
@@ -150,7 +150,7 @@ extension EventsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return eventData?[section].1.count ?? 0
     }
-
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         openEventVC(indexPath)
     }

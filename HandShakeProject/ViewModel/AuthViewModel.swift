@@ -20,38 +20,59 @@ class AuthViewModel {
         isSigningUp.value = !isSigningUp.value
     }
     
+    private func setStatusText(_ message: String) {
+        self.statusText.value = message
+    }
+    
     func userLoginAction(email: String, password: String, repeatPassword: String) {
         guard !email.isEmpty, !password.isEmpty else {
-            statusText.value = "Error: Empty fields"
+            setStatusText("Error: Empty fields")
             return
         }
         
         if isSigningUp.value {
             guard password == repeatPassword else {
-                statusText.value = "Error: Passwords do not match"
+                setStatusText("Error: Passwords do not match")
                 return
             }
             
             Auth.auth().createUser(withEmail: email, password: password) { [weak self] (result, error) in
                 guard let self = self else { return }
-                guard error == nil, let uid = result?.user.uid else {
-                    self.statusText.value = "Error: \(String(describing: error?.localizedDescription))"
+                if let error = error {
+                    self.setStatusText("Error: " + error.localizedDescription)
+                    return
+                }
+                
+                guard let uid = result?.user.uid else {
+                    self.setStatusText("Error: Could not retrieve user ID")
                     return
                 }
                 
                 self.userAPI.writeToDatabase(uid: uid, email: email)
             }
         } else {
+            guard isValidEmail(email: email) else {
+                setStatusText("Incorrect email address")
+                return
+            }
+            
             Auth.auth().signIn(withEmail: email, password: password) { [weak self] (result, error) in
                 guard let self = self else { return }
-                
-                guard error == nil else {
-                    self.statusText.value = "Error: \(String(describing: error?.localizedDescription))"
+                if let error = error {
+                    self.setStatusText("Error: \(error.localizedDescription)")
                     return
                 }
+                
             }
         }
     }
+    
+    private func isValidEmail(email: String) -> Bool {
+        let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,}"
+        let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
+        return emailPredicate.evaluate(with: email)
+    }
+    
     
     func authStateListener(completion: @escaping VoidCompletion) {
         Auth.auth().addStateDidChangeListener { [weak self](auth, user) in
@@ -80,6 +101,7 @@ class AuthViewModel {
         }
     }
 }
+
 extension AuthViewModel {
     @objc
     func loadingViewHandle() {

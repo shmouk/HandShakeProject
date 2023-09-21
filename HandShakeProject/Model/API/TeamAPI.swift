@@ -210,7 +210,7 @@ class TeamAPI: APIClient {
                             userList: team.userList,
                             eventList: eventList
                         )
-
+                        
                     }
                     
                     return team
@@ -275,7 +275,7 @@ class TeamAPI: APIClient {
                             userList: userList,
                             eventList: team.eventList
                         )
-
+                        
                     }
                     
                     return team
@@ -292,7 +292,7 @@ class TeamAPI: APIClient {
             
             let dispatchGroup = DispatchGroup()
             let teamId = snapshot.key
-
+            
             if !self.teams.contains(where: { $0.teamId == teamId }) {
                 var referenceData = [DatabaseReference]()
                 dispatchGroup.enter()
@@ -362,7 +362,7 @@ class TeamAPI: APIClient {
                     dispatchGroup.leave()
                 }
             } else {
-//                dispatchGroup.leave()
+                //                dispatchGroup.leave()
             }
         }
     }

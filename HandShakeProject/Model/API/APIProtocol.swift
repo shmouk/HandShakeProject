@@ -18,7 +18,7 @@ extension APIClient {
     var notificationCenterManager: NotificationCenterManager {
         return NotificationCenterManager.shared
     }
-
+    
     var userNotificationsManager: UserNotificationsManager {
         return UserNotificationsManager.shared
     }

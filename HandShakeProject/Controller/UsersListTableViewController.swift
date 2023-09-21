@@ -12,11 +12,11 @@ class UsersListTableViewController: UIViewController {
     private let isCellBeUsed: Bool
     
     weak var delegate: UsersListTableViewControllerDelegate?
-
+    
     var tableView = InterfaceBuilder.createTableView()
     var titleLabel = InterfaceBuilder.createTitleLabel()
     var closeVCButton = InterfaceBuilder.createButton()
-
+    
     init(users: [User], isCellBeUsed: Bool) {
         self.isCellBeUsed = isCellBeUsed
         self.users = users
@@ -31,7 +31,7 @@ class UsersListTableViewController: UIViewController {
         super.viewDidLoad()
         setUI()
     }
-   
+    
     private func setUI() {
         setSubviews()
         setupTargets()
@@ -81,7 +81,7 @@ extension UsersListTableViewController: UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         self.customTableView(tableView, willDisplay: cell, forRowAt: indexPath)
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? UsersTableViewCell else { return UITableViewCell() }
         let user = users[indexPath.row]

@@ -58,7 +58,6 @@
 		ADACF2D82A6186DF00550283 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ADACF2D72A6186DF00550283 /* Assets.xcassets */; };
 		ADACF2DB2A6186DF00550283 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ADACF2D92A6186DF00550283 /* LaunchScreen.storyboard */; };
 		ADB347C02AAF17AF00F91DB3 /* HelperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB347BF2AAF17AF00F91DB3 /* HelperViewController.swift */; };
-		ADB347C62AAF36C800F91DB3 /* HelperViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB347C52AAF36C800F91DB3 /* HelperViewModel.swift */; };
 		ADBFBB0B2A7009D900666533 /* PickerProfileImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBFBB0A2A7009D900666533 /* PickerProfileImageView.swift */; };
 		ADBFBB0E2A70166100666533 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = ADBFBB0D2A70166100666533 /* FirebaseStorage */; };
 		ADBFBB102A71612D00666533 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBFBB0F2A71612D00666533 /* ProfileViewModel.swift */; };
@@ -121,7 +120,6 @@
 		ADACF2DA2A6186DF00550283 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ADACF2DC2A6186DF00550283 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ADB347BF2AAF17AF00F91DB3 /* HelperViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperViewController.swift; sourceTree = "<group>"; };
-		ADB347C52AAF36C800F91DB3 /* HelperViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperViewModel.swift; sourceTree = "<group>"; };
 		ADBFBB0A2A7009D900666533 /* PickerProfileImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerProfileImageView.swift; sourceTree = "<group>"; };
 		ADBFBB0F2A71612D00666533 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		ADBFBB132A72894C00666533 /* ChatLogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogController.swift; sourceTree = "<group>"; };
@@ -186,7 +184,6 @@
 				AD2199752A96AE150015A409 /* EventViewModel.swift */,
 				AD840EDC2A865BC500BEAF7C /* TeamViewModel.swift */,
 				ADBFBB0F2A71612D00666533 /* ProfileViewModel.swift */,
-				ADB347C52AAF36C800F91DB3 /* HelperViewModel.swift */,
 				AD13F6402A61AD2D007F5449 /* Bindable */,
 			);
 			path = ViewModel;
@@ -421,7 +418,6 @@
 				ADA1BA202A8E75160008E353 /* KeyboardNotificationManager.swift in Sources */,
 				AD840EDF2A86976E00BEAF7C /* TeamTableViewCell.swift in Sources */,
 				AD1EB9062A7BE89700B78AEA /* MessageModel.swift in Sources */,
-				ADB347C62AAF36C800F91DB3 /* HelperViewModel.swift in Sources */,
 				AD13F6382A61A6B0007F5449 /* AuthViewModel.swift in Sources */,
 				AD13F63B2A61A85F007F5449 /* InterfaceBuilder.swift in Sources */,
 				AD86E0102A811DD6000306B2 /* MessageTextTableViewCell.swift in Sources */,

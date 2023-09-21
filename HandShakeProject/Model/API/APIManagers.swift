@@ -2,11 +2,11 @@ import UIKit
 
 final class APIManager {
     static func clearSingletonData(completion: @escaping () -> Void) {
-            UserAPI.shared.removeData()
-            ChatAPI.shared.removeData()
-            TeamAPI.shared.removeData()
-            EventAPI.shared.removeData()
-            completion()
+        UserAPI.shared.removeData()
+        ChatAPI.shared.removeData()
+        TeamAPI.shared.removeData()
+        EventAPI.shared.removeData()
+        completion()
     }
     
     private static func pullNotification() {
@@ -76,7 +76,7 @@ final class APIManager {
             completion()
         }
     }
-
+    
     private static func observeEventAndComplete(_ completion: @escaping () -> Void) {
         
         EventAPI.shared.observeEventsFromTeam { observeTeamResult in

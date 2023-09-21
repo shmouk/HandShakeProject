@@ -19,12 +19,12 @@ class KeyboardNotificationManager {
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-
+    
     private func keyboardWillShow(notification: Notification) {
         guard let userInfo = notification.userInfo,
               let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
               let view = self.view else {
-                return
+            return
         }
         
         let convertedKeyboardFrame = view.convert(keyboardFrame, from: UIScreen.main.coordinateSpace)
@@ -41,7 +41,7 @@ class KeyboardNotificationManager {
         guard let userInfo = notification.userInfo,
               let duration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval,
               let view = self.view else {
-                return
+            return
         }
         
         UIView.animate(withDuration: duration) {

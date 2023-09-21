@@ -150,7 +150,7 @@ extension EventCreateViewController {
             teamTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             teamTitleLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
         ])
-
+        
         NSLayoutConstraint.activate([
             pickedTeamLabel.topAnchor.constraint(equalTo: teamTitleLabel.bottomAnchor, constant: 6),
             pickedTeamLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -171,7 +171,7 @@ extension EventCreateViewController {
             nameTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             nameTitleLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
         ])
-   
+        
         NSLayoutConstraint.activate([
             namingTextField.topAnchor.constraint(equalTo: nameTitleLabel.bottomAnchor, constant: 6),
             namingTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -227,7 +227,7 @@ extension EventCreateViewController {
             executorTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             executorTitleLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
         ])
-
+        
         NSLayoutConstraint.activate([
             pickedExecutorLabel.topAnchor.constraint(equalTo: executorTitleLabel.bottomAnchor, constant: 6),
             pickedExecutorLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -241,14 +241,14 @@ extension EventCreateViewController {
             chooseExecutorButton.heightAnchor.constraint(equalToConstant: heightForView),
             chooseExecutorButton.widthAnchor.constraint(equalTo: pickedExecutorLabel.heightAnchor)
         ])
-
+        
         NSLayoutConstraint.activate([
             readerTitleLabel.topAnchor.constraint(equalTo: chooseExecutorButton.bottomAnchor, constant: 14),
             readerTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             readerTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             readerTitleLabel.heightAnchor.constraint(equalToConstant: heightForView / 2)
         ])
-
+        
         NSLayoutConstraint.activate([
             readingListTextView.topAnchor.constraint(equalTo: readerTitleLabel.bottomAnchor, constant: 6),
             readingListTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -284,7 +284,7 @@ extension EventHeaderView {
 extension EventTableViewCell {
     
     func setupConstraints() {
-    
+        
         NSLayoutConstraint.activate([
             executorImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
             executorImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
@@ -298,7 +298,7 @@ extension EventTableViewCell {
             titleLabel.trailingAnchor.constraint(equalTo: dateLabel.leadingAnchor),
             titleLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1/2)
         ])
-
+        
         stateView.removeConstraints(stateView.constraints)
         NSLayoutConstraint.activate([
             stateView.heightAnchor.constraint(equalToConstant: sizeForView.height + 6),
@@ -332,7 +332,7 @@ extension EventInfoViewController{
         let heightForView = view.frame.height / 14
         guard let text = nameLabel.text else { return }
         let textSize = (text as NSString).size(withAttributes: [.font: nameLabel.font])
-
+        
         NSLayoutConstraint.activate([
             nameLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 12),
             nameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -436,11 +436,11 @@ extension TeamViewController {
 // MARK: - TeamInfoViewController Constraint
 
 extension TeamInfoViewController {
-
+    
     func setupConstraints() {
         
         let heightForView = view.frame.height / 14
-
+        
         NSLayoutConstraint.activate([
             teamImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 120),
             teamImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -605,7 +605,7 @@ extension UsersListTableViewController {
 extension UsersTableViewCell {
     
     func setupConstraints() {
-
+        
         NSLayoutConstraint.activate([
             userImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
             userImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
@@ -649,7 +649,7 @@ extension MessageTableViewCell {
             userImageView.topAnchor.constraint(equalTo: topAnchor, constant: 12),
             userImageView.widthAnchor.constraint(equalTo: userImageView.heightAnchor)
         ])
-             
+        
         NSLayoutConstraint.activate([
             nameLabel.topAnchor.constraint(equalTo: topAnchor),
             nameLabel.leadingAnchor.constraint(equalTo: userImageView.trailingAnchor, constant: 12),
@@ -663,7 +663,7 @@ extension MessageTableViewCell {
             messageTextLabel.trailingAnchor.constraint(equalTo: timeTextLabel.leadingAnchor, constant: -12),
             messageTextLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1/2)
         ])
-         
+        
         NSLayoutConstraint.activate([
             timeTextLabel.topAnchor.constraint(equalTo: topAnchor),
             timeTextLabel.leadingAnchor.constraint(equalTo: trailingAnchor, constant: -64),
@@ -693,7 +693,7 @@ extension ChatLogController {
             containerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             containerView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1/14)
         ])
-
+        
         NSLayoutConstraint.activate([
             sendButton.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 10),
             sendButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10),
@@ -716,28 +716,28 @@ extension MessageTextTableViewCell {
     
     func setupConstraints() {
         guard let isMessageForUser = isMessageForUser else { return }
-       
+        
         backgroundLeadingConstraint?.isActive = false
         backgroundTrailingConstraint?.isActive = false
-
+        
         if isMessageForUser {
-            backgroundTrailingConstraint = customBackgroundView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
+            backgroundTrailingConstraint = customBackgroundView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12)
             backgroundTrailingConstraint?.isActive = true
         } else {
-            backgroundLeadingConstraint = customBackgroundView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16)
+            backgroundLeadingConstraint = customBackgroundView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12)
             backgroundLeadingConstraint?.isActive = true
         }
         
         NSLayoutConstraint.activate([
             customBackgroundView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            customBackgroundView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.8),
+            customBackgroundView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 5/6),
             customBackgroundView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 2/3)
-
+            
         ])
         
         NSLayoutConstraint.activate([
             messageLabel.topAnchor.constraint(equalTo: customBackgroundView.topAnchor, constant: 12),
-            messageLabel.bottomAnchor.constraint(equalTo: customBackgroundView.bottomAnchor, constant: -24),
+            messageLabel.bottomAnchor.constraint(equalTo: customBackgroundView.bottomAnchor, constant: -30),
             messageLabel.leadingAnchor.constraint(equalTo: customBackgroundView.leadingAnchor, constant: 12),
             messageLabel.trailingAnchor.constraint(equalTo: customBackgroundView.trailingAnchor, constant: -12)
         ])
@@ -750,15 +750,15 @@ extension MessageTextTableViewCell {
         ])
     }
 }
-    
+
 // MARK: - ProfileViewController Constraint
 
 extension ProfileViewController {
-
+    
     func setupConstraints() {
         
         let heightForView = view.frame.height / 14
-
+        
         NSLayoutConstraint.activate([
             activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: profileImageView.centerYAnchor)
@@ -791,7 +791,7 @@ extension ProfileViewController {
             editProfileButton.heightAnchor.constraint(equalToConstant: heightForView * 0.7),
             editProfileButton.widthAnchor.constraint(equalTo: editProfileButton.heightAnchor)
         ])
-  
+        
         NSLayoutConstraint.activate([
             logoutButton.topAnchor.constraint(equalTo:  editProfileButton.bottomAnchor, constant: 24),
             logoutButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),

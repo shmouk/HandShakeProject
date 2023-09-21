@@ -3,7 +3,7 @@ import Foundation
 class TeamViewModel {
     let teamAPI = TeamAPI.shared
     lazy var userAPI = UserAPI.shared
-
+    
     var fetchUser = Bindable(User())
     var ownTeams = Bindable([Team()])
     var otherTeams = Bindable([Team()])

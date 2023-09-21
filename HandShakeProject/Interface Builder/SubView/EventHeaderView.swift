@@ -1,8 +1,8 @@
 import UIKit
 
 class EventHeaderView: UITableViewHeaderFooterView {
-   var teamName = InterfaceBuilder.createTitleLabel()
-   var teamImage = InterfaceBuilder.createImageView()
+    var teamName = InterfaceBuilder.createTitleLabel()
+    var teamImage = InterfaceBuilder.createImageView()
     
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
@@ -21,7 +21,7 @@ class EventHeaderView: UITableViewHeaderFooterView {
     }
     
     private func setSubviews() {
-       contentView.addSubviews(teamImage, teamName)
+        contentView.addSubviews(teamImage, teamName)
     }
     
     private func setViewAppearance() {

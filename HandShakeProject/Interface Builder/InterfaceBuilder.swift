@@ -123,7 +123,7 @@ final class InterfaceBuilder {
         label.font = UIFont.boldSystemFont(ofSize: 14)
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.lineBreakMode = .byCharWrapping
+        label.lineBreakMode = .byWordWrapping
         label.isSkeletonable = true
         return label
     }

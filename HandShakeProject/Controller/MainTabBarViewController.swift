@@ -1,12 +1,12 @@
 import UIKit
 
 class MainTabBarViewController: UITabBarController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
     }
-
+    
     deinit {
         print("0")
     }
@@ -40,14 +40,14 @@ class MainTabBarViewController: UITabBarController {
         
         
         viewControllers = [
-                    UINavigationController(rootViewController: eventsViewController),
-                    UINavigationController(rootViewController: chatViewController),
-                    UINavigationController(rootViewController: teamViewController),
-                    UINavigationController(rootViewController: profileViewController)
-                ]
+            UINavigationController(rootViewController: eventsViewController),
+            UINavigationController(rootViewController: chatViewController),
+            UINavigationController(rootViewController: teamViewController),
+            UINavigationController(rootViewController: profileViewController)
+        ]
     }
     
-
+    
     private func setBarAppearanceUpdate() {
         tabBar.backgroundColor = .white
         tabBar.barStyle = .default
@@ -60,7 +60,7 @@ class MainTabBarViewController: UITabBarController {
 extension MainTabBarViewController {
     @objc
     private func openNotificationAction(_ sender: Any) {
-
+        
     }
     
     @objc

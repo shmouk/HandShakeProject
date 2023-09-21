@@ -3,7 +3,7 @@ import UIKit
 class EventInfoViewController: UIViewController {
     private let eventViewModel = EventViewModel()
     private let cellId = "UsersTableViewCell"
-
+    
     var nameLabel = InterfaceBuilder.createTitleLabel()
     var stateView = InterfaceBuilder.createView()
     var dateLabel = InterfaceBuilder.createTitleLabel()
@@ -16,7 +16,7 @@ class EventInfoViewController: UIViewController {
     var readerTextView = InterfaceBuilder.createTextView()
     var readyButton = InterfaceBuilder.createButton()
     var closeVCButton = InterfaceBuilder.createButton()
-
+    
     private let event: Event
     
     init(event: Event) {
@@ -71,7 +71,7 @@ class EventInfoViewController: UIViewController {
         eventViewModel.userNames.bind { [weak self] names in
             guard let self = self else { return }
             readerTextView.text = "Everyone"
-//            readerTextView.text = names.joined(separator: ", ")
+            //            readerTextView.text = names.joined(separator: ", ")
         }
     }
     

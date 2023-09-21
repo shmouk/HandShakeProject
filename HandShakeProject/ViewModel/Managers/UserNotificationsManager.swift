@@ -19,7 +19,7 @@ class UserNotificationsManager: NSObject, UNUserNotificationCenterDelegate {
             }
         }
     }
-
+    
     
     func scheduleNotification(withTitle title: String, body: String, delay: TimeInterval = 2) {
         let center = UNUserNotificationCenter.current()
@@ -46,16 +46,16 @@ class UserNotificationsManager: NSObject, UNUserNotificationCenterDelegate {
     }
     
     
-       func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-           if let topViewController = UIApplication.topViewController(),
-              !(topViewController is ChatLogController) {
-               completionHandler([.alert, .sound, .badge])
-           } else {
-               completionHandler([])
-           }
-       }
-      
-
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        if let topViewController = UIApplication.topViewController(),
+           !(topViewController is ChatLogController), !(topViewController is EventCreateViewController) {
+            completionHandler([.alert, .sound, .badge])
+        } else {
+            completionHandler([])
+        }
+    }
+    
+    
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         completionHandler()
     }

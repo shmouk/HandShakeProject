@@ -8,7 +8,7 @@ class ChatViewController: UIViewController {
     private let cellId = "MessageTableViewCell"
     private let chatViewModel = ChatViewModel()
     private let userViewModel = UserViewModel()
-
+    
     var tableView = InterfaceBuilder.createTableView()
     
     private var user: User?
@@ -39,7 +39,7 @@ class ChatViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
@@ -54,7 +54,7 @@ class ChatViewController: UIViewController {
     }
     
     private func reloadDataIfNeeded() {
-
+        
         if messages?.isEmpty ?? true {
             chatViewModel.loadLastMessagePerUser()
         }
@@ -83,7 +83,7 @@ class ChatViewController: UIViewController {
     
     private func openUsersListVC() {
         userViewModel.observeUsers()
-        userViewModel.users.bind { [weak self] users in
+        userViewModel.observeUsersWithoutMe { [weak self] users in
             guard let self = self else { return }
             let usersListTableViewController = UsersListTableViewController(users: users, isCellBeUsed: true)
             usersListTableViewController.delegate = self
@@ -142,7 +142,6 @@ extension ChatViewController: UITableViewDelegate {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? MessageTableViewCell,
               let message = messages?[indexPath.row] else
         { return UITableViewCell() }
-        
         cell.configure(with: message)
         return cell
     }

@@ -13,7 +13,7 @@ class ChatAPI: APIClient {
             }
         }
     }
-
+    
     var databaseReferenceData: [DatabaseReference]?
     
     private init() {}
@@ -91,7 +91,7 @@ class ChatAPI: APIClient {
             self.fetchMessageFromUser(snapshot) { (result) in
                 switch result {
                 case .success(let message):
-                        completion(.success(message))
+                    completion(.success(message))
                     
                 case .failure(let error):
                     completion(.failure(error))
@@ -105,18 +105,18 @@ class ChatAPI: APIClient {
         
         DispatchQueue.global(qos: .userInteractive).async { [weak self] in
             guard let self = self else { return }
-
+            
             ref.observe(.childAdded) { [weak self] (snapshot) in
                 guard let self = self else { return }
                 let messageId = snapshot.key
                 
                 self.observeMessageInRef(messageId: messageId) { [weak self] result in
                     guard let self = self else { return }
-
+                    
                     switch result {
                     case .success(let message):
                         let alreadyAdded = self.allMessages.contains { $0.messageId == messageId }
-
+                        
                         if !alreadyAdded {
                             if message.toId == User.fetchCurrentId() {
                                 userNotificationsManager.scheduleNotification(withTitle: "You received a notification", body: message.name + ": " + message.text)
@@ -124,7 +124,7 @@ class ChatAPI: APIClient {
                             self.allMessages.append(message)
                             self.allMessages.sort { $0.timestamp < $1.timestamp}
                         }
-                
+                        
                     case .failure(let error):
                         print(error.localizedDescription)
                     }

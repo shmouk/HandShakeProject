@@ -27,7 +27,6 @@ extension Int {
         }
         let date = Date(timeIntervalSince1970: TimeInterval(self))
         return dateFormatter.string(from: date)
-
     }
 }
 
@@ -59,7 +58,7 @@ extension UIColor {
         case 3:
             return #colorLiteral(red: 0.9254901961, green: 0.2064778552, blue: 0.234777142, alpha: 1)
         default:
-            return . white
+            return .white
         }
     }
     static func colorForStroke() -> UIColor {
@@ -83,7 +82,7 @@ extension UIColor {
 }
 
 extension UIViewController {
-
+    
     private static var loadingViewKey: UInt8 = 0
     
     func showLoadingView() {

@@ -19,7 +19,7 @@ extension ProfileViewController: UIImagePickerControllerDelegate {
         } else if let originalImage = info[.originalImage] as? UIImage {
             selectedImageFromPicker = originalImage
         }
-
+        
         if let selectedImage = selectedImageFromPicker {
             profileImageView.image = selectedImage
             profileViewModel.loadImagePicker(image: selectedImage)

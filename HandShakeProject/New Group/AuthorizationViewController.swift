@@ -16,13 +16,13 @@ class AuthorizationViewController: UIViewController {
     var statusAuthLabel = InterfaceBuilder.createTitleLabel()
     var loginButton = InterfaceBuilder.createButton()
     lazy var authSegmentControl = InterfaceBuilder.createSegmentControl(items: authState)
-
+    
     private let authState = ["Sign up", "Log in"]
     private var isSignup = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        authViewModel.userLogoutAction()
+        //        authViewModel.userLogoutAction()
         setUI()
         bindViewModel()
     }
@@ -34,7 +34,7 @@ class AuthorizationViewController: UIViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         KeyboardNotificationManager.hideKeyboard()
     }
-
+    
     private func bindViewModel() {
         authViewModel.statusText.bind({ [weak self](statusText) in
             guard let self = self else { return }
@@ -53,7 +53,7 @@ class AuthorizationViewController: UIViewController {
             switch result {
             case .success():
                 delegate?.didLogin()
-
+                
             case .failure(let error):
                 print(error.localizedDescription)
                 self.navigationController?.popToRootViewController(animated: false)
@@ -94,7 +94,7 @@ class AuthorizationViewController: UIViewController {
         loginTextField.placeholder = "Input login (email)"
         passwordTextField.placeholder = "Input password"
         repeatPasswordTextField.placeholder = "Repeat password"
-        
+        statusAuthLabel.textAlignment = .center
         statusAuthLabel.numberOfLines = 2
     }
     
@@ -123,16 +123,19 @@ class AuthorizationViewController: UIViewController {
 private extension AuthorizationViewController {
     @objc
     private func loginAction(_ sender: Any) {
+        KeyboardNotificationManager.hideKeyboard()
         guard let email = loginTextField.text,
-                let password = passwordTextField.text,
-                let rPassword = repeatPasswordTextField.text else { return }
+              let password = passwordTextField.text,
+              let rPassword = repeatPasswordTextField.text else { return }
         
         authViewModel.userLoginAction(email: email, password: password, repeatPassword: rPassword)
     }
-
+    
     @objc
     private func changeAuthState(_ sender: Any) {
         authViewModel.toggleAuthState()
+        passwordTextField.text = ""
+        repeatPasswordTextField.text = ""
     }
     
     @objc
@@ -145,7 +148,6 @@ private extension AuthorizationViewController {
     private func showHideButtonTouchUpInside() {
         passwordTextField.isSecureTextEntry = true
         repeatPasswordTextField.isSecureTextEntry = true
-        
     }
     
     @objc

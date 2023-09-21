@@ -11,7 +11,7 @@ class EventAPI: APIClient {
     lazy var teamAPI = TeamAPI.shared
     
     var eventsData = [((UIImage, String), [Event])]()
-
+    
     var teams: [Team]?
     
     var databaseReferenceData: [DatabaseReference]?
@@ -54,7 +54,7 @@ class EventAPI: APIClient {
         let eventData: [String: Bool] = [
             "isReady": true
         ]
-
+        
         ref.updateChildValues(eventData) 
     }
     
@@ -117,7 +117,7 @@ class EventAPI: APIClient {
         
         dispatchGroup.notify(queue: .main) { [weak self] in
             guard let self = self else { return }
-
+            
             if !eventsData.isEmpty {
                 self.eventsData = eventsData
                 completion(.success(()))
@@ -150,7 +150,7 @@ class EventAPI: APIClient {
             var events = [Event]()
             let dispatchGroup = DispatchGroup()
             let group = DispatchGroup()
-
+            
             guard let eventList = team.eventList else {
                 completion(.failure(NSError(domain: "Events not created", code: 500, userInfo: nil)))
                 return }
@@ -242,16 +242,16 @@ class EventAPI: APIClient {
                     completion(.failure(NSError(domain: "Failure image data", code: 404, userInfo: nil)))
                     return
                 }
-
-
+                
+                
                 let dataTuple = ((image, team.teamName), events)
                 
                 completion(.success(dataTuple))
             }
         }
     }
-
-
+    
+    
     
     func fetchReaderList(for ref: DatabaseReference, completion: @escaping ([String]) -> Void) {
         ref.child("readerList").observeSingleEvent(of: .value) { snapshot in
@@ -268,6 +268,6 @@ class EventAPI: APIClient {
 
 extension EventAPI {
     @objc func teamListDidChange() {
-
+        
     }
 }

@@ -10,7 +10,7 @@ class TeamViewController: UIViewController {
     private var sectionTitles = ["Your Teams", "Other Teams"]
     private var firstSectionTeams: [Team]?
     private var secondSectionTeams: [Team]?
-
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         UserNotificationsManager.shared.currentViewController = nil
@@ -83,14 +83,14 @@ class TeamViewController: UIViewController {
         let teamInfoViewController = TeamInfoViewController(team: selectedTeam)
         navigationController?.pushViewController(teamInfoViewController, animated: true)
     }
-
+    
     private func reloadTable() {
         tableView.reloadData()
     }
     
     private func fetchTeam(_ indexPath: IndexPath) -> Team? {
         var team: Team?
-
+        
         switch indexPath.section {
         case 0:
             team = firstSectionTeams?[indexPath.row]

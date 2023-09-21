@@ -4,7 +4,7 @@ import FirebaseStorage
 
 class UserAPI: APIClient {
     static let shared = UserAPI()
-
+    
     private init() { }
     
     var users = [User]() {
@@ -95,8 +95,7 @@ class UserAPI: APIClient {
             }
         }
     }
-
-
+    
     func startObserveNewData(ref: DatabaseReference) {
         databaseReferenceData = [ref]
         
@@ -120,7 +119,7 @@ class UserAPI: APIClient {
                         DispatchQueue.main.async { [weak self] in
                             guard let self = self else { return }
                             let alreadyAdded = self.users.contains { $0.uid == snapshot.key }
-
+                            
                             if !alreadyAdded {
                                 self.users.append(user)
                             }

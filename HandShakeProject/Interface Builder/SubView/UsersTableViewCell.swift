@@ -23,5 +23,5 @@ class UsersTableViewCell : UITableViewCell {
     private func setSubviews() {
         addSubviews(userImageView, nameLabel)
     }
-
+    
 }

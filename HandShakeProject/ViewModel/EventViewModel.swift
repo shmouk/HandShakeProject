@@ -33,7 +33,7 @@ class EventViewModel {
             completion(.failure(NSError(domain: "Empty name event,", code: 400, userInfo: nil)))
             return
         }
-  
+        
         if  descriptionText?.isEmpty ?? true || descriptionText == "Input text"  {
             completion(.failure(NSError(domain: "Input description text,", code: 400, userInfo: nil)))
             return
@@ -59,7 +59,7 @@ class EventViewModel {
                 userListDict[user] = 0
             }
         }
-
+        
         var eventData = [String : Any]()
         eventData["name"] = nameText
         eventData["description"] = descriptionText
@@ -117,7 +117,7 @@ class EventViewModel {
             }
         }
     }
- 
+    
     func fetchCurrentTeam(_ teams: [Team]) {
         guard let ownTeam = teams.first, let list = ownTeam.userList  else { return }
         currentTeam.value = ownTeam
@@ -160,12 +160,12 @@ extension EventViewModel {
     func updateEvent() {
         eventAPI.observeEventsFromTeam(completion: { [weak self] result in
             guard let self = self else { return }
-
+            
             switch result {
             case .success():
                 fetchEventData()
                 eventAPI.userNotificationsManager.scheduleNotification(withTitle: "You received a notification", body: "New event!")
-
+                
             case .failure(let error):
                 print(error.localizedDescription)
             }

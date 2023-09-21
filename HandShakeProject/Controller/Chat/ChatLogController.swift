@@ -11,16 +11,17 @@ class ChatLogController: UIViewController {
     var sendButton = InterfaceBuilder.createButton()
     var textField = InterfaceBuilder.createTextField()
     var tableView = InterfaceBuilder.createTableView()
+    var userImage = InterfaceBuilder.createImageView()
     
     private var messages: [Message]?
     private var keyboardManager: KeyboardNotificationManager?
     private let user: User
-
+    
     init(user: User) {
         self.user = user
         super.init(nibName: nil, bundle: nil)
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -43,7 +44,7 @@ class ChatLogController: UIViewController {
         setUI()
         bindViewModel()
     }
-
+    
     private func setUI() {
         setSubviews()
         setupConstraints()
@@ -77,7 +78,7 @@ class ChatLogController: UIViewController {
     private func settingTextLabel() {
         navigationItem.title = user.name
     }
-
+    
     private func settingTextField() {
         textField.delegate = self
         textField.placeholder = "Input text..."
@@ -107,7 +108,7 @@ class ChatLogController: UIViewController {
             self.scrollToLastRow()
         }
     }
-
+    
     private func sendText() {
         guard let text = textField.text, text != "" else { return }
         chatViewModel.sendMessage(text: text, toId: user.uid )
@@ -118,11 +119,11 @@ class ChatLogController: UIViewController {
         let lastIndexPath = IndexPath(row: messages.count - 1, section: 0)
         tableView.scrollToRow(at: lastIndexPath, at: .bottom, animated: true)
     }
-
+    
     private func setupTargets() {
         sendButton.addTarget(self, action: #selector(sendAction(_:)), for: .touchUpInside)
     }
-       
+    
     private func reloadTable() {
         self.tableView.reloadData()
     }

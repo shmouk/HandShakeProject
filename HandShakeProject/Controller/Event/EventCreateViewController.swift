@@ -23,7 +23,7 @@ class EventCreateViewController: UIViewController {
     
     lazy var importanceSegmentControl = InterfaceBuilder.createSegmentControl(items: deadlineState)
     var datePicker = InterfaceBuilder.createDatePicker()
-        
+    
     private var selectedTeam: Team?
     private var selectedDate: Int?
     private var selectedStateIndex: Int?
@@ -156,7 +156,7 @@ class EventCreateViewController: UIViewController {
         usersListTableViewController.modalPresentationStyle = .automatic
         present(usersListTableViewController, animated: true)
     }
-
+    
     
     private func createEvent() {
         AlertManager.showConfirmationAlert(title: "Create Alert", message: "Are you sure you want to create an event and it doesn't need to be changed?", viewController: self) { [weak self] in

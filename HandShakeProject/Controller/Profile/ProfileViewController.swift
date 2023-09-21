@@ -3,7 +3,7 @@ import UIKit
 class ProfileViewController: UIViewController {
     private let navigationBarManager = NavigationBarManager()
     private let authViewModel = AuthViewModel()
-
+    
     let profileViewModel = ProfileViewModel()
     
     var activityIndicator = InterfaceBuilder.createActivityIndicator()
@@ -45,7 +45,7 @@ class ProfileViewController: UIViewController {
         view.addSubviews(activityIndicator, profileImageView, editProfileButton, emailLabel, nameLabel, logoutButton)
         view.backgroundColor = .colorForView()
     }
-
+    
     func loadData() {
         activityIndicator.startAnimating()
         DispatchQueue.global().async { [weak self] in
